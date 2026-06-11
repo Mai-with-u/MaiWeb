@@ -1,0 +1,323 @@
+---
+import CtaButton from '../components/CtaButton.astro';
+---
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <div class="hero-title-wrapper animate-fade-in">
+        <h1 class="hero-title">
+          <span class="title-line">我在<span class="title-underline-text">试着学习</span></span>
+          <span class="title-line title-line-second">
+            像人类一样
+            <span class="title-highlight">陪伴你</span>
+          </span>
+        </h1>
+      </div>
+
+      <p class="hero-subtitle animate-fade-in animate-delay-2">
+        嘿! 这里是
+        <span class="subtitle-highlight">麦麦</span>
+        ，一个正在努力成为人类的BOT。
+      </p>
+
+      <div class="hero-buttons animate-fade-in animate-delay-3">
+        <CtaButton
+          variant="primary"
+          size="large"
+          href="#download"
+          icon="download"
+          label="立即下载"
+          sublabel="Windows一键包"
+        />
+        <div class="hero-buttons-row">
+          <CtaButton
+            variant="green"
+            size="small"
+            href="#versions"
+            icon="download"
+            label="其他版本"
+          />
+          <CtaButton
+            variant="green"
+            size="small"
+            href="#docs"
+            icon="docs"
+            label="使用文档"
+          />
+          <CtaButton
+            variant="green"
+            size="small"
+            href="#qq"
+            icon="qq"
+            label="QQ群"
+          />
+          <CtaButton
+            variant="green"
+            size="small"
+            href="#github"
+            icon="github"
+            label="Github"
+          />
+        </div>
+      </div>
+
+      <p class="hero-license animate-fade-in animate-delay-4">
+        MaiSaka 以 GPL v3 协议开源；使用即表示您同意并知悉「用户协议」的相关内容。
+      </p>
+    </div>
+
+    <div class="hero-visual animate-fade-in animate-delay-4">
+      <div class="character-wrapper">
+        <svg class="star-bg" viewBox="0 0 648 648" xmlns="http://www.w3.org/2000/svg">
+          <polygon
+            points="324,24 398,240 624,240 438,376 510,600 324,470 138,600 210,376 24,240 250,240"
+            fill="none"
+            stroke="#f0f0f0"
+            stroke-width="48"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <img src="/maimai-v2.png" alt="麦麦" class="character-img" />
+        <div class="chat-card">
+          <p class="chat-card-text">要来点有趣的事吗 (?)</p>
+          <div class="chat-card-pill">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+              <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+            </svg>
+            <span>整整整！</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 5rem;
+    position: relative;
+  }
+
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    padding: 0;
+  }
+
+  .hero-content {
+    text-align: left;
+    /* max-width: 540px; */
+  }
+
+  .hero-title-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: 60px;
+    font-weight: 700;
+    line-height: normal;
+    color: #000;
+  }
+
+  .title-line {
+    display: block;
+  }
+
+  .title-line-second {
+    margin-top: 0;
+  }
+
+  .title-highlight {
+    color: #e97f0f;
+  }
+
+  .title-underline-text {
+    text-decoration: underline;
+    text-decoration-color: #80de41;
+    text-decoration-thickness: 8px;
+    text-underline-offset: 6px;
+    text-decoration-skip-ink: none;
+  }
+
+  .hero-subtitle {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    color: #000;
+    line-height: 1.5;
+    margin-bottom: 32px;
+  }
+
+  .subtitle-highlight {
+    font-family: var(--font-display);
+    color: #e97f0f;
+    font-weight: 700;
+  }
+
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .hero-buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .hero-license {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    color: #a2abbc;
+    letter-spacing: 0.36px;
+    line-height: 1.5;
+    max-width: 500px;
+  }
+
+  .hero-visual {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .character-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .star-bg {
+    position: absolute;
+    width: 648px;
+    height: 648px;
+    max-width: 120%;
+    max-height: 120%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .character-img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 407px;
+    height: auto;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+  }
+
+  .chat-card {
+    position: absolute;
+    right: 10rem;
+    bottom: 12rem;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.67);
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+  }
+
+  .chat-card-text {
+    font-size: 12px;
+    color: #263141;
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  .chat-card-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 120px;
+    height: 20px;
+    background: rgba(233, 127, 15, 0.2);
+    backdrop-filter: blur(6px);
+    border-radius: 4px;
+    padding: 0 6px;
+    font-size: 10px;
+    color: #e97f0f;
+    font-weight: 700;
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+
+    .hero-inner {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .hero-content {
+      flex: 0 0 auto;
+      /* max-width: 540px; */
+      padding-left: 7.5rem;
+    }
+
+    .hero-visual {
+      flex: 1;
+      max-width: 648px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .character-wrapper {
+      max-width: 648px;
+      justify-content: flex-end;
+    }
+
+    .character-img {
+      max-width: 407px;
+      margin-right: 7.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: clamp(36px, 10vw, 60px);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(15px, 4vw, 20px);
+    }
+
+    .star-bg {
+      width: 100%;
+      height: auto;
+    }
+
+    .character-img {
+      max-width: 280px;
+    }
+
+    .chat-card {
+      right: 30px;
+      bottom: 70px;
+      padding: 10px 12px;
+    }
+  }
+</style>

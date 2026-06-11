@@ -1,0 +1,634 @@
+---
+---
+
+<section class="sticky-section">
+  <div class="sticky-inner">
+
+    <!-- === Right: Scrolling Text Blocks === -->
+    <div class="sticky-items">
+
+      <div class="text-block" data-mockup="chat">
+        <h2 class="text-block-title" style="color:#e97f0f">
+          <span>你是否厌倦了</span>
+          <span>GPT人机式的回复？</span>
+        </h2>
+        <p class="text-block-subtitle">没有人喜欢 GPT 的语言风格！</p>
+        <div class="text-block-desc">
+          <p>麦麦使用了更加自然、贴合人类对话习惯的交互方式，不是长篇大论或者 markdown 格式的分点，而是或长或短的闲谈。</p>
+          <p>不再是傻乎乎的一问一答：懂得在合适的时间说话，把握聊天中的气氛，在合适的时候开口，在合适的时候闭嘴。</p>
+          <p>在多人对话中，麦麦会模仿其他人的说话风格，还会自主理解新词或者小圈子里的黑话，不断进化。</p>
+          <p>基于心理学中人格理论，麦麦会不断积累对于你的了解，不论是你的信息、喜恶或是行为风格，她都记在心里。</p>
+        </div>
+      </div>
+
+      <div class="text-block" data-mockup="config">
+        <h2 class="text-block-title" style="color:#80de41">
+          <span>不想面对</span>
+          <span>复杂的配置过程？</span>
+        </h2>
+        <p class="text-block-subtitle">一键包，一键启动，一键配置！</p>
+        <div class="text-block-desc">
+          <p>MaiBot WebUI 是 MaiBot 聊天机器人的 Web 管理界面，提供了直观的配置管理、实时监控、插件管理、资源管理等功能。通过自动解析后端配置类，动态生成表单，实现了配置的可视化编辑。</p>
+          <p>告别繁琐的手动改配置，所有参数一目了然，修改即时生效，让部署与维护变得轻松简单。</p>
+        </div>
+      </div>
+
+      <div class="text-block" data-mockup="plugins">
+        <h2 class="text-block-title" style="color:#30ccef">
+          <span>功能太少</span>
+          <span>止步于聊天机器人？</span>
+        </h2>
+        <p class="text-block-subtitle">庞大的插件市场，要啥有啥！</p>
+        <div class="text-block-desc">
+          <p>插件就像给 MaiBot 安装"App"，让它拥有更多功能！插件系统提供强大的 API 和事件系统，拥有无限扩展可能。</p>
+          <p>无论是接入新平台、扩展记忆能力，还是添加趣味互动，都能在插件市场找到解决方案，让麦麦不断成长。</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === Left: Sticky Screen === -->
+    <div class="sticky-screen-wrap">
+      <div class="sticky-screen">
+
+        <!-- Chat mockup -->
+        <div class="screen-scene screen-chat" data-scene="chat">
+          <div class="chat-box">
+            <div class="chat-bubble user">
+              <div class="chat-avatar user-avatar">
+                <svg viewBox="0 0 40 40" width="48" height="48" fill="currentColor">
+                  <path d="M20 20c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm0 4c-5.34 0-16 2.68-16 8v2h32v-2c0-5.32-10.66-8-16-8z" />
+                </svg>
+              </div>
+              <div class="chat-bubble-text">麦麦去把可乐电脑关机了</div>
+            </div>
+            <div class="chat-bubble mai">
+              <img src="/mai-avatar.jpg" alt="" class="mai-avatar" />
+              <div class="chat-bubble-text mai-text">别搞</div>
+            </div>
+            <div class="chat-bubble mai">
+              <img src="/mai-avatar.jpg" alt="" class="mai-avatar" style="margin-top: 24px;" />
+              <div class="chat-bubble-text mai-text long">你让我关我就关？自己写个crontab去</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Config mockup -->
+        <div class="screen-scene screen-config" data-scene="config">
+          <div class="config-mockup">
+            <div class="config-backdrop"></div>
+            <div class="config-panel">
+              <div class="panel-header">
+                <div class="window-dots">
+                  <span class="dot red"></span>
+                  <span class="dot yellow"></span>
+                  <span class="dot green"></span>
+                </div>
+                <span class="panel-title">config.toml</span>
+              </div>
+              <div class="panel-body">
+                <div class="code-line" style="width: 42%;"></div>
+                <div class="code-line" style="width: 55%;"></div>
+                <div class="code-line" style="width: 49%;"></div>
+                <div class="code-line" style="width: 78%;"></div>
+                <div class="code-line" style="width: 65%;"></div>
+              </div>
+            </div>
+            <div class="webui-card">
+              <div class="webui-tag"></div>
+              <div class="webui-label">MaiBot WebUI</div>
+              <div class="webui-version">v X.X.X</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plugins mockup -->
+        <div class="screen-scene screen-plugins" data-scene="plugins">
+          <div class="plugin-mockup">
+            <div class="plugin-backdrop"></div>
+            <div class="plugin-panel">
+              <div class="plugin-card-item">
+                <div class="plugin-stats">
+                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg><span>xx</span></div>
+                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg><span>x.x</span></div>
+                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z" /></svg><span>xx</span></div>
+                </div>
+                <div class="plugin-divider"></div>
+                <div class="plugin-desc">
+                  <div class="desc-line"></div>
+                  <div class="desc-line short"></div>
+                </div>
+                <div class="plugin-actions">
+                  <button class="btn-detail">查看详情</button>
+                  <button class="btn-install"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg>安装</button>
+                </div>
+              </div>
+              <div class="plugin-card-item">
+                <div class="plugin-desc">
+                  <div class="desc-line"></div>
+                  <div class="desc-line short"></div>
+                </div>
+                <div class="plugin-divider"></div>
+                <div class="plugin-stats">
+                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg><span>xx</span></div>
+                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg><span>x.x</span></div>
+                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z" /></svg><span>xx</span></div>
+                </div>
+                <div class="plugin-actions">
+                  <button class="btn-detail">查看详情</button>
+                  <button class="btn-install"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg>安装</button>
+                </div>
+              </div>
+              <div class="cursor-pointer">
+                <svg viewBox="0 0 32 40" width="32" height="40" fill="none">
+                  <path d="M8.5 4.5L8.5 28.5L13.5 24.5L17.5 34.5L21 33L17 23.5L23.5 23.5L8.5 4.5Z" fill="white" stroke="#262d49" stroke-width="2" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ===== Section Layout ===== */
+  .sticky-section {
+    position: relative;
+    padding: 160px 0 80px;
+  }
+
+  .sticky-inner {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ===== Right: Scrolling Text Items ===== */
+  .sticky-items {
+    width: 560px;
+    margin-right: 60px;
+    margin-left: 120px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text-block {
+    min-height: 720px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+    transition: opacity 0.36s ease-out;
+    padding-top: 140px;
+  }
+
+  .text-block:last-child {
+    min-height: 680px;
+  }
+
+  .text-block-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: #000;
+    margin-bottom: 16px;
+    z-index: 1;
+  }
+
+  .text-block-title span {
+    display: block;
+  }
+
+  .text-block-subtitle {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: #121938;
+    margin-bottom: 28px;
+    line-height: normal;
+  }
+
+  .text-block-desc {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.5);
+    letter-spacing: 1.2px;
+  }
+
+  .text-block-desc p {
+    margin-bottom: 16px;
+  }
+
+  .text-block-desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===== Left: Sticky Screen ===== */
+  .sticky-screen-wrap {
+    position: relative;
+    margin-top: 140px;
+  }
+
+  .sticky-screen {
+    position: sticky;
+    width: 720px;
+    height: 480px;
+    top: calc((100vh - 480px) / 2);
+    border-radius: 32px;
+    overflow: hidden;
+    transition: background 0.32s ease-in;
+    background: rgb(219, 131, 36);
+  }
+
+  .screen-scene {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.32s ease-out;
+  }
+
+  /* ===== Chat Mockup ===== */
+  .chat-box {
+    background: rgb(219, 131, 36);
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    height: 100%;
+  }
+
+  .chat-bubble {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.24s ease-out, transform 0.24s ease-out;
+  }
+
+  .chat-bubble.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+    transform: translateX(30px) scale(0.92);
+  }
+
+  .chat-bubble.mai {
+    transform: translateX(-30px) scale(0.92);
+  }
+
+  .chat-bubble-text {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 16px 24px;
+    border-radius: 24px;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+  }
+
+  .chat-bubble.user .chat-bubble-text {
+    background: #35d28d;
+    color: #000;
+    border-bottom-right-radius: 4px;
+  }
+
+  .chat-bubble.mai .chat-bubble-text {
+    background: #eeeef0;
+    color: #2b2b2b;
+    border-bottom-left-radius: 4px;
+  }
+
+  .chat-avatar {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .user-avatar {
+    background: #d9d9d9;
+    color: #fff;
+  }
+
+  .user-avatar svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .mai-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* ===== Config Mockup ===== */
+  .config-mockup {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .config-backdrop {
+    position: absolute;
+    inset: 0;
+    background: #80de41;
+    border-radius: 32px;
+  }
+
+  .config-panel {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 55%;
+    height: 76%;
+    background: #282c34;
+    border-radius: 0 0 0 32px;
+    border-top-right-radius: 8px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .window-dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .dot.red    { background: #ff5f57; }
+  .dot.yellow { background: #ffbd2e; }
+  .dot.green  { background: #28c840; }
+
+  .panel-title {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-left: 32px;
+  }
+
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .code-line {
+    height: 22px;
+    background: #414752;
+    border-radius: 6px;
+    animation: codePulse 2.4s ease-in-out infinite;
+  }
+  .code-line:nth-child(2) { animation-delay: 0.2s; }
+  .code-line:nth-child(3) { animation-delay: 0.4s; }
+  .code-line:nth-child(4) { animation-delay: 0.6s; }
+  .code-line:nth-child(5) { animation-delay: 0.8s; }
+
+  @keyframes codePulse {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 1; }
+  }
+
+  .webui-card {
+    position: absolute;
+    right: 8%;
+    top: 42%;
+    width: 38%;
+    background: #27464a;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px;
+    gap: 12px;
+  }
+
+  .webui-tag { width: 40%; height: 28px; background: #d16837; border-radius: 6px; }
+
+  .webui-label {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .webui-version {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* ===== Plugin Mockup ===== */
+  .plugin-mockup {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .plugin-backdrop {
+    position: absolute;
+    inset: 0;
+    background: #30ccef;
+    border-radius: 32px;
+  }
+
+  .plugin-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 78%;
+    height: 100%;
+    background: #27464a;
+    border-radius: 32px 0 0 32px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .plugin-card-item {
+    border: 2px solid #d6c398;
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .plugin-stats { display: flex; gap: 12px; }
+  .stat { display: flex; align-items: center; gap: 4px; color: #d6c398; font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 12px; }
+  .plugin-divider { height: 1px; background: #d6c398; opacity: 0.5; }
+  .plugin-desc { display: flex; flex-direction: column; gap: 8px; }
+  .desc-line { height: 12px; background: rgba(214, 195, 152, 0.25); border-radius: 4px; width: 80%; }
+  .desc-line.short { width: 55%; }
+  .plugin-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+  .btn-detail, .btn-install { font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 4px; border: 1px solid #d6c398; background: transparent; color: #d6c398; cursor: default; display: flex; align-items: center; gap: 4px; }
+  .btn-install { background: #d16837; color: #000; border-color: #d6c398; }
+
+  .cursor-pointer {
+    position: absolute;
+    right: 22%;
+    bottom: 22%;
+    z-index: 2;
+    animation: cursorMove 2.4s ease-in-out infinite;
+  }
+
+  @keyframes cursorMove {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(-8px, -6px); }
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 1100px) {
+    .sticky-inner {
+      flex-direction: column;
+      padding: 0 24px;
+    }
+    .sticky-items {
+      width: 100%;
+      margin: 0;
+    }
+    .text-block {
+      min-height: auto;
+      padding-top: 24px;
+    }
+    .sticky-screen-wrap {
+      display: flex;
+      justify-content: center;
+    }
+    .sticky-screen {
+      position: relative;
+      top: 0;
+      width: 100%;
+      max-width: 720px;
+      height: 400px;
+    }
+  }
+</style>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('.text-block');
+  const scenes = document.querySelectorAll<HTMLElement>('.screen-scene');
+  const screen = document.querySelector<HTMLElement>('.sticky-screen')!;
+  const section = document.querySelector<HTMLElement>('.sticky-section')!;
+
+  const bgColors: Record<string, string> = {
+    chat: 'rgb(219, 131, 36)',
+    config: '#80de41',
+    plugins: '#30ccef'
+  };
+
+  let ticking = false;
+  let activeMockup = 'chat';
+  let sectionVisible = false;
+  let initialAnimationPlayed = false;
+
+  function playChatAnimation() {
+    const chatScene = document.querySelector<HTMLElement>('.screen-chat');
+    if (!chatScene) return;
+    const bubbles = chatScene.querySelectorAll<HTMLElement>('.chat-bubble');
+    bubbles.forEach((b: HTMLElement, i: number) => {
+      b.style.opacity = '0';
+      b.style.transform = b.classList.contains('user')
+        ? 'translateX(30px) scale(0.92)'
+        : 'translateX(-30px) scale(0.92)';
+      setTimeout(() => {
+        b.style.opacity = '1';
+        b.style.transform = 'translateX(0) scale(1)';
+      }, 600 + i * 600);
+    });
+  }
+
+  // Detect when section enters viewport
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      sectionVisible = entry.isIntersecting;
+      if (sectionVisible && !initialAnimationPlayed) {
+        initialAnimationPlayed = true;
+        playChatAnimation();
+      }
+    });
+  }, { threshold: 0.1 });
+  sectionObserver.observe(section);
+
+  function getCentroid(block: HTMLElement) {
+    const rect = block.getBoundingClientRect();
+    return rect.top + rect.height / 2;
+  }
+
+  function update() {
+    const viewCenter = window.innerHeight / 2;
+
+    // Find item closest to viewport center
+    let bestBlock = items[0];
+    let bestDist = Infinity;
+
+    items.forEach((block: HTMLElement) => {
+      const dist = Math.abs(getCentroid(block) - viewCenter);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestBlock = block;
+      }
+    });
+
+    const target = bestBlock.dataset.mockup!;
+
+    // Set item opacities
+    items.forEach((item: HTMLElement) => {
+      item.style.opacity = item.dataset.mockup === target ? '1' : '0.3';
+    });
+
+    // Only trigger scene change when target changes
+    if (target !== activeMockup) {
+      activeMockup = target;
+
+      // Change screen background
+      screen.style.background = bgColors[target] || bgColors.chat;
+
+      // Fade scenes
+      scenes.forEach((scene: HTMLElement) => {
+        scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
+      });
+
+      // Animate chat bubbles when switching back to chat
+      if (target === 'chat' && initialAnimationPlayed) {
+        playChatAnimation();
+      }
+    }
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initial scene setup
+  scenes.forEach((scene: HTMLElement) => {
+    scene.style.opacity = scene.dataset.scene === 'chat' ? '1' : '0';
+  });
+</script>
