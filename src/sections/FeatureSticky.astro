@@ -870,171 +870,171 @@
 </style>
 
 <script>
-  const items = document.querySelectorAll<HTMLElement>('.text-block');
-  const scenes = document.querySelectorAll<HTMLElement>('.screen-scene');
-  const screen = document.querySelector<HTMLElement>('.sticky-screen')!;
-  const section = document.querySelector<HTMLElement>('.sticky-section')!;
+  const items = document.querySelectorAll('.text-block');
+  const scenes = document.querySelectorAll('.screen-scene');
+  const screen = document.querySelector('.sticky-screen');
+  const section = document.querySelector('.sticky-section');
 
-  const bgColors: Record<string, string> = {
-    chat: 'rgb(219, 131, 36)',
-    config: '#80de41',
-    plugins: '#30ccef'
-  };
+  if (screen && section) {
+    const bgColors = {
+      chat: 'rgb(219, 131, 36)',
+      config: '#80de41',
+      plugins: '#30ccef'
+    };
 
-  let ticking = false;
-  let activeMockup = 'chat';
-  let sectionVisible = false;
-  let initialAnimationPlayed = false;
+    let ticking = false;
+    let activeMockup = 'chat';
+    let initialAnimationPlayed = false;
 
-  function playChatAnimation() {
-    const chatScene = document.querySelector<HTMLElement>('.screen-chat');
-    if (!chatScene) return;
-    const bubbles = chatScene.querySelectorAll<HTMLElement>('.chat-bubble');
-    bubbles.forEach((b: HTMLElement, i: number) => {
-      b.style.opacity = '0';
-      b.style.transform = b.classList.contains('user')
-        ? 'translateX(30px) scale(0.92)'
-        : 'translateX(-30px) scale(0.92)';
-      setTimeout(() => {
-        b.style.opacity = '1';
-        b.style.transform = 'translateX(0) scale(1)';
-      }, 600 + i * 600);
-    });
-  }
+    function playChatAnimation() {
+      const chatScene = document.querySelector('.screen-chat');
+      if (!chatScene) return;
+      const bubbles = chatScene.querySelectorAll('.chat-bubble');
+      bubbles.forEach((b, i) => {
+        b.style.opacity = '0';
+        b.style.transform = b.classList.contains('user')
+          ? 'translateX(30px) scale(0.92)'
+          : 'translateX(-30px) scale(0.92)';
+        setTimeout(() => {
+          b.style.opacity = '1';
+          b.style.transform = 'translateX(0) scale(1)';
+        }, 600 + i * 600);
+      });
+    }
 
-  // Detect when section enters viewport
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      sectionVisible = entry.isIntersecting;
-      if (sectionVisible && !initialAnimationPlayed) {
-        initialAnimationPlayed = true;
-        playChatAnimation();
-      }
-    });
-  }, { threshold: 0.1 });
-  sectionObserver.observe(section);
+    // Detect when section enters viewport
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !initialAnimationPlayed) {
+          initialAnimationPlayed = true;
+          playChatAnimation();
+        }
+      });
+    }, { threshold: 0.1 });
+    sectionObserver.observe(section);
 
-  function getCentroid(block: HTMLElement) {
-    const rect = block.getBoundingClientRect();
-    return rect.top + rect.height / 2;
-  }
+    function getCentroid(block) {
+      const rect = block.getBoundingClientRect();
+      return rect.top + rect.height / 2;
+    }
 
-  function update() {
-    const viewCenter = window.innerHeight / 2;
+    function update() {
+      const viewCenter = window.innerHeight / 2;
 
-    // Find item closest to viewport center
-    let bestBlock = items[0];
-    let bestDist = Infinity;
+      // Find item closest to viewport center
+      let bestBlock = items[0];
+      let bestDist = Infinity;
 
-    items.forEach((block: HTMLElement) => {
-      const dist = Math.abs(getCentroid(block) - viewCenter);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestBlock = block;
-      }
-    });
-
-    const target = bestBlock.dataset.mockup!;
-
-    // Set item opacities
-    items.forEach((item: HTMLElement) => {
-      item.style.opacity = item.dataset.mockup === target ? '1' : '0.3';
-    });
-
-    // Only trigger scene change when target changes
-    if (target !== activeMockup) {
-      activeMockup = target;
-
-      // Change screen background
-      screen.style.background = bgColors[target] || bgColors.chat;
-
-      // Fade scenes
-      scenes.forEach((scene: HTMLElement) => {
-        scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
+      items.forEach((block) => {
+        const dist = Math.abs(getCentroid(block) - viewCenter);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestBlock = block;
+        }
       });
 
-      // Animate chat bubbles when switching back to chat
-      if (target === 'chat' && initialAnimationPlayed) {
-        playChatAnimation();
-      }
+      const target = bestBlock.dataset.mockup || 'chat';
 
-      // Staggered animation for config: editor first, webui second
-      if (target === 'config') {
-        const editor = document.querySelector<HTMLElement>('.config-editor');
-        const webui = document.querySelector<HTMLElement>('.config-webui');
-        if (editor && webui) {
-          editor.style.transition = 'none';
-          webui.style.transition = 'none';
-          editor.style.opacity = '0';
-          editor.style.transform = 'translate(-120px, 480px)';
-          webui.style.opacity = '0';
-          webui.style.transform = 'translate(120px, 480px)';
-          editor.offsetHeight; // force reflow
-          editor.style.transition = 'opacity 0.55s ease-out, transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1)';
-          webui.style.transition = 'opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)';
-          editor.style.opacity = '1';
-          editor.style.transform = 'translate(0, 0)';
-          webui.style.opacity = '1';
-          webui.style.transform = 'translate(0, 0)';
+      // Set item opacities
+      items.forEach((item) => {
+        item.style.opacity = item.dataset.mockup === target ? '1' : '0.3';
+      });
+
+      // Only trigger scene change when target changes
+      if (target !== activeMockup) {
+        activeMockup = target;
+
+        // Change screen background
+        screen.style.background = bgColors[target] || bgColors.chat;
+
+        // Fade scenes
+        scenes.forEach((scene) => {
+          scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
+        });
+
+        // Animate chat bubbles when switching back to chat
+        if (target === 'chat' && initialAnimationPlayed) {
+          playChatAnimation();
+        }
+
+        // Staggered animation for config: editor first, webui second
+        if (target === 'config') {
+          const editor = document.querySelector('.config-editor');
+          const webui = document.querySelector('.config-webui');
+          if (editor && webui) {
+            editor.style.transition = 'none';
+            webui.style.transition = 'none';
+            editor.style.opacity = '0';
+            editor.style.transform = 'translate(-120px, 480px)';
+            webui.style.opacity = '0';
+            webui.style.transform = 'translate(120px, 480px)';
+            editor.offsetHeight; // force reflow
+            editor.style.transition = 'opacity 0.55s ease-out, transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1)';
+            webui.style.transition = 'opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)';
+            editor.style.opacity = '1';
+            editor.style.transform = 'translate(0, 0)';
+            webui.style.opacity = '1';
+            webui.style.transform = 'translate(0, 0)';
+          }
+        }
+
+        // Plugins panel slides in from top-right corner (like second screen entrance)
+        if (target === 'plugins') {
+          const panel = document.querySelector('.plugin-panel');
+          const scroll = document.querySelector('.plugin-scroll');
+          const cursor = document.querySelector('.plugin-cursor');
+          if (panel && scroll && cursor) {
+            panel.style.transition = 'none';
+            cursor.style.transition = 'none';
+            scroll.style.opacity = '1';
+            scroll.style.transform = 'translate(0, 0)';
+            panel.style.opacity = '0';
+            panel.style.transform = 'translate(120px, -480px)';
+            cursor.style.opacity = '0';
+            cursor.style.transform = 'translate(40px, -30px)';
+            panel.offsetHeight; // force reflow
+            panel.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
+            cursor.style.transition = 'opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
+            panel.style.opacity = '1';
+            panel.style.transform = 'translate(0, 0)';
+            cursor.style.opacity = '1';
+            cursor.style.transform = 'translate(0, 0)';
+          }
         }
       }
 
-      // Plugins panel slides in from top-right corner (like second screen entrance)
-      if (target === 'plugins') {
-        const panel = document.querySelector<HTMLElement>('.plugin-panel');
-        const scroll = document.querySelector<HTMLElement>('.plugin-scroll');
-        const cursor = document.querySelector<HTMLElement>('.plugin-cursor');
-        if (panel && scroll && cursor) {
-          panel.style.transition = 'none';
-          cursor.style.transition = 'none';
-          scroll.style.opacity = '1';
-          scroll.style.transform = 'translate(0, 0)';
-          panel.style.opacity = '0';
-          panel.style.transform = 'translate(120px, -480px)';
-          cursor.style.opacity = '0';
-          cursor.style.transform = 'translate(40px, -30px)';
-          panel.offsetHeight; // force reflow
-          panel.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
-          cursor.style.transition = 'opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
-          panel.style.opacity = '1';
-          panel.style.transform = 'translate(0, 0)';
-          cursor.style.opacity = '1';
-          cursor.style.transform = 'translate(0, 0)';
-        }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Initial scene setup
+    scenes.forEach((scene) => {
+      scene.style.opacity = scene.dataset.scene === 'chat' ? '1' : '0';
+    });
+
+    // Scale mockup to fit narrow screens
+    const stickyScreen = document.querySelector('.sticky-screen');
+    const stickyWrap = document.querySelector('.sticky-screen-wrap');
+    function updateMockupScale() {
+      if (!stickyScreen || !stickyWrap) return;
+      const isNarrow = window.innerWidth <= 1279;
+      if (isNarrow) {
+        const designW = 720;
+        const scale = Math.min(1, stickyWrap.clientWidth / designW);
+        stickyScreen.style.setProperty('--mockup-scale', String(scale));
+        stickyWrap.style.height = `${480 * scale}px`;
+      } else {
+        stickyScreen.style.setProperty('--mockup-scale', '1');
+        stickyWrap.style.height = '';
       }
     }
-
-    ticking = false;
+    window.addEventListener('resize', updateMockupScale);
+    updateMockupScale();
   }
-
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(update);
-      ticking = true;
-    }
-  }, { passive: true });
-
-  // Initial scene setup
-  scenes.forEach((scene: HTMLElement) => {
-    scene.style.opacity = scene.dataset.scene === 'chat' ? '1' : '0';
-  });
-
-  // Scale mockup to fit narrow screens
-  const stickyScreen = document.querySelector<HTMLElement>('.sticky-screen');
-  const stickyWrap = document.querySelector<HTMLElement>('.sticky-screen-wrap');
-  function updateMockupScale() {
-    if (!stickyScreen || !stickyWrap) return;
-    const isNarrow = window.innerWidth <= 1279;
-    if (isNarrow) {
-      const designW = 720;
-      const scale = Math.min(1, stickyWrap.clientWidth / designW);
-      stickyScreen.style.setProperty('--mockup-scale', String(scale));
-      stickyWrap.style.height = `${480 * scale}px`;
-    } else {
-      stickyScreen.style.setProperty('--mockup-scale', '1');
-      stickyWrap.style.height = '';
-    }
-  }
-  window.addEventListener('resize', updateMockupScale);
-  updateMockupScale();
 </script>
