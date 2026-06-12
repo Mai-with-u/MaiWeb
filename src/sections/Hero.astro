@@ -52,7 +52,7 @@ try {
           <CtaButton
             variant="green"
             size="small"
-            href="#docs"
+            href="https://docs.mai-mai.org/"
             delay={0.5}
             icon="docs"
             label="使用文档"
@@ -261,19 +261,28 @@ try {
     right: 10rem;
     bottom: 12rem;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.67);
+    background: linear-gradient(
+      135deg,
+      rgba(233, 127, 15, 0.1) 0%,
+      rgba(233, 127, 15, 0.04) 100%
+    );
     border-radius: 12px;
     padding: 12px 14px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(4px);
+    box-shadow:
+      0 8px 32px rgba(233, 127, 15, 0.1),
+      inset 0 0 0 1.5px rgba(233, 127, 15, 0.2),
+      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px) saturate(140%);
   }
 
   .chat-card-text {
     font-size: 12px;
-    color: #263141;
+    color: #1a1a1a;
     margin-bottom: 6px;
     white-space: nowrap;
     text-align: center;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   .chat-card-pill {
@@ -367,10 +376,14 @@ try {
   }
 
   :global([data-theme='dark']) .chat-card {
-    background: rgba(19, 19, 19, 0.8);
+    background: linear-gradient(
+      135deg,
+      rgba(245, 148, 25, 0.12) 0%,
+      rgba(245, 148, 25, 0.04) 100%
+    );
   }
 
   :global([data-theme='dark']) .chat-card-text {
-    color: var(--c-text);
+    color: #f9fafc;
   }
 </style>
