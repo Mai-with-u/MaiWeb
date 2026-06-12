@@ -175,42 +175,83 @@
         <div class="screen-scene screen-plugins" data-scene="plugins">
           <div class="plugin-mockup">
             <div class="plugin-backdrop"></div>
-            <div class="plugin-panel">
-              <div class="plugin-card-item">
-                <div class="plugin-stats">
-                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg><span>xx</span></div>
-                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg><span>x.x</span></div>
-                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z" /></svg><span>xx</span></div>
+
+            <!-- Plugin panel: viewport / mask -->
+            <div class="plugin-panel" data-part="panel">
+              <!-- Left sidebar (fixed, does not scroll) -->
+              <div class="plugin-sidebar">
+                <div class="plugin-pill" data-part="pill" style="left:27px; top:245.5px; width:159px; height:38px;"></div>
+              </div>
+
+              <!-- Vertical divider between sidebar and card area (fixed, does not scroll) -->
+              <div class="plugin-divider-main" style="left:210px; top:0; height:396px;"></div>
+
+              <!-- Scrollable content wrapper: only cards scroll up like mouse wheel -->
+              <div class="plugin-scroll" data-part="scroll">
+                <!-- Plugin card 1 -->
+                <div class="plugin-card" style="left:272px; top:-17px; width:299px; height:208px;">
+                  <div class="plugin-card-border"></div>
+                  <div class="plugin-vline" style="left:4px; top:17px; height:192px;"></div>
+                  <div class="plugin-hline" style="left:21px; top:66px; width:260px;"></div>
+
+                  <div class="plugin-stat-row" style="left:24px; top:40px;">
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    <span class="plugin-stat-text">xx</span>
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <span class="plugin-stat-text">x.x</span>
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z"/></svg>
+                    <span class="plugin-stat-text">xx</span>
+                  </div>
+
+                  <div class="plugin-desc-bar" style="left:24px; top:82px; width:149px;"></div>
+                  <div class="plugin-desc-bar" style="left:24px; top:105px; width:149px;"></div>
+
+                  <div class="plugin-actions" style="left:103px; top:160px;">
+                    <button class="plugin-btn-detail">查看详情</button>
+                    <button class="plugin-btn-install" data-install="1">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                      安装
+                    </button>
+                  </div>
+
+                  <div class="plugin-pointer"></div>
                 </div>
-                <div class="plugin-divider"></div>
-                <div class="plugin-desc">
-                  <div class="desc-line"></div>
-                  <div class="desc-line short"></div>
-                </div>
-                <div class="plugin-actions">
-                  <button class="btn-detail">查看详情</button>
-                  <button class="btn-install"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg>安装</button>
+
+                <!-- Plugin card 2 -->
+                <div class="plugin-card" style="left:272px; top:219px; width:299px; height:208px;">
+                  <div class="plugin-card-border"></div>
+                  <div class="plugin-vline" style="left:2px; top:1px; height:208px;"></div>
+                  <div class="plugin-hline" style="left:21px; top:66px; width:260px;"></div>
+
+                  <div class="plugin-stat-row" style="left:24px; top:40px;">
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    <span class="plugin-stat-text">xx</span>
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <span class="plugin-stat-text">x.x</span>
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z"/></svg>
+                    <span class="plugin-stat-text">xx</span>
+                  </div>
+
+                  <div class="plugin-desc-bar" style="left:24px; top:82px; width:149px;"></div>
+                  <div class="plugin-desc-bar" style="left:24px; top:105px; width:149px;"></div>
+                  <div class="plugin-desc-bar" style="left:24px; top:17px; width:149px;"></div>
+
+                  <div class="plugin-actions" style="left:103px; top:160px;">
+                    <button class="plugin-btn-detail">查看详情</button>
+                    <button class="plugin-btn-install">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                      安装
+                    </button>
+                  </div>
+
+                  <div class="plugin-pointer"></div>
                 </div>
               </div>
-              <div class="plugin-card-item">
-                <div class="plugin-desc">
-                  <div class="desc-line"></div>
-                  <div class="desc-line short"></div>
-                </div>
-                <div class="plugin-divider"></div>
-                <div class="plugin-stats">
-                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg><span>xx</span></div>
-                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg><span>x.x</span></div>
-                  <div class="stat"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z" /></svg><span>xx</span></div>
-                </div>
-                <div class="plugin-actions">
-                  <button class="btn-detail">查看详情</button>
-                  <button class="btn-install"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" /></svg>安装</button>
-                </div>
-              </div>
-              <div class="cursor-pointer">
-                <svg viewBox="0 0 32 40" width="32" height="40" fill="none">
-                  <path d="M8.5 4.5L8.5 28.5L13.5 24.5L17.5 34.5L21 33L17 23.5L23.5 23.5L8.5 4.5Z" fill="white" stroke="#262d49" stroke-width="2" />
+
+              <!-- Cursor pointer (outside scroll, on top) -->
+              <div class="plugin-cursor" data-part="cursor" style="left:532px; top:155px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M25.1501 30.399L17.2741 22.523L14.8681 24.927C12.4081 27.391 11.1761 28.621 9.8521 28.331C8.5281 28.041 7.9261 26.405 6.7221 23.139L2.7081 12.239C0.306098 5.721 -0.897903 2.46301 0.782097 0.783006C2.4621 -0.896994 5.7221 0.303006 12.2421 2.70701L23.1421 6.719C26.4081 7.923 28.0421 8.525 28.3341 9.849C28.6261 11.173 27.3941 12.403 24.9301 14.865L22.5261 17.271L30.4021 25.147C31.2181 25.963 31.6261 26.371 31.8141 26.827C32.0641 27.433 32.0641 28.113 31.8141 28.721C31.6261 29.175 31.2181 29.583 30.4021 30.399C29.5861 31.215 29.1781 31.623 28.7221 31.811C28.1156 32.0616 27.4346 32.0616 26.8281 31.811C26.3741 31.623 25.9681 31.215 25.1501 30.399Z" fill="white"/>
                 </svg>
               </div>
             </div>
@@ -306,6 +347,8 @@
   .sticky-screen-wrap {
     position: relative;
     margin-top: 140px;
+    width: 720px;
+    flex-shrink: 0;
   }
 
   .sticky-screen {
@@ -613,45 +656,158 @@
     border-radius: 32px;
   }
 
+  /* Viewport / mask for plugin content */
   .plugin-panel {
     position: absolute;
-    right: 0;
+    left: 76px;
     top: 0;
-    width: 78%;
-    height: 100%;
+    width: 644px;
+    height: 397px;
     background: #27464a;
-    border-radius: 32px 0 0 32px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    border-radius: 0 32px 0 32px;
+    overflow: hidden;
   }
 
-  .plugin-card-item {
-    border: 2px solid #d6c398;
+  .plugin-panel > * {
+    position: absolute;
+  }
+
+  /* Scrollable wrapper: content scrolls up like mouse wheel */
+  .plugin-scroll {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(260px);
+  }
+
+  .plugin-scroll > * {
+    position: absolute;
+  }
+
+  /* Left sidebar inside panel */
+  .plugin-sidebar {
+    left: 0;
+    top: 0;
+    width: 210px;
+    height: 397px;
+  }
+
+  .plugin-pill {
+    position: absolute;
+    background: #d16837;
     border-radius: 8px;
-    padding: 14px;
+  }
+
+  .plugin-divider-main {
+    width: 2px;
+    background: #d6c398;
+    opacity: 0.3;
+  }
+
+  /* Plugin card container */
+  .plugin-card {
+    position: absolute;
+  }
+
+  .plugin-card-border {
+    position: absolute;
+    inset: 0;
+    border: 2px solid #d6c398;
+    border-radius: 2px;
+  }
+
+  .plugin-vline {
+    position: absolute;
+    width: 2px;
+    background: #d6c398;
+    opacity: 0.3;
+  }
+
+  .plugin-hline {
+    position: absolute;
+    height: 2px;
+    background: #d6c398;
+    opacity: 0.3;
+  }
+
+  .plugin-stat-row {
+    position: absolute;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .plugin-stat-icon {
+    width: 16px;
+    height: 16px;
+    color: #d6c398;
+  }
+
+  .plugin-stat-text {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #d6c398;
+    letter-spacing: 0.6px;
+  }
+
+  .plugin-desc-bar {
+    position: absolute;
+    height: 14px;
+    background: rgba(214, 195, 152, 0.19);
+    border-radius: 4px;
+  }
+
+  .plugin-actions {
+    position: absolute;
+    display: flex;
     gap: 8px;
   }
 
-  .plugin-stats { display: flex; gap: 12px; }
-  .stat { display: flex; align-items: center; gap: 4px; color: #d6c398; font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 12px; }
-  .plugin-divider { height: 1px; background: #d6c398; opacity: 0.5; }
-  .plugin-desc { display: flex; flex-direction: column; gap: 8px; }
-  .desc-line { height: 12px; background: rgba(214, 195, 152, 0.25); border-radius: 4px; width: 80%; }
-  .desc-line.short { width: 55%; }
-  .plugin-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
-  .btn-detail, .btn-install { font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 4px; border: 1px solid #d6c398; background: transparent; color: #d6c398; cursor: default; display: flex; align-items: center; gap: 4px; }
-  .btn-install { background: #d16837; color: #000; border-color: #d6c398; }
+  .plugin-btn-detail,
+  .plugin-btn-install {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #d6c398;
+    background: transparent;
+    color: #d6c398;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 32px;
+    min-width: 83px;
+    justify-content: center;
+  }
 
-  .cursor-pointer {
+  .plugin-btn-install {
+    background: #d16837;
+    color: #000;
+    border-color: #d6c398;
+  }
+
+  /* Right triangle decoration at bottom-right corner of plugin card border */
+  .plugin-pointer {
     position: absolute;
-    right: 22%;
-    bottom: 22%;
-    z-index: 2;
-    animation: cursorMove 2.4s ease-in-out infinite;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    background: #d6c398;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
+  /* Cursor icon */
+  .plugin-cursor {
+    position: absolute;
+    width: 32px;
+    height: 40px;
+    opacity: 0;
+    transform: translate(40px, -30px);
+    transition: opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
   @keyframes cursorMove {
@@ -662,10 +818,6 @@
   /* ===== Responsive ===== */
   @media (max-width: 1100px) {
     .sticky-inner {
-      flex-direction: column;
-      padding: 0 24px;
-    }
-    .sticky-items {
       width: 100%;
       margin: 0;
     }
@@ -794,6 +946,27 @@
           editor.style.transform = 'translate(0, 0)';
           webui.style.opacity = '1';
           webui.style.transform = 'translate(0, 0)';
+        }
+      }
+
+      // Scroll-up animation for plugins: content scrolls up inside panel mask, then cursor clicks install
+      if (target === 'plugins') {
+        const scroll = document.querySelector<HTMLElement>('.plugin-scroll');
+        const cursor = document.querySelector<HTMLElement>('.plugin-cursor');
+        if (scroll && cursor) {
+          scroll.style.transition = 'none';
+          cursor.style.transition = 'none';
+          scroll.style.opacity = '0';
+          scroll.style.transform = 'translateY(260px)';
+          cursor.style.opacity = '0';
+          cursor.style.transform = 'translate(40px, -30px)';
+          scroll.offsetHeight; // force reflow
+          scroll.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
+          cursor.style.transition = 'opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
+          scroll.style.opacity = '1';
+          scroll.style.transform = 'translateY(0)';
+          cursor.style.opacity = '1';
+          cursor.style.transform = 'translate(0, 0)';
         }
       }
     }
