@@ -8,6 +8,7 @@ export interface Props {
   sublabel?: string;
   delay?: number;
   modal?: string;
+  id?: string;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   sublabel,
   delay,
   modal,
+  id,
 } = Astro.props;
 
 const corner = variant === 'green' ? 8 : 10;
@@ -36,6 +38,7 @@ const corner = variant === 'green' ? 8 : 10;
       <!-- Layer 3: glass background + border + content -->
       <a
         href={href}
+        id={id}
         data-modal={modal || undefined}
         aria-haspopup={modal ? 'dialog' : undefined}
         aria-controls={modal ? 'global-modal' : undefined}
