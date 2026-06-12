@@ -37,9 +37,9 @@ const ogImage = `${siteUrl}/maimai-v2.png`;
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css" /></noscript>
     <script is:inline>
       (function(){
         var apply=function(t){document.documentElement.setAttribute('data-theme',t||'light')};
