@@ -148,8 +148,8 @@ const ogImage = new URL(optimizedHero.src, siteUrl).toString();
     </div>
 
     <!-- Global Modal -->
-    <div class="modal-overlay" id="global-modal" aria-hidden="true">
-      <div class="modal-card">
+    <div class="modal-overlay" id="global-modal" role="dialog" aria-modal="true" aria-label="弹窗" aria-hidden="true">
+      <div class="modal-card" role="document">
         <button class="modal-close" aria-label="关闭">&times;</button>
         <div class="modal-body" id="modal-body"></div>
       </div>
@@ -185,48 +185,99 @@ const ogImage = new URL(optimizedHero.src, siteUrl).toString();
   reveals.forEach((el) => observer.observe(el));
 
   // Global modal
+  const modal = document.getElementById('global-modal') as HTMLElement | null;
+  const modalBody = document.getElementById('modal-body') as HTMLElement | null;
+  const modalClose = modal?.querySelector('.modal-close') as HTMLElement | null;
+  let lastTrigger: HTMLElement | null = null;
+
+  function getFocusableElements(container: HTMLElement): HTMLElement[] {
+    return Array.from(
+      container.querySelectorAll<HTMLElement>(
+        "a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])"
+      )
+    ).filter((el) => el.offsetParent !== null);
+  }
+
+  function trapFocus(e: KeyboardEvent) {
+    if (!modal || e.key !== 'Tab') return;
+    const focusable = getFocusableElements(modal);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  function openModal(trigger: HTMLElement) {
+    if (!modal || !modalBody) return;
+    lastTrigger = trigger;
+    const content = trigger.getAttribute('data-modal');
+    if (content === 'qq') {
+      modalBody.innerHTML = `<h2>💬 讨论与社区</h2><p style="font-size:12px;color:var(--c-text-muted)">Discussion and Community</p><p style="margin:8px 0">我们欢迎所有对 MaiBot 感兴趣的朋友加入！</p><p style="font-size:12px;color:var(--c-text-muted);margin-bottom:16px">We welcome everyone interested in MaiBot to join us.</p><table><tr><th>技术交流<br><small style="font-weight:400">Technical</small></th><td><b>麦麦脑电图</b>: 571780722<br><small style="color:var(--c-text-muted)">MaiBrain EEG</small></td><td>技术交流 / 答疑<br><small style="color:var(--c-text-muted)">Technical discussion / Q&A</small></td></tr><tr><th>技术交流<br><small style="font-weight:400">Technical</small></th><td><b>麦麦大脑磁共振</b>: 766798517<br><small style="color:var(--c-text-muted)">MaiBrain MRI</small></td><td>技术交流 / 答疑<br><small style="color:var(--c-text-muted)">Technical discussion / Q&A</small></td></tr><tr><th>技术交流<br><small style="font-weight:400">Technical</small></th><td><a href="https://qm.qq.com/q/wGePTl1UyY" target="_blank" rel="noopener noreferrer">麦麦要当 VTB</a><br><small style="color:var(--c-text-muted)">Mai Wants to Be a VTuber</small></td><td>技术交流 / 答疑<br><small style="color:var(--c-text-muted)">Technical discussion / Q&A</small></td></tr><tr><th>闲聊吹水<br><small style="font-weight:400">Casual Chat</small></th><td><a href="https://qm.qq.com/q/JxvHZnxyec" target="_blank" rel="noopener noreferrer">麦麦之闲聊群</a><br><small style="color:var(--c-text-muted)">Mai Casual Chat Group</small></td><td>仅限闲聊，不答疑<br><small style="color:var(--c-text-muted)">Casual chat only, no support</small></td></tr><tr><th>插件开发<br><small style="font-weight:400">Plugin Dev</small></th><td><b>插件开发群</b>: 1036092828<br><small style="color:var(--c-text-muted)">Plugin Dev Group</small></td><td>进阶开发与测试<br><small style="color:var(--c-text-muted)">Advanced development and testing</small></td></tr></table>`;
+    } else if (content === 'versions') {
+      modalBody.innerHTML =
+        '<h2>📦 选择安装方式</h2>' +
+        '<div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">' +
+        '<a href="https://github.com/Mai-with-u/MaiBot/releases/latest" target="_blank" rel="noopener noreferrer" style="display:block;padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s">' +
+        '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">📋 源码安装</div>' +
+        '<div style="font-size:13px;color:var(--c-text-muted)">适合人群：适合喜欢用源码部署的人</div>' +
+        '</a>' +
+        '<div style="padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px">' +
+        '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">🐳 Docker 安装</div>' +
+        '<div style="font-size:13px;color:var(--c-text-muted);margin-bottom:12px">适合人群：适合喜欢用 Docker 的人</div>' +
+        '<div style="background:rgba(var(--color-text-muted),0.06);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.7">' +
+        '<p style="font-weight:700;margin-bottom:8px">🚀 5 分钟快速部署</p>' +
+        '<p style="font-weight:600;margin:8px 0 4px">1. 下载 MaiBot</p>' +
+        '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">git clone https://github.com/Mai-with-u/MaiBot.git\ncd MaiBot</pre>' +
+        '<p style="font-weight:600;margin:12px 0 4px">2. 一键启动！</p>' +
+        '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">docker compose up -d</pre>' +
+        '<p style="font-size:12px;color:var(--c-text-muted);margin-top:4px">第一次启动会自动生成配置文件，然后会停下来等你配置。</p>' +
+        '<p style="margin-top:12px;font-weight:600">已经下载？</p>' +
+        '<p style="font-size:13px">运行后浏览器打开 <code style="background:rgba(var(--color-primary),0.1);padding:2px 6px;border-radius:4px;font-size:12px">http://127.0.0.1:8001</code> 即可进入 WebUI 配置界面！</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    } else {
+      modalBody.innerHTML = '<p style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</p>';
+    }
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.addEventListener('keydown', handleKeyDown);
+    requestAnimationFrame(() => modalClose?.focus());
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.removeEventListener('keydown', handleKeyDown);
+    if (modalBody) modalBody.innerHTML = '';
+    lastTrigger?.focus();
+    lastTrigger = null;
+  }
+
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      closeModal();
+      return;
+    }
+    trapFocus(e);
+  }
+
   document.addEventListener('click', (e) => {
-    const trigger = (e.target as HTMLElement).closest('[data-modal]');
+    const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-modal]');
     if (trigger) {
       e.preventDefault();
-      const modal = document.getElementById('global-modal')!;
-      const body = document.getElementById('modal-body')!;
-      const content = trigger.getAttribute('data-modal');
-      if (content === 'qq') {
-        body.innerHTML = `<h2>💬 讨论与社区</h2><p style="font-size:12px;color:var(--c-text-muted)">Discussion and Community</p><p style="margin:8px 0">我们欢迎所有对 MaiBot 感兴趣的朋友加入！</p><p style="font-size:12px;color:var(--c-text-muted);margin-bottom:16px">We welcome everyone interested in MaiBot to join us.</p><table><tr><th>技术交流<br><small style="font-weight:400">Technical</small></th><td><b>麦麦脑电图</b>: 571780722<br><small style="color:var(--c-text-muted)">MaiBrain EEG</small></td><td>技术交流 / 答疑<br><small style="color:var(--c-text-muted)">Technical discussion / Q&A</small></td></tr><tr><th>技术交流<br><small style="font-weight:400">Technical</small></th><td><b>麦麦大脑磁共振</b>: 766798517<br><small style="color:var(--c-text-muted)">MaiBrain MRI</small></td><td>技术交流 / 答疑<br><small style="color:var(--c-text-muted)">Technical discussion / Q&A</small></td></tr><tr><th>技术交流<br><small style="font-weight:400">Technical</small></th><td><a href="https://qm.qq.com/q/wGePTl1UyY" target="_blank" rel="noopener noreferrer">麦麦要当 VTB</a><br><small style="color:var(--c-text-muted)">Mai Wants to Be a VTuber</small></td><td>技术交流 / 答疑<br><small style="color:var(--c-text-muted)">Technical discussion / Q&A</small></td></tr><tr><th>闲聊吹水<br><small style="font-weight:400">Casual Chat</small></th><td><a href="https://qm.qq.com/q/JxvHZnxyec" target="_blank" rel="noopener noreferrer">麦麦之闲聊群</a><br><small style="color:var(--c-text-muted)">Mai Casual Chat Group</small></td><td>仅限闲聊，不答疑<br><small style="color:var(--c-text-muted)">Casual chat only, no support</small></td></tr><tr><th>插件开发<br><small style="font-weight:400">Plugin Dev</small></th><td><b>插件开发群</b>: 1036092828<br><small style="color:var(--c-text-muted)">Plugin Dev Group</small></td><td>进阶开发与测试<br><small style="color:var(--c-text-muted)">Advanced development and testing</small></td></tr></table>`;
-      } else if (content === 'versions') {
-        body.innerHTML =
-          '<h2>📦 选择安装方式</h2>' +
-          '<div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">' +
-          '<a href="https://github.com/Mai-with-u/MaiBot/releases/latest" target="_blank" rel="noopener noreferrer" style="display:block;padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s">' +
-          '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">📋 源码安装</div>' +
-          '<div style="font-size:13px;color:var(--c-text-muted)">适合人群：适合喜欢用源码部署的人</div>' +
-          '</a>' +
-          '<div style="padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px">' +
-          '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">🐳 Docker 安装</div>' +
-          '<div style="font-size:13px;color:var(--c-text-muted);margin-bottom:12px">适合人群：适合喜欢用 Docker 的人</div>' +
-          '<div style="background:rgba(var(--color-text-muted),0.06);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.7">' +
-          '<p style="font-weight:700;margin-bottom:8px">🚀 5 分钟快速部署</p>' +
-          '<p style="font-weight:600;margin:8px 0 4px">1. 下载 MaiBot</p>' +
-          '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">git clone https://github.com/Mai-with-u/MaiBot.git\ncd MaiBot</pre>' +
-          '<p style="font-weight:600;margin:12px 0 4px">2. 一键启动！</p>' +
-          '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">docker compose up -d</pre>' +
-          '<p style="font-size:12px;color:var(--c-text-muted);margin-top:4px">第一次启动会自动生成配置文件，然后会停下来等你配置。</p>' +
-          '<p style="margin-top:12px;font-weight:600">已经下载？</p>' +
-          '<p style="font-size:13px">运行后浏览器打开 <code style="background:rgba(var(--color-primary),0.1);padding:2px 6px;border-radius:4px;font-size:12px">http://127.0.0.1:8001</code> 即可进入 WebUI 配置界面！</p>' +
-          '</div>' +
-          '</div>' +
-          '</div>';
-      } else {
-        body.innerHTML = '<p style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</p>';
-      }
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden', 'false');
+      openModal(trigger);
+      return;
     }
     if ((e.target as HTMLElement).closest('.modal-close') || (e.target as HTMLElement).matches('.modal-overlay')) {
-      const modal = document.getElementById('global-modal')!;
-      modal.classList.remove('is-open');
-      modal.setAttribute('aria-hidden', 'true');
+      closeModal();
     }
   });
 </script>

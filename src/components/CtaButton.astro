@@ -37,6 +37,8 @@ const corner = variant === 'green' ? 8 : 10;
       <a
         href={href}
         data-modal={modal || undefined}
+        aria-haspopup={modal ? 'dialog' : undefined}
+        aria-controls={modal ? 'global-modal' : undefined}
         class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]}
         style={delay !== undefined ? `animation-delay: ${delay}s` : ''}
       >
