@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
+import heroImage from '../assets/maimai-v2.png';
 
 const releaseUrl = 'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest';
 const oneKeyUrl = 'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest';
@@ -111,7 +113,7 @@ try {
             stroke-width="48"
             stroke-linejoin="round"></polygon>
         </svg>
-        <img src="/maimai-v2.png" alt="麦麦" class="character-img" />
+        <Image src={heroImage} alt="麦麦" class="character-img" loading="eager" fetchpriority="high" decoding="async" />
         <div class="chat-card">
           <p class="chat-card-text">当前版本：{version}</p>
           <div class="chat-card-pill">

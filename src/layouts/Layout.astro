@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import heroImage from '../assets/maimai-v2.png';
 
 interface Props {
   title?: string;
@@ -8,7 +10,8 @@ interface Props {
 const { title = 'MaiBot 官方网站' } = Astro.props;
 const description = 'MaiBot - 一个正在努力成为人类的BOT';
 const siteUrl = 'https://mai-mai.org';
-const ogImage = `${siteUrl}/maimai-v2.png`;
+const optimizedHero = await getImage({ src: heroImage, format: 'webp' });
+const ogImage = new URL(optimizedHero.src, siteUrl).toString();
 ---
 
 <!doctype html>

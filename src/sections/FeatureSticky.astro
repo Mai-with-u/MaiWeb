@@ -1,5 +1,6 @@
 ---
-
+import { Image } from 'astro:assets';
+import maiAvatar from '../assets/mai-avatar.jpg';
 ---
 
 <section class="sticky-section">
@@ -67,11 +68,18 @@
               <div class="chat-bubble-text">麦麦去把可乐电脑关机了</div>
             </div>
             <div class="chat-bubble mai">
-              <img src="/mai-avatar.jpg" alt="" class="mai-avatar" />
+              <Image src={maiAvatar} alt="" class="mai-avatar" loading="lazy" decoding="async" />
               <div class="chat-bubble-text mai-text">别搞</div>
             </div>
             <div class="chat-bubble mai">
-              <img src="/mai-avatar.jpg" alt="" class="mai-avatar" style="margin-top: 24px;" />
+              <Image
+                src={maiAvatar}
+                alt=""
+                class="mai-avatar"
+                style="margin-top: 24px;"
+                loading="lazy"
+                decoding="async"
+              />
               <div class="chat-bubble-text mai-text long">你让我关我就关？自己写个crontab去</div>
             </div>
           </div>
