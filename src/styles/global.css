@@ -346,6 +346,30 @@ h4 {
   }
 }
 
+/* === Focus Visible (keyboard navigation) === */
+:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role='button']:focus-visible {
+  box-shadow: 0 0 0 4px rgba(var(--color-primary), 0.35);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 0;
+  border-color: var(--c-primary);
+}
+
 /* === Reduced Motion === */
 @media (prefers-reduced-motion: reduce) {
   *,
