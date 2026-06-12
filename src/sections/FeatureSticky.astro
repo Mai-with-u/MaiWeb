@@ -76,28 +76,97 @@
         <!-- Config mockup -->
         <div class="screen-scene screen-config" data-scene="config">
           <div class="config-mockup">
-            <div class="config-backdrop"></div>
-            <div class="config-panel">
-              <div class="panel-header">
+            <div class="config-bg"></div>
+
+            <!-- Right: WebUI panel -->
+            <div class="config-webui" data-part="webui">
+              <!-- Back arrow -->
+              <div class="webui-back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z" fill="#D6C398"/>
+                </svg>
+              </div>
+
+              <!-- Vertical divider: separates left col (title/tag) from right col (fields) -->
+              <div class="webui-vline" style="left:191px; top:1px; height:396px;"></div>
+
+              <!-- Horizontal divider under title (left col only) -->
+              <div class="webui-hline" style="top:89px; left:1px; width:190px;"></div>
+
+              <!-- Horizontal divider under title (right col) -->
+              <div class="webui-hline" style="top:54px; left:191px; width:243px;"></div>
+
+              <!-- Title + version (left col) -->
+              <div class="webui-head">
+                <div class="webui-title">MaiBot WebUI</div>
+                <div class="webui-version">v X.X.X</div>
+              </div>
+
+              <!-- Orange tag (left col, below divider) -->
+              <div class="webui-tag-orange"></div>
+
+              <!-- Right col: form field 41px tall -->
+              <div class="webui-field" style="left:220px; top:89px; width:131px; height:41px; border-radius:4px;"></div>
+
+              <!-- Right col: form field 14px -->
+              <div class="webui-field" style="left:220px; top:139px; width:193px; height:14px; border-radius:4px;"></div>
+
+              <!-- Right col: indented form field -->
+              <div class="webui-field" style="left:241px; top:177px; width:193px; height:14px; border-radius:1px;"></div>
+
+              <!-- Right col: bordered input (31px tall) -->
+              <div class="webui-input-border" style="left:221px; top:168px; width:240px; height:31px;">
+                <div class="webui-input-scrollbar"></div>
+              </div>
+
+              <!-- Right col: small bordered input (20px tall) -->
+              <div class="webui-input-small" style="left:221px; top:214px; width:240px; height:20px;">
+                <div class="webui-input-small-scrollbar"></div>
+              </div>
+
+              <!-- Right col: inline tabs inside input area -->
+              <div class="webui-field-orange" style="left:227px; top:217px; width:35px; height:14px; border-radius:1px;"></div>
+              <div class="webui-vline" style="left:262px; top:217px; height:14px;"></div>
+              <div class="webui-field" style="left:273px; top:217px; width:35px; height:14px; border-radius:1px;"></div>
+              <div class="webui-vline" style="left:309px; top:217px; height:14px;"></div>
+              <div class="webui-field" style="left:317px; top:217px; width:35px; height:14px; border-radius:1px;"></div>
+              <div class="webui-vline" style="left:353px; top:217px; height:14px;"></div>
+              <div class="webui-field" style="left:361px; top:217px; width:35px; height:14px; border-radius:1px;"></div>
+              <div class="webui-vline" style="left:397px; top:217px; height:14px;"></div>
+              <div class="webui-field" style="left:403px; top:217px; width:29px; height:14px; border-radius:1px;"></div>
+
+              <!-- Right col: tall vertical divider for content area (4px thick) -->
+              <div class="webui-vline-thick" style="left:221px; top:244px; height:153px;"></div>
+
+              <!-- Content rows -->
+              <div class="webui-hline" style="top:245px; left:222px; width:212px;"></div>
+              <div class="webui-field-orange-alpha" style="left:235px; top:254px; width:28px; height:14px; border-radius:1px;"></div>
+              <div class="webui-hline" style="top:277px; left:222px; width:212px;"></div>
+              <div class="webui-field" style="left:235px; top:287px; width:57px; height:14px; border-radius:1px;"></div>
+              <div class="webui-vline" style="left:244px; top:320px; height:77px;"></div>
+              <div class="webui-hline" style="top:321px; left:245px; width:189px;"></div>
+              <div class="webui-field" style="left:259px; top:334px; width:39px; height:14px; border-radius:1px;"></div>
+              <div class="webui-vline" style="left:259px; top:358px; height:39px;"></div>
+              <div class="webui-hline" style="top:359px; left:259px; width:175px;"></div>
+            </div>
+
+            <!-- Left: Code editor panel -->
+            <div class="config-editor" data-part="editor">
+              <div class="editor-topbar">
                 <div class="window-dots">
                   <span class="dot red"></span>
                   <span class="dot yellow"></span>
                   <span class="dot green"></span>
                 </div>
-                <span class="panel-title">config.toml</span>
+                <span class="editor-tab">config.toml</span>
               </div>
-              <div class="panel-body">
-                <div class="code-line" style="width: 42%;"></div>
-                <div class="code-line" style="width: 55%;"></div>
-                <div class="code-line" style="width: 49%;"></div>
-                <div class="code-line" style="width: 78%;"></div>
-                <div class="code-line" style="width: 65%;"></div>
+              <div class="editor-body">
+                <div class="code-line" style="width: 167px;"></div>
+                <div class="code-line" style="width: 216px;"></div>
+                <div class="code-line" style="width: 192px;"></div>
+                <div class="code-line" style="width: 309px;"></div>
+                <div class="code-line" style="width: 256px;"></div>
               </div>
-            </div>
-            <div class="webui-card">
-              <div class="webui-tag"></div>
-              <div class="webui-label">MaiBot WebUI</div>
-              <div class="webui-version">v X.X.X</div>
             </div>
           </div>
         </div>
@@ -344,53 +413,174 @@
     height: 100%;
   }
 
-  .config-backdrop {
+  .config-bg {
     position: absolute;
     inset: 0;
     background: #80de41;
     border-radius: 32px;
   }
 
-  .config-panel {
+  /* Right: WebUI panel — top-left/bottom-left/bottom-right rounded, top-right square */
+  .config-webui {
+    position: absolute;
+    right: 0;
+    top: 83px;
+    width: 434px;
+    height: 397px;
+    background: #27464a;
+    border-radius: 32px 0 32px 0;
+    z-index: 2;
+    opacity: 0;
+    transform: translate(120px, 480px);
+  }
+
+  .config-webui > * {
+    position: absolute;
+  }
+
+  .webui-back-btn {
+    right: 206px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .webui-vline {
+    width: 2px;
+    background: #d6c398;
+    opacity: 1;
+  }
+
+  .webui-vline-thick {
+    width: 4px;
+    background: #d6c398;
+    opacity: 1;
+  }
+
+  .webui-hline {
+    height: 2px;
+    background: #d6c398;
+    opacity: 1;
+  }
+
+  .webui-head {
+    left: 24px;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .webui-title {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #d16837;
+  }
+
+  .webui-version {
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #d16837;
+  }
+
+  .webui-tag-orange {
+    left: 22px;
+    top: 109px;
+    width: 146px;
+    height: 38px;
+    background: #d16837;
+    border-radius: 8px;
+  }
+
+  .webui-field {
+    background: rgba(214, 195, 152, 0.19);
+  }
+
+  .webui-field-orange {
+    background: #d16837;
+  }
+
+  .webui-field-orange-alpha {
+    background: rgba(209, 104, 55, 0.57);
+  }
+
+  /* Bordered input */
+  .webui-input-border {
+    border: 2px solid #d6c398;
+    border-radius: 4px;
+  }
+
+  .webui-input-scrollbar {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    width: 18px;
+    border-left: 2px solid #d6c398;
+  }
+
+  .webui-input-small {
+    border: 2px solid #d6c398;
+    border-radius: 4px;
+  }
+
+  .webui-input-small-scrollbar {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    width: 14px;
+    border-left: 2px solid #d6c398;
+  }
+
+  /* Left: Code editor — bottom-left 32px, top-right/bottom-right 8px, top-left square */
+  .config-editor {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 55%;
-    height: 76%;
+    width: 396px;
+    height: 259px;
     background: #282c34;
-    border-radius: 0 0 0 32px;
-    border-top-right-radius: 8px;
-    padding: 18px 20px;
+    border-radius: 0 8px 8px 32px;
+    padding: 20px 22px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
+    z-index: 1;
+    opacity: 0;
+    transform: translate(-120px, 480px);
   }
 
-  .panel-header {
+  .editor-topbar {
     display: flex;
     align-items: center;
     gap: 12px;
   }
 
-  .window-dots { display: flex; gap: 6px; }
+  .window-dots { display: flex; gap: 6px; flex-shrink: 0; }
   .dot { width: 12px; height: 12px; border-radius: 50%; display: block; }
   .dot.red    { background: #ff5f57; }
   .dot.yellow { background: #ffbd2e; }
   .dot.green  { background: #28c840; }
 
-  .panel-title {
+  .editor-tab {
     font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #fff;
-    margin-left: 32px;
+    margin-left: 24px;
   }
 
-  .panel-body {
+  .editor-body {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 4px;
   }
 
   .code-line {
@@ -407,36 +597,6 @@
   @keyframes codePulse {
     0%, 100% { opacity: 0.6; }
     50%      { opacity: 1; }
-  }
-
-  .webui-card {
-    position: absolute;
-    right: 8%;
-    top: 42%;
-    width: 38%;
-    background: #27464a;
-    border-radius: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 28px;
-    gap: 12px;
-  }
-
-  .webui-tag { width: 40%; height: 28px; background: #d16837; border-radius: 6px; }
-
-  .webui-label {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: #fff;
-  }
-
-  .webui-version {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.6);
   }
 
   /* ===== Plugin Mockup ===== */
@@ -614,6 +774,27 @@
       // Animate chat bubbles when switching back to chat
       if (target === 'chat' && initialAnimationPlayed) {
         playChatAnimation();
+      }
+
+      // Staggered animation for config: editor first, webui second
+      if (target === 'config') {
+        const editor = document.querySelector<HTMLElement>('.config-editor');
+        const webui = document.querySelector<HTMLElement>('.config-webui');
+        if (editor && webui) {
+          editor.style.transition = 'none';
+          webui.style.transition = 'none';
+          editor.style.opacity = '0';
+          editor.style.transform = 'translate(-120px, 480px)';
+          webui.style.opacity = '0';
+          webui.style.transform = 'translate(120px, 480px)';
+          editor.offsetHeight; // force reflow
+          editor.style.transition = 'opacity 0.55s ease-out, transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1)';
+          webui.style.transition = 'opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)';
+          editor.style.opacity = '1';
+          editor.style.transform = 'translate(0, 0)';
+          webui.style.opacity = '1';
+          webui.style.transform = 'translate(0, 0)';
+        }
       }
     }
 
