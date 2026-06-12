@@ -16,12 +16,12 @@ import CtaButton from '../components/CtaButton.astro';
       </div>
 
       <p class="hero-subtitle animate-fade-in animate-delay-2">
-        嘿! 这里是
+        泥壕! 我是
         <span class="subtitle-highlight">麦麦</span>
         ，一个正在努力成为人类的BOT。
       </p>
 
-      <div class="hero-buttons animate-fade-in animate-delay-3">
+      <div class="hero-buttons">
         <CtaButton
           variant="primary"
           size="large"
@@ -29,6 +29,7 @@ import CtaButton from '../components/CtaButton.astro';
           icon="download"
           label="立即下载"
           sublabel="Windows一键包"
+          delay={0.3}
         />
         <div class="hero-buttons-row">
           <CtaButton
@@ -36,24 +37,28 @@ import CtaButton from '../components/CtaButton.astro';
             size="small"
             href="#versions"
             icon="download"
+            delay={0.4}
             label="其他版本"
           />
           <CtaButton
             variant="green"
             size="small"
             href="#docs"
+            delay={0.5}
             icon="docs"
             label="使用文档"
           />
           <CtaButton
             variant="green"
             size="small"
+            delay={0.6}
             href="#qq"
             icon="qq"
             label="QQ群"
           />
           <CtaButton
             variant="green"
+            delay={0.7}
             size="small"
             href="#github"
             icon="github"
@@ -80,12 +85,12 @@ import CtaButton from '../components/CtaButton.astro';
         </svg>
         <img src="/maimai-v2.png" alt="麦麦" class="character-img" />
         <div class="chat-card">
-          <p class="chat-card-text">要来点有趣的事吗 (?)</p>
+          <p class="chat-card-text">当前版本：1.0.0.rc6</p>
           <div class="chat-card-pill">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
               <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
             </svg>
-            <span>整整整！</span>
+            <span>看看更新了什么</span>
           </div>
         </div>
       </div>
@@ -124,7 +129,7 @@ import CtaButton from '../components/CtaButton.astro';
 
   .hero-title {
     font-family: var(--font-display);
-    font-size: 60px;
+    font-size: 72px;
     font-weight: 700;
     line-height: normal;
     color: #000;

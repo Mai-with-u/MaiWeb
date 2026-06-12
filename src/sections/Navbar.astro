@@ -1,8 +1,9 @@
 ---
 ---
 
-<div class="navbar-wrap">
-  <div class="navbar-glass">
+<div class="navbar-blur">
+  <div class="navbar-wrap">
+    <div class="navbar-glass">
     <div class="navbar-accent"></div>
     <div class="navbar-logo">
       <div class="logo-icon">
@@ -51,17 +52,22 @@
     </div>
   </div>
 </div>
+</div>
 
 <style>
-  /* === Outer: backdrop-filter (glass) + drop-shadow ===
-      blur overflows slightly beyond cut corner — accepted trade-off */
-  .navbar-wrap {
+  /* === Layer 0: backdrop blur only === */
+  .navbar-blur {
     position: fixed;
     top: 16px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
     backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  /* === Layer 1: drop-shadow only === */
+  .navbar-wrap {
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.12));
     animation: fadeInDown 0.48s ease-out;
   }
@@ -69,11 +75,11 @@
   @keyframes fadeInDown {
     from {
       opacity: 0;
-      transform: translateX(-50%) translateY(-12px);
+      transform: translateY(-12px);
     }
     to {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      transform: none;
     }
   }
 
