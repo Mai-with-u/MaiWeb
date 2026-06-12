@@ -3,28 +3,7 @@ import { Image } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
 import heroImage from '../assets/maimai-v2.png';
 
-const releaseUrl = 'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest';
-const oneKeyUrl = 'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest';
-
-let version = '获取中……';
-let downloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
-
-try {
-  const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'MaiWeb/1.0' };
-  const [verRes, dlRes] = await Promise.all([fetch(releaseUrl, { headers }), fetch(oneKeyUrl, { headers })]);
-  if (verRes.ok) {
-    const data = await verRes.json();
-    version = (data.tag_name || data.name || '').replace(/^v/, '') || '获取中……';
-  }
-  if (dlRes.ok) {
-    const data = await dlRes.json();
-    if (data.assets?.length > 0) {
-      downloadUrl = data.assets[0].browser_download_url;
-    }
-  }
-} catch {
-  // Ignore network errors and fall back to defaults
-}
+const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
 ---
 
 <section class="hero">
@@ -47,7 +26,8 @@ try {
         <CtaButton
           variant="primary"
           size="large"
-          href={downloadUrl}
+          id="hero-download"
+          href={fallbackDownloadUrl}
           icon="download"
           label="立即下载"
           sublabel="Windows一键包"
@@ -115,7 +95,7 @@ try {
         </svg>
         <Image src={heroImage} alt="麦麦" class="character-img" loading="eager" fetchpriority="high" decoding="async" />
         <div class="chat-card">
-          <p class="chat-card-text">当前版本：{version}</p>
+          <p class="chat-card-text">当前版本：<span id="hero-version">获取中……</span></p>
           <div class="chat-card-pill">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
               <path
@@ -129,6 +109,40 @@ try {
     </div>
   </div>
 </section>
+
+<script>
+  (async function () {
+    const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'MaiWeb/1.0' };
+
+    try {
+      const res = await fetch('https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest', { headers });
+      if (res.ok) {
+        const data = await res.json();
+        const version = (data.tag_name || data.name || '').replace(/^v/, '');
+        if (version) {
+          const el = document.getElementById('hero-version');
+          if (el) el.textContent = version;
+        }
+      }
+    } catch {
+      // Ignore network errors and keep fallback text
+    }
+
+    try {
+      const res = await fetch('https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest', { headers });
+      if (res.ok) {
+        const data = await res.json();
+        const assetUrl = data.assets?.[0]?.browser_download_url;
+        if (assetUrl) {
+          const link = document.getElementById('hero-download') as HTMLAnchorElement | null;
+          if (link) link.href = assetUrl;
+        }
+      }
+    } catch {
+      // Ignore network errors and keep fallback link
+    }
+  })();
+</script>
 
 <style>
   .hero {
