@@ -113,7 +113,14 @@ h1, h2, h3, h4 {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 16px;
+  min-width: 0;
+}
+
+@media (min-width: 480px) {
+  .container {
+    padding: 0 24px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -126,12 +133,25 @@ h1, h2, h3, h4 {
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 16px;
+  min-width: 0;
+}
+
+@media (min-width: 480px) {
+  .container-wide {
+    padding: 0 24px;
+  }
 }
 
 @media (min-width: 768px) {
   .container-wide {
     padding: 0 48px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
   }
 }
 

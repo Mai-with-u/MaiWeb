@@ -8,10 +8,7 @@ import CtaButton from '../components/CtaButton.astro';
       <div class="hero-title-wrapper animate-fade-in">
         <h1 class="hero-title">
           <span class="title-line">我在<span class="title-underline-text">试着学习</span></span>
-          <span class="title-line title-line-second">
-            像人类一样
-            <span class="title-highlight">陪伴你</span>
-          </span>
+          <span class="title-line title-line-second">像人类一样<span class="title-highlight">陪伴你</span></span>
         </h1>
       </div>
 
@@ -113,12 +110,24 @@ import CtaButton from '../components/CtaButton.astro';
     flex-direction: column;
     align-items: center;
     gap: 48px;
-    padding: 0;
+    padding: 0 16px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 480px) {
+    .hero-inner {
+      padding: 0 24px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-inner {
+      padding: 0 48px;
+    }
   }
 
   .hero-content {
     text-align: left;
-    /* max-width: 540px; */
   }
 
   .hero-title-wrapper {
@@ -129,7 +138,7 @@ import CtaButton from '../components/CtaButton.astro';
 
   .hero-title {
     font-family: var(--font-display);
-    font-size: 72px;
+    font-size: clamp(28px, 4.5vw, 72px);
     font-weight: 700;
     line-height: normal;
     color: #000;
@@ -157,7 +166,7 @@ import CtaButton from '../components/CtaButton.astro';
 
   .hero-subtitle {
     font-family: 'Times New Roman', Times, serif;
-    font-size: 20px;
+    font-size: clamp(15px, 1.8vw, 20px);
     color: #000;
     line-height: 1.5;
     margin-bottom: 32px;
@@ -211,10 +220,11 @@ import CtaButton from '../components/CtaButton.astro';
 
   .star-bg {
     position: absolute;
-    width: 648px;
-    height: 648px;
-    max-width: 120%;
-    max-height: 120%;
+    left: 50%;
+    top: 50%;
+    width: min(90%, 648px);
+    height: auto;
+    transform: translate(-50%, -50%);
     z-index: 0;
     pointer-events: none;
   }
@@ -223,7 +233,7 @@ import CtaButton from '../components/CtaButton.astro';
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 407px;
+    max-width: min(90%, 407px);
     height: auto;
     animation: float 4s ease-in-out infinite;
     filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
@@ -273,57 +283,60 @@ import CtaButton from '../components/CtaButton.astro';
 
     .hero-inner {
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      gap: 48px;
+      gap: clamp(0rem, 3vw, 4rem);
+      padding: 0 clamp(1rem, 4vw, 5rem);
     }
 
     .hero-content {
       flex: 0 0 auto;
-      /* max-width: 540px; */
-      padding-left: 7.5rem;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-visual {
-      flex: 1;
-      max-width: 648px;
-      justify-content: flex-end;
+      flex: 0 0 auto;
+      max-width: clamp(400px, 50vw, 648px);
+      justify-content: center;
       align-items: center;
     }
 
     .character-wrapper {
-      max-width: 648px;
-      justify-content: flex-end;
+      max-width: 100%;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .star-bg {
+      width: clamp(300px, 48vw, 648px);
     }
 
     .character-img {
-      max-width: 407px;
-      margin-right: 7.5rem;
+      max-width: clamp(180px, 30vw, 407px);
+    }
+
+    .chat-card {
+      right: clamp(1rem, 8vw, 10rem);
+      bottom: clamp(4rem, 12vw, 12rem);
+    }
+  }
+
+  @media (max-width: 1279px) {
+    .hero-visual {
+      display: none;
     }
   }
 
   @media (max-width: 768px) {
-    .hero-title {
-      font-size: clamp(36px, 10vw, 60px);
+    .hero-buttons-row {
+      gap: 8px;
     }
 
-    .hero-subtitle {
-      font-size: clamp(15px, 4vw, 20px);
-    }
-
-    .star-bg {
-      width: 100%;
-      height: auto;
-    }
-
-    .character-img {
-      max-width: 280px;
-    }
-
-    .chat-card {
-      right: 30px;
-      bottom: 70px;
-      padding: 10px 12px;
+    .hero-buttons-row :global(.cta-link-small) {
+      min-width: 0;
+      padding: 8px 12px;
+      gap: 8px;
     }
   }
 </style>
