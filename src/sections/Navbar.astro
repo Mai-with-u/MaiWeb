@@ -1,82 +1,98 @@
 ---
+
 ---
 
 <div class="navbar-blur">
   <div class="navbar-wrap">
     <div class="navbar-glass">
-    <div class="navbar-accent"></div>
-    <a href="/" class="navbar-logo">
-      <div class="logo-icon">
-        <img src="/logo-icon.png" alt="" width="40" height="40" />
-      </div>
-      <div class="logo-text">
-        <span class="logo-title">麦麦Bot</span>
-        <span class="logo-subtitle">MaiBot MaiSaka</span>
-      </div>
-    </a>
+      <div class="navbar-accent"></div>
+      <a href="/" class="navbar-logo">
+        <div class="logo-icon">
+          <img src="/logo-icon.png" alt="" width="40" height="40" />
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">麦麦Bot</span>
+          <span class="logo-subtitle">MaiBot MaiSaka</span>
+        </div>
+      </a>
 
-    <div class="nav-divider"></div>
+      <div class="nav-divider"></div>
 
-    <div class="nav-menu">
-      <a href="https://github.com/Mai-with-u/MaiBot/blob/main/changelogs/changelog.md" class="nav-item">
-        更新日志
-        <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-          <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z" />
-        </svg>
-      </a>
-      <div class="nav-separator"></div>
-      <a href="https://docs.mai-mai.org/" class="nav-item">
-        使用文档
-        <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-          <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z" />
-        </svg>
-      </a>
-      <div class="nav-separator"></div>
-      <a href="#" data-modal="about" class="nav-item">
-        关于我们
-        <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-          <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z" />
-        </svg>
-      </a>
+      <div class="nav-menu">
+        <a href="https://github.com/Mai-with-u/MaiBot/blob/main/changelogs/changelog.md" class="nav-item">
+          更新日志
+          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
+          </svg>
+        </a>
+        <div class="nav-separator"></div>
+        <a href="https://docs.mai-mai.org/" class="nav-item">
+          使用文档
+          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
+          </svg>
+        </a>
+        <div class="nav-separator"></div>
+        <a href="#" data-modal="about" class="nav-item">
+          关于我们
+          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
+          </svg>
+        </a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" aria-label="切换深色模式">
+          <svg
+            class="icon-sun"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"
+            ></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"
+            ></line>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+          </svg>
+        </button>
+        <button class="lang-switch" aria-label="切换语言" data-modal="lang">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+            <path
+              d="M3.33333 10V11.3333C3.33333 12.0363 3.87725 12.6121 4.56716 12.663L4.66667 12.6667H6.66667V14H4.66667C3.19391 14 2 12.8061 2 11.3333V10H3.33333ZM12 6.66667L14.9333 14H13.4967L12.696 12H9.96933L9.17 14H7.734L10.6667 6.66667H12ZM11.3333 8.59013L10.502 10.6667H12.1633L11.3333 8.59013ZM5.33333 1.33333V2.66667H8V7.33333H5.33333V9.33333H4V7.33333H1.33333V2.66667H4V1.33333H5.33333ZM11.3333 2C12.8061 2 14 3.19391 14 4.66667V6H12.6667V4.66667C12.6667 3.93029 12.0697 3.33333 11.3333 3.33333H9.33333V2H11.3333ZM4 4H2.66667V6H4V4ZM6.66667 4H5.33333V6H6.66667V4Z"
+            ></path>
+          </svg>
+        </button>
+        <button class="nav-hamburger" aria-label="展开菜单" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <span class="nav-cta-wrap">
+          <a href="https://docs.mai-mai.org/manual/deployment/" class="nav-cta">部署</a>
+        </span>
+      </div>
     </div>
 
-    <div class="nav-actions">
-      <button class="theme-toggle" aria-label="切换深色模式">
-        <svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-        </svg>
-      </button>
-      <button class="lang-switch" aria-label="切换语言" data-modal="lang">
-        <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
-          <path d="M3.33333 10V11.3333C3.33333 12.0363 3.87725 12.6121 4.56716 12.663L4.66667 12.6667H6.66667V14H4.66667C3.19391 14 2 12.8061 2 11.3333V10H3.33333ZM12 6.66667L14.9333 14H13.4967L12.696 12H9.96933L9.17 14H7.734L10.6667 6.66667H12ZM11.3333 8.59013L10.502 10.6667H12.1633L11.3333 8.59013ZM5.33333 1.33333V2.66667H8V7.33333H5.33333V9.33333H4V7.33333H1.33333V2.66667H4V1.33333H5.33333ZM11.3333 2C12.8061 2 14 3.19391 14 4.66667V6H12.6667V4.66667C12.6667 3.93029 12.0697 3.33333 11.3333 3.33333H9.33333V2H11.3333ZM4 4H2.66667V6H4V4ZM6.66667 4H5.33333V6H6.66667V4Z" />
-        </svg>
-      </button>
-      <button class="nav-hamburger" aria-label="展开菜单" aria-expanded="false">
-        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
-      <span class="nav-cta-wrap">
-        <a href="https://docs.mai-mai.org/manual/deployment/" class="nav-cta">部署</a>
-      </span>
+    <div class="nav-menu-mobile">
+      <a href="https://github.com/Mai-with-u/MaiBot/blob/main/changelogs/changelog.md" class="nav-item-mobile"
+        >更新日志</a
+      >
+      <a href="https://docs.mai-mai.org/" class="nav-item-mobile">使用文档</a>
+      <a href="#" data-modal="about" class="nav-item-mobile">关于我们</a>
     </div>
   </div>
-
-  <div class="nav-menu-mobile">
-    <a href="https://github.com/Mai-with-u/MaiBot/blob/main/changelogs/changelog.md" class="nav-item-mobile">更新日志</a>
-    <a href="https://docs.mai-mai.org/" class="nav-item-mobile">使用文档</a>
-    <a href="#" data-modal="about" class="nav-item-mobile">关于我们</a>
-  </div>
-</div>
 </div>
 
 <style>
@@ -271,9 +287,15 @@
     background: rgba(233, 127, 15, 0.08);
   }
 
-  .theme-toggle .icon-moon { display: none; }
-  :global([data-theme='dark']) .theme-toggle .icon-sun { display: none; }
-  :global([data-theme='dark']) .theme-toggle .icon-moon { display: block; }
+  .theme-toggle .icon-moon {
+    display: none;
+  }
+  :global([data-theme='dark']) .theme-toggle .icon-sun {
+    display: none;
+  }
+  :global([data-theme='dark']) .theme-toggle .icon-moon {
+    display: block;
+  }
 
   /* === Dark mode navbar === */
   :global([data-theme='dark']) .navbar-glass {
