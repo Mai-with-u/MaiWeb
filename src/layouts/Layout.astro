@@ -159,29 +159,27 @@ const ogImage = `${siteUrl}/maimai-v2.png`;
 </html>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-            // Remove transform after transition so backdrop-filter on children works
-            entry.target.addEventListener(
-              'transitionend',
-              () => {
-                (entry.target as HTMLElement).style.transform = 'none';
-              },
-              { once: true }
-            );
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
-    );
-    reveals.forEach((el) => observer.observe(el));
-  });
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          // Remove transform after transition so backdrop-filter on children works
+          entry.target.addEventListener(
+            'transitionend',
+            () => {
+              (entry.target as HTMLElement).style.transform = 'none';
+            },
+            { once: true }
+          );
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+  );
+  reveals.forEach((el) => observer.observe(el));
 
   // Global modal
   document.addEventListener('click', (e) => {
