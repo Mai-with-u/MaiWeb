@@ -7,9 +7,10 @@ export interface Props {
   label: string;
   sublabel?: string;
   delay?: number;
+  modal?: string;
 }
 
-const { variant = 'primary', size = 'large', href = '#', icon = 'download', label, sublabel, delay } = Astro.props;
+const { variant = 'primary', size = 'large', href = '#', icon = 'download', label, sublabel, delay, modal } = Astro.props;
 
 const corner = variant === 'green' ? 8 : 10;
 ---
@@ -21,7 +22,7 @@ const corner = variant === 'green' ? 8 : 10;
     <!-- Layer 2: cut corner clip -->
     <span class:list={['cta-clip', `cta-clip-${variant}`]} style={`clip-path: polygon(0 0, 100% 0, 100% calc(100% - ${corner}px), calc(100% - ${corner}px) 100%, 0 100%)`}>
       <!-- Layer 3: glass background + border + content -->
-      <a href={href} class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]} style={delay !== undefined ? `animation-delay: ${delay}s` : ''}>
+      <a href={href} data-modal={modal || undefined} class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]} style={delay !== undefined ? `animation-delay: ${delay}s` : ''}>
         <span class="cta-icon">
           {icon === 'download' && (
             <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">

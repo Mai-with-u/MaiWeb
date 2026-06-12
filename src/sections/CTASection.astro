@@ -1,5 +1,15 @@
 ---
 import CtaButton from '../components/CtaButton.astro';
+
+const oneKeyUrl = 'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest';
+let downloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
+try {
+  const res = await fetch(oneKeyUrl, { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'MaiWeb/1.0' } });
+  if (res.ok) {
+    const data = await res.json();
+    if (data.assets?.length > 0) downloadUrl = data.assets[0].browser_download_url;
+  }
+} catch {}
 ---
 
 <section class="cta-section" id="cta">
@@ -11,7 +21,7 @@ import CtaButton from '../components/CtaButton.astro';
       <CtaButton
         variant="primary"
         size="large"
-        href="#download"
+        href={downloadUrl}
         icon="paperplane"
         label="现在开始"
       />

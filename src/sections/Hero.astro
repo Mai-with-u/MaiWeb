@@ -2,14 +2,26 @@
 import CtaButton from '../components/CtaButton.astro';
 
 const releaseUrl = 'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest';
+const oneKeyUrl = 'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest';
+
 let version = '获取中……';
+let downloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
+
 try {
-  const res = await fetch(releaseUrl, {
-    headers: { Accept: 'application/vnd.github+json' },
-  });
-  if (res.ok) {
-    const data = await res.json();
+  const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'MaiWeb/1.0' };
+  const [verRes, dlRes] = await Promise.all([
+    fetch(releaseUrl, { headers }),
+    fetch(oneKeyUrl, { headers }),
+  ]);
+  if (verRes.ok) {
+    const data = await verRes.json();
     version = (data.tag_name || data.name || '').replace(/^v/, '') || '获取中……';
+  }
+  if (dlRes.ok) {
+    const data = await dlRes.json();
+    if (data.assets?.length > 0) {
+      downloadUrl = data.assets[0].browser_download_url;
+    }
   }
 } catch {}
 ---
@@ -34,7 +46,7 @@ try {
         <CtaButton
           variant="primary"
           size="large"
-          href="#download"
+          href={downloadUrl}
           icon="download"
           label="立即下载"
           sublabel="Windows一键包"
@@ -44,10 +56,11 @@ try {
           <CtaButton
             variant="green"
             size="small"
-            href="#versions"
+            href="#"
             icon="download"
             delay={0.4}
             label="其他版本"
+            modal="versions"
           />
           <CtaButton
             variant="green"
@@ -61,15 +74,16 @@ try {
             variant="green"
             size="small"
             delay={0.6}
-            href="#qq"
+            href="#"
             icon="qq"
             label="QQ群"
+            modal="qq"
           />
           <CtaButton
             variant="green"
             delay={0.7}
             size="small"
-            href="#github"
+            href="https://github.com/Mai-with-u/MaiBot"
             icon="github"
             label="Github"
           />
