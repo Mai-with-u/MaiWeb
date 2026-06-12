@@ -132,7 +132,11 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
       const res = await fetch('https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest', { headers });
       if (res.ok) {
         const data = await res.json();
-        const assetUrl = data.assets?.[0]?.browser_download_url;
+        const asset = data.assets?.find(
+          (a: { name: string; browser_download_url?: string }) =>
+            a.name.endsWith('.exe') && !a.name.endsWith('.blockmap')
+        );
+        const assetUrl = asset?.browser_download_url;
         if (assetUrl) {
           const link = document.getElementById('hero-download') as HTMLAnchorElement | null;
           if (link) link.href = assetUrl;
