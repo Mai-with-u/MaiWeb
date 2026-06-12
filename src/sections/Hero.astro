@@ -91,7 +91,7 @@ try {
       </div>
 
       <p class="hero-license animate-fade-in animate-delay-4">
-        MaiSaka 以 GPL v3 协议开源；使用即表示您同意并知悉「用户协议」的相关内容。
+        MaiSaka 以 <a href="https://github.com/Mai-with-u/MaiBot/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="license-link">GPL-3.0</a> 协议开源；使用即表示您同意并知悉<a href="https://github.com/Mai-with-u/MaiBot/blob/main/EULA.md" target="_blank" rel="noopener noreferrer" class="license-link">「用户协议」</a>和<a href="https://github.com/Mai-with-u/MaiBot/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer" class="license-link">「隐私协议」</a>的相关内容。AI 生成内容请仔细甄别。
       </p>
     </div>
 
@@ -226,6 +226,16 @@ try {
     letter-spacing: 0.36px;
     line-height: 1.5;
     max-width: 500px;
+  }
+
+  .hero-license .license-link {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .hero-license .license-link:hover {
+    color: var(--c-primary-hover);
   }
 
   .hero-visual {

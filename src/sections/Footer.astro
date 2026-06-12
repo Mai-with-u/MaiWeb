@@ -3,8 +3,8 @@
 
 <footer class="footer">
   <div class="container footer-inner">
-    <p class="footer-copyright">MaiSaka 以 GPL v3 协议开源；使用即表示您同意并知悉「用户协议」的相关内容。</p>
-    <p class="footer-credit">LittleSadSheep 2026/06/11</p>
+    <p class="footer-copyright">MaiSaka 以 <a href="https://github.com/Mai-with-u/MaiBot/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="footer-link">GPL-3.0</a> 协议开源；使用即表示您同意并知悉<a href="https://github.com/Mai-with-u/MaiBot/blob/main/EULA.md" target="_blank" rel="noopener noreferrer" class="footer-link">「用户协议」</a>和<a href="https://github.com/Mai-with-u/MaiBot/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer" class="footer-link">「隐私协议」</a>的相关内容。<br> AI 生成内容请仔细甄别。</p>
+    <p class="footer-credit"> </p>
   </div>
 </footer>
 
@@ -30,6 +30,16 @@
     letter-spacing: 0.36px;
     line-height: 1.5;
     max-width: 640px;
+  }
+
+  .footer-link {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .footer-link:hover {
+    color: var(--c-primary-hover);
   }
 
   .footer-credit {
