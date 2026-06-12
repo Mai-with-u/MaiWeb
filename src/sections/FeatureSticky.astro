@@ -949,22 +949,25 @@
         }
       }
 
-      // Scroll-up animation for plugins: content scrolls up inside panel mask, then cursor clicks install
+      // Plugins panel slides in from top-right corner (like second screen entrance)
       if (target === 'plugins') {
+        const panel = document.querySelector<HTMLElement>('.plugin-panel');
         const scroll = document.querySelector<HTMLElement>('.plugin-scroll');
         const cursor = document.querySelector<HTMLElement>('.plugin-cursor');
-        if (scroll && cursor) {
-          scroll.style.transition = 'none';
+        if (panel && scroll && cursor) {
+          panel.style.transition = 'none';
           cursor.style.transition = 'none';
-          scroll.style.opacity = '0';
-          scroll.style.transform = 'translateY(260px)';
+          scroll.style.opacity = '1';
+          scroll.style.transform = 'translate(0, 0)';
+          panel.style.opacity = '0';
+          panel.style.transform = 'translate(120px, -480px)';
           cursor.style.opacity = '0';
           cursor.style.transform = 'translate(40px, -30px)';
-          scroll.offsetHeight; // force reflow
-          scroll.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
+          panel.offsetHeight; // force reflow
+          panel.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
           cursor.style.transition = 'opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
-          scroll.style.opacity = '1';
-          scroll.style.transform = 'translateY(0)';
+          panel.style.opacity = '1';
+          panel.style.transform = 'translate(0, 0)';
           cursor.style.opacity = '1';
           cursor.style.transform = 'translate(0, 0)';
         }
