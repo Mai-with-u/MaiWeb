@@ -44,7 +44,7 @@ const { title = '麦麦Bot MaiBot MaiSaka' } = Astro.props;
             entry.target.classList.add('revealed');
             // Remove transform after transition so backdrop-filter on children works
             entry.target.addEventListener('transitionend', () => {
-              entry.target.style.transform = 'none';
+              (entry.target as HTMLElement).style.transform = 'none';
             }, { once: true });
             observer.unobserve(entry.target);
           }
@@ -66,12 +66,15 @@ const { title = '麦麦Bot MaiBot MaiSaka' } = Astro.props;
     background-image: url('/tile-light.svg');
     background-repeat: repeat;
     background-size: 48px 48px;
-    background-position: -24px -24px;
+    background-position: 0 0;
   }
 
   :global([data-theme='dark']) .bg-dots {
     background-color: #121212;
     background-image: url('/tile-dark.svg');
+    background-repeat: repeat;
+    background-size: 48px 48px;
+    background-position: 0 0;
   }
 
   .page-wrapper {
