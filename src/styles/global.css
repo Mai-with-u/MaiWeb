@@ -38,6 +38,27 @@
   --c-bg: #ffffff;
 }
 
+/* === Dark Mode === */
+[data-theme='dark'] {
+  --color-primary: 245, 148, 25;
+  --color-green: 112, 191, 34;
+  --color-dark: 180, 185, 210;
+  --color-text: 249, 250, 252;
+  --color-text-muted: 65, 70, 77;
+  --color-bg: 18, 18, 18;
+  --color-border: 35, 38, 42;
+  --color-shadow: 0, 0, 0;
+
+  --c-primary: #f59419;
+  --c-primary-hover: #e08410;
+  --c-green: #70bf22;
+  --c-green-hover: #60a81a;
+  --c-dark: #b4b9d2;
+  --c-text: #f9fafc;
+  --c-text-muted: #41464d;
+  --c-bg: #121212;
+}
+
 /* === Reset & Base === */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -49,14 +70,29 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+body,
+a,
+button,
+h1, h2, h3, h4,
+p,
+span,
+div,
+nav,
+section,
+footer,
+header {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, fill 0.35s ease, stroke 0.35s ease;
 }
 
 body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: rgb(var(--color-text));
+  background: rgb(var(--color-bg));
   overflow-x: hidden;
 }
 

@@ -20,6 +20,9 @@ const { title = '麦麦Bot MaiBot MaiSaka' } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css" />
+    <script is:inline>
+      (function(){var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark')}})();
+    </script>
   </head>
   <body>
     <!-- Fixed Background Dots -->
@@ -59,11 +62,16 @@ const { title = '麦麦Bot MaiBot MaiSaka' } = Astro.props;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background-color: rgba(var(--color-bg), 1);
+    background-color: rgb(var(--color-bg));
     background-image: url('/tile-light.svg');
     background-repeat: repeat;
     background-size: 48px 48px;
     background-position: -24px -24px;
+  }
+
+  :global([data-theme='dark']) .bg-dots {
+    background-color: #121212;
+    background-image: url('/tile-dark.svg');
   }
 
   .page-wrapper {

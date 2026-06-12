@@ -75,7 +75,7 @@ import CtaButton from '../components/CtaButton.astro';
           <polygon
             points="324,24 398,240 624,240 438,376 510,600 324,470 138,600 210,376 24,240 250,240"
             fill="none"
-            stroke="#f0f0f0"
+            stroke="currentColor"
             stroke-width="48"
             stroke-linejoin="round"
           />
@@ -227,6 +227,11 @@ import CtaButton from '../components/CtaButton.astro';
     transform: translate(-50%, -50%);
     z-index: 0;
     pointer-events: none;
+    color: #f0f0f0;
+  }
+
+  :global([data-theme='dark']) .star-bg {
+    color: #2b2b2b;
   }
 
   .character-img {
@@ -338,5 +343,22 @@ import CtaButton from '../components/CtaButton.astro';
       padding: 8px 12px;
       gap: 8px;
     }
+  }
+
+  /* === Dark mode === */
+  :global([data-theme='dark']) .hero-title {
+    color: var(--c-text);
+  }
+
+  :global([data-theme='dark']) .hero-subtitle {
+    color: var(--c-text);
+  }
+
+  :global([data-theme='dark']) .chat-card {
+    background: rgba(19, 19, 19, 0.8);
+  }
+
+  :global([data-theme='dark']) .chat-card-text {
+    color: var(--c-text);
   }
 </style>
