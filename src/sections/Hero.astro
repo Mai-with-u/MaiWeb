@@ -1,5 +1,17 @@
 ---
 import CtaButton from '../components/CtaButton.astro';
+
+const releaseUrl = 'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest';
+let version = '获取中……';
+try {
+  const res = await fetch(releaseUrl, {
+    headers: { Accept: 'application/vnd.github+json' },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    version = (data.tag_name || data.name || '').replace(/^v/, '') || '获取中……';
+  }
+} catch {}
 ---
 
 <section class="hero">
@@ -82,7 +94,7 @@ import CtaButton from '../components/CtaButton.astro';
         </svg>
         <img src="/maimai-v2.png" alt="麦麦" class="character-img" />
         <div class="chat-card">
-          <p class="chat-card-text">当前版本：1.0.0.rc6</p>
+          <p class="chat-card-text">当前版本：{version}</p>
           <div class="chat-card-pill">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
               <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
