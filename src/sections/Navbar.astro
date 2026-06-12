@@ -5,7 +5,7 @@
   <div class="navbar-wrap">
     <div class="navbar-glass">
     <div class="navbar-accent"></div>
-    <div class="navbar-logo">
+    <a href="/" class="navbar-logo">
       <div class="logo-icon">
         <img src="/logo-icon.png" alt="" width="40" height="40" />
       </div>
@@ -13,7 +13,7 @@
         <span class="logo-title">麦麦Bot</span>
         <span class="logo-subtitle">MaiBot MaiSaka</span>
       </div>
-    </div>
+    </a>
 
     <div class="nav-divider"></div>
 
@@ -110,6 +110,8 @@
     align-items: center;
     gap: 8px;
     padding-left: 4px;
+    text-decoration: none;
+    color: inherit;
   }
 
   .logo-icon {
@@ -265,3 +267,15 @@
     }
   }
 </style>
+
+<script>
+  const logo = document.querySelector('.navbar-logo');
+  if (logo) {
+    logo.addEventListener('click', (e) => {
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+</script>
