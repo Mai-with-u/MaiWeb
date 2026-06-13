@@ -1,5 +1,6 @@
 ---
-
+import { Image } from 'astro:assets';
+import easterEgg from '../assets/easter-egg.png';
 ---
 
 <footer class="footer">
@@ -24,13 +25,62 @@
     </p>
     <p class="footer-credit"></p>
   </div>
+
+  <div class="easter-egg" role="button" aria-label="彩蛋" tabindex="0">
+    <Image src={easterEgg} alt="" width={120} height={120} />
+  </div>
+  <div class="easter-bubble">
+    <span class="easter-bubble-text">麦麦说得对</span>
+  </div>
 </footer>
+
+<script>
+  const egg = document.querySelector('.easter-egg') as HTMLElement | null;
+  const bubble = document.querySelector('.easter-bubble') as HTMLElement | null;
+  if (egg && bubble) {
+    let timerShow: ReturnType<typeof setTimeout> | null = null;
+    let timerHide: ReturnType<typeof setTimeout> | null = null;
+    let timerReset: ReturnType<typeof setTimeout> | null = null;
+
+    const clearTimers = () => {
+      if (timerShow) clearTimeout(timerShow);
+      if (timerHide) clearTimeout(timerHide);
+      if (timerReset) clearTimeout(timerReset);
+      timerShow = timerHide = timerReset = null;
+    };
+
+    const trigger = () => {
+      if (egg.classList.contains('is-rising')) return;
+      clearTimers();
+      egg.classList.add('is-rising');
+      // 彩蛋浮到顶点后气泡从左滑入
+      timerShow = setTimeout(() => bubble.classList.add('is-visible'), 500);
+      // 彩蛋开始下降前气泡滑出
+      timerHide = setTimeout(() => bubble.classList.remove('is-visible'), 3500);
+      // 动画结束复位
+      timerReset = setTimeout(() => {
+        egg.classList.remove('is-rising');
+        bubble.classList.remove('is-visible');
+      }, 4000);
+    };
+
+    egg.addEventListener('click', trigger);
+    egg.addEventListener('keydown', (e) => {
+      const ke = e as KeyboardEvent;
+      if (ke.key === 'Enter' || ke.key === ' ') {
+        e.preventDefault();
+        trigger();
+      }
+    });
+  }
+</script>
 
 <style>
   .footer {
     position: relative;
     padding: 40px 0 60px;
     text-align: center;
+    overflow: hidden;
   }
 
   .footer-inner {
@@ -69,5 +119,119 @@
 
   :global([data-theme='dark']) .footer-credit {
     color: var(--c-text);
+  }
+
+  .easter-egg {
+    position: absolute;
+    left: 15%;
+    bottom: -95px;
+    width: 120px;
+    height: 120px;
+    transform: translateX(-50%);
+    border-radius: 16px;
+    overflow: visible;
+    cursor: pointer;
+    z-index: 2;
+    transition: filter 0.2s ease;
+  }
+
+  .easter-egg:hover {
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.2));
+  }
+
+  .easter-egg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    border-radius: 16px;
+  }
+
+  .easter-egg.is-rising {
+    animation: easterRise 4s ease-in-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes easterRise {
+    0% {
+      transform: translateX(-50%) translateY(0);
+    }
+    12.5%,
+    87.5% {
+      transform: translateX(-50%) translateY(-95px);
+    }
+    100% {
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  .easter-bubble {
+    position: absolute;
+    left: 15%;
+    bottom: -64px;
+    transform: translateX(calc(-50% + 138px)) translateY(-95px);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .easter-bubble-text {
+    display: inline-block;
+    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 12px 18px;
+    border-radius: 20px;
+    border-bottom-left-radius: 4px;
+    background: #eeeef0;
+    color: #2b2b2b;
+    opacity: 0;
+    transform: translateX(-30px) scale(0.92);
+    transition:
+      opacity 0.24s ease-out,
+      transform 0.24s ease-out;
+  }
+
+  .easter-bubble.is-visible .easter-bubble-text {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  :global([data-theme='dark']) .easter-bubble-text {
+    background: #3a3a3c;
+    color: #f9fafc;
+  }
+
+  @media (max-width: 768px) {
+    .easter-egg {
+      width: 80px;
+      height: 80px;
+      bottom: -60px;
+    }
+
+    .easter-bubble {
+      transform: translateX(calc(-50% + 60px)) translateY(-60px);
+    }
+
+    .easter-bubble-text {
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      max-width: 160px;
+    }
+
+    @keyframes easterRise {
+      0% {
+        transform: translateX(-50%) translateY(0);
+      }
+      12.5%,
+      87.5% {
+        transform: translateX(-50%) translateY(-60px);
+      }
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+    }
   }
 </style>
