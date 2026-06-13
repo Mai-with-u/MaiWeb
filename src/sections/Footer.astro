@@ -26,7 +26,7 @@ import easterEgg from '../assets/easter-egg.png';
     <p class="footer-credit"></p>
   </div>
 
-  <div class="easter-egg" role="button" aria-label="彩蛋" tabindex="0">
+  <div class="easter-egg" role="button" aria-label="彩蛋" tabindex="-1">
     <Image src={easterEgg} alt="" width={120} height={120} />
   </div>
   <div class="easter-bubble">
@@ -65,13 +65,7 @@ import easterEgg from '../assets/easter-egg.png';
     };
 
     egg.addEventListener('click', trigger);
-    egg.addEventListener('keydown', (e) => {
-      const ke = e as KeyboardEvent;
-      if (ke.key === 'Enter' || ke.key === ' ') {
-        e.preventDefault();
-        trigger();
-      }
-    });
+    // Keep keydown for keyboard users who tab to the element via tabindex=-1 still allows programmatic focus
   }
 </script>
 
