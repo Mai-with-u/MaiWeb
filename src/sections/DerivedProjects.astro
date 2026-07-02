@@ -62,10 +62,9 @@ const actionCards = [
   {
     name: '交流社区',
     description: '找到志同道合的伙伴',
-    href: '#',
+    href: 'https://docs.mai-mai.org/community/#qq-%E4%BA%A4%E6%B5%81%E7%BE%A4',
     variant: 'outline',
     action: '加入我们',
-    modal: 'qq',
   },
 ];
 
@@ -289,11 +288,8 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
               <a
                 class={`action-card action-${card.variant}`}
                 href={card.href}
-                target={card.modal ? undefined : '_blank'}
-                rel={card.modal ? undefined : 'noopener noreferrer'}
-                data-modal={card.modal}
-                aria-haspopup={card.modal ? 'dialog' : undefined}
-                aria-controls={card.modal ? 'global-modal' : undefined}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <span class="action-copy">
                   <strong>{card.name}</strong>
