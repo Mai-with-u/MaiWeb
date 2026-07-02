@@ -1,0 +1,999 @@
+<!-- Global Modal -->
+<div class="modal-overlay" id="global-modal" role="dialog" aria-modal="true" aria-label="弹窗" aria-hidden="true">
+  <div class="modal-card" role="document">
+    <button class="modal-close" aria-label="关闭">&times;</button>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  // Global modal
+  const modal = document.getElementById('global-modal') as HTMLElement | null;
+  const modalBody = document.getElementById('modal-body') as HTMLElement | null;
+  const modalCard = modal?.querySelector('.modal-card') as HTMLElement | null;
+  const modalClose = modal?.querySelector('.modal-close') as HTMLElement | null;
+  let lastTrigger: HTMLElement | null = null;
+
+  function getFocusableElements(container: HTMLElement): HTMLElement[] {
+    return Array.from(
+      container.querySelectorAll<HTMLElement>(
+        "a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])"
+      )
+    ).filter((el) => el.offsetParent !== null);
+  }
+
+  function trapFocus(e: KeyboardEvent) {
+    if (!modal || e.key !== 'Tab') return;
+    const focusable = getFocusableElements(modal);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  function openModal(trigger: HTMLElement) {
+    if (!modal || !modalBody) return;
+    lastTrigger = trigger;
+    const content = trigger.getAttribute('data-modal');
+    modalCard?.classList.toggle('modal-card--qq', content === 'qq');
+    if (content === 'qq') {
+      modalBody.innerHTML = `
+        <div class="qq-modal">
+          <header class="qq-modal__header">
+            <div class="qq-modal__title-wrap">
+              <h2 class="qq-modal__title">QQ 交流群</h2>
+              <span class="qq-modal__accent" aria-hidden="true"></span>
+            </div>
+            <p class="qq-modal__subtitle">MaiBot 有多个 QQ 交流群，按不同用途划分</p>
+          </header>
+
+          <div class="qq-modal__content">
+            <section class="qq-section qq-section--tech" aria-labelledby="qq-tech-title">
+              <h3 class="qq-section__label" id="qq-tech-title">技术交流</h3>
+              <div class="qq-section__grid">
+                <article class="qq-card">
+                  <div class="qq-card__body">
+                    <div class="qq-card__title-row">
+                      <span class="qq-card__dot" aria-hidden="true"></span>
+                      <h4 class="qq-card__title">麦麦脑电图</h4>
+                    </div>
+                    <p class="qq-card__desc">技术交流 / 答疑</p>
+                  </div>
+                  <a class="qq-card__button" href="https://qm.qq.com/q/RzmCiRtHEW" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦脑电图 QQ 群">加入群聊 →</a>
+                </article>
+                <article class="qq-card">
+                  <div class="qq-card__body">
+                    <div class="qq-card__title-row">
+                      <span class="qq-card__dot" aria-hidden="true"></span>
+                      <h4 class="qq-card__title">麦麦大脑磁共振</h4>
+                    </div>
+                    <p class="qq-card__desc">技术交流 / 答疑</p>
+                  </div>
+                  <a class="qq-card__button" href="https://qm.qq.com/q/VQ3XZrWgMs" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦大脑磁共振 QQ 群">加入群聊 →</a>
+                </article>
+                <article class="qq-card">
+                  <div class="qq-card__body">
+                    <div class="qq-card__title-row">
+                      <span class="qq-card__dot" aria-hidden="true"></span>
+                      <h4 class="qq-card__title">麦麦要当 VTB</h4>
+                    </div>
+                    <p class="qq-card__desc">技术交流 / 答疑</p>
+                  </div>
+                  <a class="qq-card__button" href="https://qm.qq.com/q/wGePTl1UyY" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦要当 VTB QQ 群">加入群聊 →</a>
+                </article>
+              </div>
+            </section>
+
+            <section class="qq-section qq-section--chat" aria-labelledby="qq-chat-title">
+              <h3 class="qq-section__label" id="qq-chat-title">闲聊吹水</h3>
+              <div class="qq-section__grid">
+                <article class="qq-card">
+                  <div class="qq-card__body">
+                    <div class="qq-card__title-row">
+                      <span class="qq-card__dot" aria-hidden="true"></span>
+                      <h4 class="qq-card__title">麦麦之闲聊群</h4>
+                    </div>
+                    <p class="qq-card__desc">仅限闲聊，不答疑</p>
+                  </div>
+                  <a class="qq-card__button" href="https://qm.qq.com/q/JxvHZnxyec" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦之闲聊群 QQ 群">加入群聊 →</a>
+                </article>
+              </div>
+            </section>
+
+            <section class="qq-section qq-section--plugin" aria-labelledby="qq-plugin-title">
+              <h3 class="qq-section__label" id="qq-plugin-title">插件开发</h3>
+              <div class="qq-section__grid">
+                <article class="qq-card">
+                  <div class="qq-card__body">
+                    <div class="qq-card__title-row">
+                      <span class="qq-card__dot" aria-hidden="true"></span>
+                      <h4 class="qq-card__title">插件开发群</h4>
+                    </div>
+                    <p class="qq-card__desc">进阶开发与测试</p>
+                  </div>
+                  <a class="qq-card__button" href="https://qm.qq.com/q/1036092828" target="_blank" rel="noopener noreferrer" aria-label="加入插件开发群 QQ 群">加入群聊 →</a>
+                </article>
+              </div>
+            </section>
+          </div>
+
+          <aside class="qq-tip">
+            <span class="qq-tip__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M9 21h6v-1.5H9V21Zm3-19a7 7 0 0 0-4.18 12.62c.55.41.93.98 1.08 1.63l.16.75h5.88l.16-.75c.15-.65.53-1.22 1.08-1.63A7 7 0 0 0 12 2Zm2.98 10.99a4.2 4.2 0 0 0-1.48 2.01h-3a4.2 4.2 0 0 0-1.48-2.01A5 5 0 1 1 14.98 13ZM9 18.5h6V17H9v1.5Z" />
+              </svg>
+            </span>
+            <div class="qq-tip__content">
+              <strong>提示</strong>
+              <p>技术问题请优先在技术交流群中提问，闲聊群不提供技术答疑。如果你在开发 MaiBot 插件，欢迎加入插件开发群交流。</p>
+            </div>
+          </aside>
+        </div>`;
+    } else if (content === 'versions') {
+      modalBody.innerHTML =
+        '<h2>📦 选择安装方式</h2>' +
+        '<div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">' +
+        '<a href="https://github.com/Mai-with-u/MaiBot/releases/latest" target="_blank" rel="noopener noreferrer" style="display:block;padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s">' +
+        '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">📋 源码安装</div>' +
+        '<div style="font-size:13px;color:var(--c-text-muted)">适合人群：适合喜欢用源码部署的人</div>' +
+        '</a>' +
+        '<div style="padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px">' +
+        '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">🐳 Docker 安装</div>' +
+        '<div style="font-size:13px;color:var(--c-text-muted);margin-bottom:12px">适合人群：适合喜欢用 Docker 的人</div>' +
+        '<div style="background:rgba(var(--color-text-muted),0.06);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.7">' +
+        '<p style="font-weight:700;margin-bottom:8px">🚀 5 分钟快速部署</p>' +
+        '<p style="font-weight:600;margin:8px 0 4px">1. 下载 MaiBot</p>' +
+        '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">git clone https://github.com/Mai-with-u/MaiBot.git\ncd MaiBot</pre>' +
+        '<p style="font-weight:600;margin:12px 0 4px">2. 一键启动！</p>' +
+        '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">docker compose up -d</pre>' +
+        '<p style="font-size:12px;color:var(--c-text-muted);margin-top:4px">第一次启动会自动生成配置文件，然后会停下来等你配置。</p>' +
+        '<p style="margin-top:12px;font-weight:600">已经下载？</p>' +
+        '<p style="font-size:13px">运行后浏览器打开 <code style="background:rgba(var(--color-primary),0.1);padding:2px 6px;border-radius:4px;font-size:12px">http://127.0.0.1:8001</code> 即可进入 WebUI 配置界面！</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    } else {
+      modalBody.innerHTML = '<p style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</p>';
+    }
+    modal.classList.add('is-open');
+    document.documentElement.classList.add('modal-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.addEventListener('keydown', handleKeyDown);
+    requestAnimationFrame(() => modalClose?.focus());
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    document.documentElement.classList.remove('modal-open');
+    modal.setAttribute('aria-hidden', 'true');
+    modalCard?.classList.remove('modal-card--qq');
+    document.removeEventListener('keydown', handleKeyDown);
+    if (modalBody) modalBody.innerHTML = '';
+    lastTrigger?.focus();
+    lastTrigger = null;
+  }
+
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      closeModal();
+      return;
+    }
+    trapFocus(e);
+  }
+
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-modal]');
+    if (trigger) {
+      e.preventDefault();
+      openModal(trigger);
+      return;
+    }
+    if ((e.target as HTMLElement).closest('.modal-close') || (e.target as HTMLElement).matches('.modal-overlay')) {
+      closeModal();
+    }
+  });
+</script>
+
+<style>
+  /* === Global Modal === */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .modal-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 32px 36px;
+    max-width: 560px;
+    width: calc(100vw - 48px);
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+  }
+
+  .modal-card::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  :global([data-theme='dark']) .modal-card {
+    background: rgba(30, 30, 30, 0.95);
+    color: #f9fafc;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    color: #a2abbc;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all var(--transition-fast);
+    line-height: 1;
+  }
+
+  .modal-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #000;
+  }
+
+  :global([data-theme='dark']) .modal-close:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f9fafc;
+  }
+
+  .modal-card--qq {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 760px;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none;
+  }
+
+  .modal-card--qq .modal-close {
+    top: 40px;
+    right: 40px;
+    display: grid;
+    place-items: center;
+    background: #f0f2f5;
+    border-radius: 16px;
+    color: #a2abbc;
+    font-size: 0;
+  }
+
+  .modal-card--qq .modal-close::before,
+  .modal-card--qq .modal-close::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .modal-card--qq .modal-close::before {
+    transform: rotate(45deg);
+  }
+
+  .modal-card--qq .modal-close::after {
+    transform: rotate(-45deg);
+  }
+
+  .modal-card--qq .modal-close:hover {
+    background: #e8ebf0;
+    color: #121831;
+  }
+
+  :global([data-theme='dark']) .modal-card--qq {
+    background: #ffffff;
+    color: #121831;
+  }
+
+  :global([data-theme='dark']) .modal-card--qq .modal-close:hover {
+    background: #e8ebf0;
+    color: #121831;
+  }
+
+  .modal-card--qq .modal-body {
+    line-height: 1.5;
+  }
+
+  .modal-card--qq .modal-body h2 {
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .modal-card--qq .modal-body a.qq-card__button {
+    color: #ffffff;
+  }
+
+  .qq-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    color: #121831;
+  }
+
+  .qq-modal__header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 48px;
+  }
+
+  .qq-modal__title-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .qq-modal__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    color: #121831;
+  }
+
+  .qq-modal__accent {
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+    background: #e97f0f;
+  }
+
+  .qq-modal__subtitle {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #a2abbc;
+  }
+
+  .qq-modal__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .qq-section {
+    --qq-accent: #e97f0f;
+    --qq-accent-rgb: 233, 127, 15;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .qq-section--chat {
+    --qq-accent: #30ccef;
+    --qq-accent-rgb: 48, 204, 239;
+  }
+
+  .qq-section--plugin {
+    --qq-accent: #80de41;
+    --qq-accent-rgb: 128, 222, 65;
+  }
+
+  .qq-section__label {
+    margin: 0;
+    padding: 4px 16px 4px 12px;
+    border-left: 4px solid var(--qq-accent);
+    border-radius: 4px;
+    background: rgba(var(--qq-accent-rgb), 0.08);
+    color: var(--qq-accent);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .qq-section__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+
+  .qq-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 152px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    overflow: hidden;
+    padding: 20px;
+    border: 1px solid rgba(var(--qq-accent-rgb), 0.12);
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(var(--qq-accent-rgb), 0.18), transparent 38%),
+      linear-gradient(135deg, rgba(var(--qq-accent-rgb), 0.1), rgba(var(--qq-accent-rgb), 0.02) 45%, #ffffff 100%);
+  }
+
+  .qq-card::before {
+    content: '';
+    position: absolute;
+    top: -58px;
+    left: -34px;
+    width: 210px;
+    height: 124px;
+    border-radius: 999px;
+    border: 1px solid rgba(var(--qq-accent-rgb), 0.14);
+    background: rgba(var(--qq-accent-rgb), 0.06);
+    transform: rotate(-12deg);
+  }
+
+  .qq-card::after {
+    content: '';
+    position: absolute;
+    right: -42px;
+    bottom: -54px;
+    width: 132px;
+    height: 132px;
+    border-radius: 36px;
+    background: rgba(var(--qq-accent-rgb), 0.08);
+    transform: rotate(18deg);
+  }
+
+  .qq-card__body,
+  .qq-card__button {
+    position: relative;
+    z-index: 1;
+  }
+
+  .qq-card__body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .qq-card__title-row {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qq-card__dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--qq-accent);
+  }
+
+  .qq-card__title {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .qq-card__desc {
+    margin: 0;
+    color: #a2abbc;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .qq-card__button {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 8px;
+    background: var(--qq-accent);
+    color: #ffffff;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    padding: 6px 12px;
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      filter var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .qq-card__button:hover,
+  .qq-card__button:focus-visible {
+    color: #ffffff;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  .qq-card__button.is-copied {
+    filter: brightness(1.02);
+  }
+
+  .qq-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    border-left: 4px solid #e97f0f;
+    border-radius: 8px;
+    background: #fff5e6;
+  }
+
+  .qq-tip__icon {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    place-items: center;
+    color: #e97f0f;
+  }
+
+  .qq-tip__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .qq-tip__content strong {
+    color: #e97f0f;
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .qq-tip__content p {
+    margin: 0;
+    color: #121831;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 760px) {
+    .modal-card--qq {
+      padding: 28px 22px;
+      max-height: 86vh;
+    }
+
+    .modal-card--qq .modal-close {
+      top: 24px;
+      right: 22px;
+    }
+
+    .qq-modal {
+      gap: 24px;
+    }
+
+    .qq-section__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .qq-card {
+      min-height: 140px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qq-card__button {
+      transition: none;
+    }
+
+    .qq-card__button:hover,
+    .qq-card__button:focus-visible {
+      transform: none;
+    }
+  }
+
+  .modal-body {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .modal-body h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  .modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+  .modal-body th,
+  .modal-body td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    text-align: left;
+    vertical-align: top;
+  }
+  .modal-body th {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  :global([data-theme='dark']) .modal-body th,
+  :global([data-theme='dark']) .modal-body td {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .modal-body a:not(.qq-card__button) {
+    color: var(--c-primary);
+  }
+</style>
+
+<style is:global>
+  .modal-card.modal-card--qq {
+    background: var(--c-bg);
+    color: var(--c-text);
+  }
+
+  [data-theme='dark'] .modal-card.modal-card--qq {
+    background: #1e1e1e;
+    color: #f9fafc;
+  }
+
+  .modal-card.modal-card--qq .modal-close.modal-close {
+    transition: none;
+  }
+
+  [data-theme='dark'] .modal-card.modal-card--qq .modal-close.modal-close {
+    background: #2b2f36;
+    color: #8f98a8;
+  }
+
+  [data-theme='dark'] .modal-card.modal-card--qq .modal-close.modal-close:hover {
+    background: #343943;
+    color: #c8ced8;
+  }
+
+  .modal-card--qq .modal-body {
+    line-height: 1.5;
+  }
+
+  .modal-card--qq .modal-body h2 {
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .modal-card--qq .modal-body a.qq-card__button {
+    color: #ffffff;
+  }
+
+  .qq-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    color: #121831;
+  }
+
+  [data-theme='dark'] .qq-modal {
+    color: #f9fafc;
+  }
+
+  .qq-modal__header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 48px;
+  }
+
+  .qq-modal__title-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .qq-modal__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    color: #121831;
+  }
+
+  [data-theme='dark'] .qq-modal__title {
+    color: #f9fafc;
+  }
+
+  .qq-modal__accent {
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+    background: #e97f0f;
+  }
+
+  .qq-modal__subtitle {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #a2abbc;
+  }
+
+  [data-theme='dark'] .qq-modal__subtitle {
+    color: #8a93a3;
+  }
+
+  .qq-modal__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .qq-section {
+    --qq-accent: #e97f0f;
+    --qq-accent-rgb: 233, 127, 15;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .qq-section--chat {
+    --qq-accent: #30ccef;
+    --qq-accent-rgb: 48, 204, 239;
+  }
+
+  .qq-section--plugin {
+    --qq-accent: #80de41;
+    --qq-accent-rgb: 128, 222, 65;
+  }
+
+  .qq-section__label {
+    margin: 0;
+    padding: 4px 16px 4px 12px;
+    border-left: 4px solid var(--qq-accent);
+    border-radius: 4px;
+    background: rgba(var(--qq-accent-rgb), 0.08);
+    color: var(--qq-accent);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  [data-theme='dark'] .qq-section__label {
+    background: rgba(var(--qq-accent-rgb), 0.14);
+  }
+
+  .qq-section__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+
+  .qq-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 152px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    overflow: hidden;
+    padding: 20px 24px 20px 20px;
+    border: 1px solid rgba(var(--qq-accent-rgb), 0.18);
+    border-radius: 8px;
+    background: rgba(var(--qq-accent-rgb), 0.08);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+  }
+
+  [data-theme='dark'] .qq-card {
+    border-color: rgba(var(--qq-accent-rgb), 0.26);
+    background: rgba(var(--qq-accent-rgb), 0.12);
+  }
+
+  .qq-card__body,
+  .qq-card__button {
+    position: relative;
+    z-index: 1;
+  }
+
+  .qq-card__body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .qq-card__title-row {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qq-card__dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--qq-accent);
+  }
+
+  .qq-card__title {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-theme='dark'] .qq-card__title {
+    color: #f9fafc;
+  }
+
+  .qq-card__desc {
+    margin: 0;
+    color: #a2abbc;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  [data-theme='dark'] .qq-card__desc {
+    color: #9aa3b2;
+  }
+
+  .qq-card__button {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 8px;
+    background: var(--qq-accent);
+    color: #ffffff;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    padding: 6px 12px;
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      filter var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .qq-card__button:hover,
+  .qq-card__button:focus-visible {
+    color: #ffffff;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  .qq-card__button.is-copied {
+    filter: brightness(1.02);
+  }
+
+  .qq-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    border-left: 4px solid #e97f0f;
+    border-radius: 8px;
+    background: #fff5e6;
+  }
+
+  [data-theme='dark'] .qq-tip {
+    background: rgba(233, 127, 15, 0.14);
+  }
+
+  .qq-tip__icon {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    place-items: center;
+    color: #e97f0f;
+  }
+
+  .qq-tip__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .qq-tip__content strong {
+    color: #e97f0f;
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .qq-tip__content p {
+    margin: 0;
+    color: #121831;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  [data-theme='dark'] .qq-tip__content p {
+    color: #f9fafc;
+  }
+
+  @media (max-width: 760px) {
+    .modal-card.modal-card--qq {
+      padding: 28px 22px;
+      max-height: 86vh;
+    }
+
+    .modal-card--qq .modal-close {
+      top: 24px;
+      right: 22px;
+    }
+
+    .qq-modal {
+      gap: 24px;
+    }
+
+    .qq-section__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .qq-card {
+      min-height: 140px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qq-card__button {
+      transition: none;
+    }
+
+    .qq-card__button:hover,
+    .qq-card__button:focus-visible {
+      transform: none;
+    }
+  }
+</style>
