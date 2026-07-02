@@ -1,0 +1,402 @@
+<!-- Fixed Background Dots -->
+<div class="bg-dots" aria-hidden="true"></div>
+
+<!-- Decorative crosses around the page -->
+<div class="deco-crosses" aria-hidden="true">
+  <svg class="cross cross-1" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-2" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-3" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-4" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-5" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-6" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-7" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+  <svg class="cross cross-8" viewBox="0 0 16 16"
+    ><line x1="0" y1="8" x2="16" y2="8"></line><line x1="8" y1="0" x2="8" y2="16"></line></svg
+  >
+</div>
+
+<!-- Decorative abstract blocks -->
+<div class="deco-blocks" aria-hidden="true">
+  <div class="block block-1"></div>
+  <div class="block block-2"></div>
+  <div class="block block-outline block-3"></div>
+  <div class="block block-outline block-4"></div>
+  <!-- Triangle -->
+  <svg class="block block-tri" viewBox="0 0 100 87"><polygon points="50,0 100,87 0,87"></polygon></svg>
+  <!-- Diamonds -->
+  <svg class="diamond diamond-1" viewBox="0 0 12 12"><polygon points="6,0 12,6 6,12 0,6"></polygon></svg>
+  <svg class="diamond diamond-2" viewBox="0 0 12 12"><polygon points="6,0 12,6 6,12 0,6"></polygon></svg>
+  <svg class="diamond diamond-3" viewBox="0 0 12 12"><polygon points="6,0 12,6 6,12 0,6"></polygon></svg>
+  <!-- Corner brackets -->
+  <svg class="bracket bracket-tl" viewBox="0 0 24 24"><path d="M22 2H6v4h12v12h4" fill="none"></path></svg>
+  <svg class="bracket bracket-br" viewBox="0 0 24 24"><path d="M2 22h16v-4H6V6H2" fill="none"></path></svg>
+  <svg class="bracket bracket-tr" viewBox="0 0 24 24"><path d="M2 2h16v4H6v12H2" fill="none"></path></svg>
+  <!-- Thin angled lines -->
+  <svg class="thinline thin-1" viewBox="0 0 60 1"><line x1="0" y1="0.5" x2="60" y2="0.5"></line></svg>
+  <svg class="thinline thin-2" viewBox="0 0 1 80"><line x1="0.5" y1="0" x2="0.5" y2="80"></line></svg>
+  <!-- Dot pairs -->
+  <svg class="dotpair dots-1" viewBox="0 0 28 8"
+    ><circle cx="4" cy="4" r="2"></circle><circle cx="24" cy="4" r="2"></circle></svg
+  >
+  <svg class="dotpair dots-2" viewBox="0 0 8 28"
+    ><circle cx="4" cy="4" r="2"></circle><circle cx="4" cy="24" r="2"></circle></svg
+  >
+  <!-- Crosshair -->
+  <svg class="crosshair" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8" fill="none"></circle>
+    <line x1="12" y1="2" x2="12" y2="7"></line><line x1="12" y1="17" x2="12" y2="22"></line>
+    <line x1="2" y1="12" x2="7" y2="12"></line><line x1="17" y1="12" x2="22" y2="12"></line>
+  </svg>
+  <!-- Hexagon -->
+  <svg class="hex" viewBox="0 0 52 60">
+    <polygon points="26,0 52,15 52,45 26,60 0,45 0,15" fill="none"></polygon>
+  </svg>
+  <!-- Segmented bar -->
+  <svg class="segbar" viewBox="0 0 48 4">
+    <rect x="0" y="0" width="48" height="4" rx="2" fill="none"></rect>
+    <rect x="0" y="0" width="18" height="4" rx="2"></rect>
+  </svg>
+</div>
+
+<style>
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: rgb(var(--color-bg));
+    background-image: url('/tile-light.svg');
+    background-repeat: repeat;
+    background-size: 48px 48px;
+    background-position: 0 0;
+  }
+
+  :global([data-theme='dark']) .bg-dots {
+    background-color: #121212;
+    background-image: url('/tile-dark.svg');
+    background-repeat: repeat;
+    background-size: 48px 48px;
+    background-position: 0 0;
+  }
+
+  /* Decorative crosses */
+  .deco-crosses {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .cross {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    stroke: rgb(var(--color-text-muted));
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.4;
+  }
+
+  :global([data-theme='dark']) .cross {
+    stroke: #555;
+    opacity: 0.6;
+  }
+
+  .cross-1 {
+    top: 6%;
+    left: 8%;
+  }
+  .cross-2 {
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .cross-3 {
+    top: 6%;
+    right: 8%;
+  }
+  .cross-4 {
+    top: 50%;
+    left: 3%;
+    transform: translateY(-50%);
+  }
+  .cross-5 {
+    top: 50%;
+    right: 3%;
+    transform: translateY(-50%);
+  }
+  .cross-6 {
+    bottom: 6%;
+    left: 8%;
+  }
+  .cross-7 {
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .cross-8 {
+    bottom: 6%;
+    right: 8%;
+  }
+
+  /* Decorative abstract blocks */
+  .deco-blocks {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .block {
+    position: absolute;
+    border-radius: 24px;
+    background: rgb(var(--color-text-muted));
+    opacity: 0.07;
+  }
+
+  :global([data-theme='dark']) .block {
+    background: #4a4a4a;
+    opacity: 0.14;
+  }
+
+  .block-outline {
+    background: transparent;
+    border: 1.5px solid rgb(var(--color-text-muted));
+    opacity: 0.1;
+  }
+
+  :global([data-theme='dark']) .block-outline {
+    background: transparent;
+    border-color: #555;
+    opacity: 0.2;
+  }
+
+  .block-1 {
+    top: 14%;
+    left: -3%;
+    width: 200px;
+    height: 80px;
+    border-radius: 6px 36px 6px 6px;
+    transform: rotate(-8deg);
+  }
+  .block-2 {
+    top: 55%;
+    right: -5%;
+    width: 150px;
+    height: 150px;
+    border-radius: 44px 8px 44px 8px;
+    transform: rotate(14deg);
+  }
+  .block-3 {
+    top: 72%;
+    left: 6%;
+    width: 80px;
+    height: 80px;
+    border-radius: 14px 3px 14px 3px;
+    transform: rotate(-18deg);
+  }
+  .block-4 {
+    top: 20%;
+    right: 14%;
+    width: 56px;
+    height: 56px;
+    border-radius: 3px 14px 3px 14px;
+    transform: rotate(30deg);
+  }
+
+  .block-tri {
+    position: absolute;
+    top: 42%;
+    left: 5%;
+    width: 36px;
+    height: 31px;
+    opacity: 0.05;
+    fill: rgb(var(--color-text-muted));
+    transform: rotate(-12deg);
+  }
+
+  :global([data-theme='dark']) .block-tri {
+    fill: #555;
+    opacity: 0.12;
+  }
+
+  /* Diamonds */
+  .diamond {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    fill: rgb(var(--color-text-muted));
+    opacity: 0.2;
+  }
+
+  :global([data-theme='dark']) .diamond {
+    fill: #555;
+    opacity: 0.35;
+  }
+
+  .diamond-1 {
+    top: 22%;
+    right: 22%;
+  }
+  .diamond-2 {
+    bottom: 22%;
+    left: 14%;
+  }
+  .diamond-3 {
+    top: 55%;
+    left: 28%;
+  }
+
+  /* Corner brackets */
+  .bracket {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    stroke: rgb(var(--color-text-muted));
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    opacity: 0.18;
+  }
+
+  :global([data-theme='dark']) .bracket {
+    stroke: #555;
+    opacity: 0.3;
+  }
+
+  .bracket-tl {
+    top: 8%;
+    left: 20%;
+  }
+  .bracket-br {
+    bottom: 14%;
+    right: 16%;
+  }
+  .bracket-tr {
+    top: 60%;
+    right: 24%;
+  }
+
+  /* Thin lines */
+  .thinline {
+    position: absolute;
+    stroke: rgb(var(--color-text-muted));
+    stroke-width: 1;
+    opacity: 0.12;
+  }
+
+  :global([data-theme='dark']) .thinline {
+    stroke: #555;
+    opacity: 0.22;
+  }
+
+  .thin-1 {
+    top: 48%;
+    right: 8%;
+    width: 80px;
+    height: 1px;
+  }
+  .thin-2 {
+    bottom: 20%;
+    left: 10%;
+    width: 1px;
+    height: 100px;
+  }
+
+  /* Dot pairs */
+  .dotpair {
+    position: absolute;
+    fill: rgb(var(--color-text-muted));
+    opacity: 0.18;
+  }
+
+  :global([data-theme='dark']) .dotpair {
+    fill: #555;
+    opacity: 0.3;
+  }
+
+  .dots-1 {
+    top: 32%;
+    right: 30%;
+    width: 36px;
+    height: 10px;
+  }
+  .dots-2 {
+    bottom: 28%;
+    left: 22%;
+    width: 10px;
+    height: 36px;
+  }
+
+  /* Crosshair */
+  .crosshair {
+    position: absolute;
+    top: 38%;
+    right: 10%;
+    width: 50px;
+    height: 50px;
+    stroke: rgb(var(--color-text-muted));
+    stroke-width: 1.2;
+    fill: none;
+    opacity: 0.14;
+  }
+
+  :global([data-theme='dark']) .crosshair {
+    stroke: #555;
+    opacity: 0.25;
+  }
+
+  /* Hexagon */
+  .hex {
+    position: absolute;
+    top: 25%;
+    left: 38%;
+    width: 72px;
+    height: 83px;
+    stroke: rgb(var(--color-text-muted));
+    stroke-width: 1.2;
+    fill: none;
+    opacity: 0.1;
+    transform: rotate(15deg);
+  }
+
+  :global([data-theme='dark']) .hex {
+    stroke: #555;
+    opacity: 0.2;
+  }
+
+  /* Segmented bar */
+  .segbar {
+    position: absolute;
+    bottom: 18%;
+    right: 20%;
+    width: 80px;
+    height: 6px;
+    fill: rgb(var(--color-text-muted));
+    stroke: rgb(var(--color-text-muted));
+    stroke-width: 1;
+    opacity: 0.15;
+  }
+
+  :global([data-theme='dark']) .segbar {
+    fill: #555;
+    stroke: #555;
+    opacity: 0.25;
+  }
+</style>
