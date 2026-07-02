@@ -483,12 +483,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     inset: 0;
     z-index: 0;
     content: '';
-    background: radial-gradient(
-      ellipse 80% 70% at 22% 28%,
-      rgba(16, 39, 30, 0.62) 0%,
-      rgba(16, 39, 30, 0.22) 48%,
-      transparent 78%
-    );
+    background: radial-gradient(ellipse 55% 50% at 18% 22%, rgba(16, 39, 30, 0.2) 0%, transparent 55%);
     pointer-events: none;
   }
 
@@ -501,7 +496,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     inset: 0;
     z-index: 0;
     content: '';
-    background: linear-gradient(90deg, rgba(15, 27, 53, 0.72) 0%, rgba(15, 27, 53, 0.32) 55%, transparent 100%);
+    background: linear-gradient(90deg, rgba(15, 27, 53, 0.45) 0%, rgba(15, 27, 53, 0.12) 48%, transparent 100%);
     pointer-events: none;
   }
 
@@ -514,7 +509,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     inset: 0;
     z-index: 0;
     content: '';
-    background: linear-gradient(90deg, rgba(61, 40, 0, 0.72) 0%, rgba(61, 40, 0, 0.32) 55%, transparent 100%);
+    background: linear-gradient(90deg, rgba(61, 40, 0, 0.45) 0%, rgba(61, 40, 0, 0.12) 48%, transparent 100%);
     pointer-events: none;
   }
 
@@ -537,6 +532,10 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     transform: scale(1.05);
   }
 
+  .texture-bg-amaidesu .card-bg-image {
+    opacity: 0.8;
+  }
+
   .texture-blur {
     position: absolute;
     inset: 0;
@@ -547,30 +546,23 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
   }
 
   .texture-blur-amaidesu {
-    background: radial-gradient(
-      ellipse 75% 65% at 20% 25%,
-      rgba(16, 39, 30, 0.78) 0%,
-      rgba(16, 39, 30, 0.32) 42%,
-      transparent 74%
-    );
-    mask-image: radial-gradient(
-      ellipse 75% 65% at 20% 25%,
-      rgba(0, 0, 0, 0.98) 0%,
-      rgba(0, 0, 0, 0.48) 42%,
-      transparent 74%
-    );
-    -webkit-mask-image: radial-gradient(
-      ellipse 75% 65% at 20% 25%,
-      rgba(0, 0, 0, 0.98) 0%,
-      rgba(0, 0, 0, 0.48) 42%,
-      transparent 74%
-    );
+    background: radial-gradient(ellipse 50% 45% at 16% 20%, rgba(16, 39, 30, 0.22) 0%, transparent 52%);
+    mask-image: radial-gradient(ellipse 50% 45% at 16% 20%, rgba(0, 0, 0, 0.75) 0%, transparent 52%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 45% at 16% 20%, rgba(0, 0, 0, 0.75) 0%, transparent 52%);
+  }
+
+  .texture-bg .card-bg-image {
+    opacity: 0.8;
+  }
+
+  .texture-bg-market .market-bg-image {
+    opacity: 0.22;
   }
 
   .texture-blur-small {
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 45%, transparent 72%);
-    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.5) 42%, transparent 75%);
-    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.5) 42%, transparent 75%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.1) 40%, transparent 66%);
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 66%);
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 66%);
   }
 
   .tone-market .card-content,
@@ -1117,13 +1109,22 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
       padding: 22px;
     }
 
-    .texture-bg .card-bg-image,
+    .texture-bg .card-bg-image {
+      opacity: 0.7;
+    }
+
     .texture-bg-market .market-bg-image {
       opacity: 0.14;
     }
 
     .texture-blur {
-      backdrop-filter: blur(12px) saturate(1.1);
+      backdrop-filter: blur(10px) saturate(1.1);
+    }
+
+    .texture-blur-small {
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.08) 38%, transparent 62%);
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.25) 38%, transparent 62%);
+      -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.25) 38%, transparent 62%);
     }
 
     .spotlight-link {
