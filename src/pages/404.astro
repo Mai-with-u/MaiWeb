@@ -1,0 +1,361 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Footer from '../sections/Footer.astro';
+import notFoundMai from '../assets/404-mai.png';
+---
+
+<Layout title="404 - 页面未找到 | MaiBot" description="抱歉，您访问的页面不存在或已被移动。" canonicalPath="/404">
+  <main class="not-found-page">
+    <!-- Large outline "404" in background -->
+    <svg class="not-found-bg-text" viewBox="0 0 1000 420" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+      <text
+        x="50%"
+        y="340"
+        text-anchor="middle"
+        font-family="var(--font-display)"
+        font-size="400"
+        font-weight="800"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2">404</text
+      >
+    </svg>
+
+    <!-- Decorative orange squares -->
+    <div class="deco-square square-1" aria-hidden="true"></div>
+    <div class="deco-square square-2" aria-hidden="true"></div>
+    <div class="deco-square square-3" aria-hidden="true"></div>
+    <div class="deco-square square-4" aria-hidden="true"></div>
+    <div class="deco-square square-5" aria-hidden="true"></div>
+
+    <!-- Decorative question mark circles -->
+    <svg class="deco-question question-1" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">?</text>
+    </svg>
+    <svg class="deco-question question-2" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">?</text>
+    </svg>
+    <svg class="deco-question question-3" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">?</text>
+    </svg>
+
+    <div class="not-found-content">
+      <div class="not-found-illustration">
+        <Image src={notFoundMai} alt="麦麦正在吃文件" width={400} height={540} loading="eager" decoding="async" />
+      </div>
+
+      <div class="not-found-text">
+        <h1 class="not-found-title">
+          <span class="title-highlight">404</span>
+          <span>你似乎来到了火星……</span>
+        </h1>
+        <p class="not-found-subtitle">文件可能被麦麦当成小零食吃掉了……（悲</p>
+      </div>
+
+      <div class="not-found-actions">
+        <a href="/" class="not-found-btn not-found-btn-primary">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+          </svg>
+          回到首页
+        </a>
+        <a
+          href="https://github.com/Mai-with-u/MaiWeb/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="not-found-btn not-found-btn-outline"
+        >
+          <svg
+            class="btn-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          报告问题
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .not-found-page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 80px;
+    overflow: hidden;
+  }
+
+  /* Background outline "404" */
+  .not-found-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(100vw, 1600px);
+    height: auto;
+    transform: translate(-50%, -50%);
+    color: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Decorative squares */
+  .deco-square {
+    position: absolute;
+    border-radius: 4.8px;
+    background: #ff7a30;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .square-1 {
+    left: 10%;
+    top: 150px;
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    transform: rotate(15deg);
+  }
+
+  .square-2 {
+    right: 8%;
+    top: 196px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.4;
+    transform: rotate(-10deg);
+  }
+
+  .square-3 {
+    right: 6%;
+    top: 650px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.8;
+    transform: rotate(45deg);
+  }
+
+  .square-4 {
+    left: 15%;
+    top: 690px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    transform: rotate(-30deg);
+  }
+
+  .square-5 {
+    right: 20%;
+    top: 100px;
+    width: 12px;
+    height: 12px;
+    opacity: 0.3;
+    transform: rotate(10deg);
+  }
+
+  /* Decorative question marks */
+  .deco-question {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 122, 48, 0.45);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .question-1 {
+    left: 20%;
+    top: 236px;
+    transform: rotate(-12deg);
+  }
+
+  .question-2 {
+    right: 18%;
+    top: 300px;
+    transform: rotate(15deg);
+  }
+
+  .question-3 {
+    left: 26%;
+    top: 600px;
+    width: 40px;
+    height: 40px;
+    transform: rotate(20deg);
+  }
+
+  /* Content */
+  .not-found-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    animation: fadeInUp 0.72s ease-out forwards;
+  }
+
+  .not-found-illustration {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 420 / 420;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .not-found-illustration img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .not-found-text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .not-found-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1a1a2e;
+  }
+
+  .title-highlight {
+    color: #ff7a30;
+  }
+
+  .not-found-subtitle {
+    font-size: clamp(16px, 2.4vw, 20px);
+    line-height: 1.6;
+    color: #6a6a80;
+  }
+
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .not-found-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 140px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .btn-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .not-found-btn-primary {
+    background: #ff7a30;
+    color: #fff;
+    box-shadow: 0 8px 28px rgba(255, 122, 48, 0.32);
+  }
+
+  .not-found-btn-primary:hover {
+    background: #e86a24;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(255, 122, 48, 0.4);
+  }
+
+  .not-found-btn-outline {
+    background: transparent;
+    color: #1a1a2e;
+    border: 1.5px solid #1a1a2e;
+  }
+
+  .not-found-btn-outline:hover {
+    background: rgba(26, 26, 46, 0.06);
+    transform: translateY(-2px);
+  }
+
+  /* Dark mode */
+  :global([data-theme='dark']) .not-found-bg-text {
+    color: rgba(255, 255, 255, 0.06);
+  }
+
+  :global([data-theme='dark']) .not-found-title {
+    color: #f9fafc;
+  }
+
+  :global([data-theme='dark']) .not-found-subtitle {
+    color: #a2abbc;
+  }
+
+  :global([data-theme='dark']) .not-found-btn-outline {
+    color: #f9fafc;
+    border-color: #f9fafc;
+  }
+
+  :global([data-theme='dark']) .not-found-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  :global([data-theme='dark']) .deco-question {
+    color: rgba(255, 122, 48, 0.35);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .not-found-page {
+      padding: 100px 20px 60px;
+    }
+
+    .square-1,
+    .square-2,
+    .square-3,
+    .square-4,
+    .square-5,
+    .question-1,
+    .question-2,
+    .question-3 {
+      display: none;
+    }
+
+    .not-found-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .not-found-btn {
+      width: 100%;
+    }
+  }
+</style>
