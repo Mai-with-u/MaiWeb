@@ -20,19 +20,25 @@ import logoIcon from '../assets/logo-icon.png';
       <div class="nav-divider"></div>
 
       <div class="nav-menu">
-        <a href="https://github.com/Mai-with-u/MaiBot/blob/main/changelogs/changelog.md" class="nav-item">
-          更新日志
+        <a href="/projects/" class="nav-item">
+          衍生项目
           <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
             <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
           </svg>
         </a>
         <div class="nav-separator"></div>
-        <a href="https://docs.mai-mai.org/" class="nav-item">
-          使用文档
-          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
-          </svg>
-        </a>
+        <div class="nav-dropdown">
+          <button class="nav-item nav-dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+            使用文档
+            <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+              <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
+            </svg>
+          </button>
+          <div class="nav-dropdown-menu" role="menu">
+            <a href="https://docs.mai-mai.org/" class="nav-dropdown-link" role="menuitem">用户手册</a>
+            <a href="https://docs.mai-mai.org/develop/" class="nav-dropdown-link" role="menuitem">开发文档</a>
+          </div>
+        </div>
         <div class="nav-separator"></div>
         <a href="#" data-modal="about" aria-haspopup="dialog" aria-controls="global-modal" class="nav-item">
           关于我们
@@ -93,10 +99,9 @@ import logoIcon from '../assets/logo-icon.png';
     </div>
 
     <div class="nav-menu-mobile">
-      <a href="https://github.com/Mai-with-u/MaiBot/blob/main/changelogs/changelog.md" class="nav-item-mobile"
-        >更新日志</a
-      >
-      <a href="https://docs.mai-mai.org/" class="nav-item-mobile">使用文档</a>
+      <a href="/projects/" class="nav-item-mobile">衍生项目</a>
+      <a href="https://docs.mai-mai.org/manual/" class="nav-item-mobile">用户手册</a>
+      <a href="https://docs.mai-mai.org/develop/" class="nav-item-mobile">开发文档</a>
       <a href="#" data-modal="about" aria-haspopup="dialog" aria-controls="global-modal" class="nav-item-mobile"
         >关于我们</a
       >
@@ -138,10 +143,19 @@ import logoIcon from '../assets/logo-icon.png';
     position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     width: 600px;
     height: 56px;
     padding: 0 12px;
+    background: transparent;
+    isolation: isolate;
+  }
+
+  .navbar-glass::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: '';
     background: rgba(255, 255, 255, 0.7);
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
   }
@@ -231,6 +245,7 @@ import logoIcon from '../assets/logo-icon.png';
     align-items: center;
     gap: 2px;
     padding: 6px 8px;
+    border: none;
     font-family: var(--font-display);
     font-size: 12px;
     font-weight: 700;
@@ -239,15 +254,87 @@ import logoIcon from '../assets/logo-icon.png';
     transition: all var(--transition-fast);
     white-space: nowrap;
     text-decoration: none;
+    background: transparent;
+    cursor: pointer;
   }
 
-  .nav-item:hover {
+  .nav-item:hover,
+  .nav-dropdown.is-open .nav-dropdown-trigger,
+  .nav-dropdown:focus-within .nav-dropdown-trigger {
     color: var(--color-primary);
     background: rgba(233, 127, 15, 0.08);
   }
 
   .nav-arrow {
     opacity: 0.7;
+    transition: transform var(--transition-fast);
+  }
+
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    display: grid;
+    min-width: 136px;
+    padding: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -6px);
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .nav-dropdown-menu::before {
+    position: absolute;
+    top: -14px;
+    left: 0;
+    width: 100%;
+    height: 14px;
+    content: '';
+  }
+
+  .nav-dropdown.is-open .nav-dropdown-menu,
+  .nav-dropdown:hover .nav-dropdown-menu,
+  .nav-dropdown:focus-within .nav-dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .nav-dropdown.is-open .nav-arrow,
+  .nav-dropdown:hover .nav-arrow,
+  .nav-dropdown:focus-within .nav-arrow {
+    transform: rotate(180deg);
+  }
+
+  .nav-dropdown-link {
+    display: flex;
+    align-items: center;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: #1b1b1b;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+
+  .nav-dropdown-link:hover,
+  .nav-dropdown-link:focus-visible {
+    color: var(--c-primary);
+    background: rgba(233, 127, 15, 0.08);
   }
 
   .nav-actions {
@@ -307,7 +394,7 @@ import logoIcon from '../assets/logo-icon.png';
   }
 
   /* === Dark mode navbar === */
-  :global([data-theme='dark']) .navbar-glass {
+  :global([data-theme='dark']) .navbar-glass::before {
     background: rgba(28, 28, 28, 0.85);
   }
 
@@ -324,12 +411,25 @@ import logoIcon from '../assets/logo-icon.png';
     color: #fafafa;
   }
 
+  :global([data-theme='dark']) .nav-dropdown-menu {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(38, 38, 38, 0.96);
+  }
+
+  :global([data-theme='dark']) .nav-dropdown-link {
+    color: #fafafa;
+  }
+
   :global([data-theme='dark']) .nav-divider,
   :global([data-theme='dark']) .nav-separator {
     background: rgba(255, 255, 255, 0.1);
   }
 
   :global([data-theme='dark']) .nav-item:hover,
+  :global([data-theme='dark']) .nav-dropdown.is-open .nav-dropdown-trigger,
+  :global([data-theme='dark']) .nav-dropdown:focus-within .nav-dropdown-trigger,
+  :global([data-theme='dark']) .nav-dropdown-link:hover,
+  :global([data-theme='dark']) .nav-dropdown-link:focus-visible,
   :global([data-theme='dark']) .lang-switch:hover,
   :global([data-theme='dark']) .theme-toggle:hover,
   :global([data-theme='dark']) .nav-item-mobile:hover {
@@ -481,6 +581,56 @@ import logoIcon from '../assets/logo-icon.png';
       if (window.location.pathname === '/' || window.location.pathname === '') {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
+  const dropdown = document.querySelector<HTMLElement>('.nav-dropdown');
+  const dropdownTrigger = dropdown?.querySelector<HTMLButtonElement>('.nav-dropdown-trigger');
+  const dropdownMenu = dropdown?.querySelector<HTMLElement>('.nav-dropdown-menu');
+  const dropdownLinks = dropdownMenu?.querySelectorAll<HTMLAnchorElement>('a');
+  if (dropdown && dropdownTrigger && dropdownMenu) {
+    const closeDropdown = () => {
+      dropdown.classList.remove('is-open');
+      dropdownTrigger.setAttribute('aria-expanded', 'false');
+    };
+
+    const openDropdown = () => {
+      dropdown.classList.add('is-open');
+      dropdownTrigger.setAttribute('aria-expanded', 'true');
+    };
+
+    dropdownTrigger.addEventListener('click', () => {
+      const isOpen = dropdown.classList.contains('is-open');
+      if (isOpen) {
+        closeDropdown();
+      } else {
+        openDropdown();
+      }
+    });
+
+    dropdownTrigger.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        openDropdown();
+        dropdownLinks?.[0]?.focus();
+      }
+    });
+
+    dropdown.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeDropdown();
+        dropdownTrigger.focus();
+      }
+    });
+
+    dropdownLinks?.forEach((link) => {
+      link.addEventListener('click', closeDropdown);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target as Node)) {
+        closeDropdown();
       }
     });
   }
