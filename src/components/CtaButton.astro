@@ -33,7 +33,7 @@ const corner = variant === 'green' ? 8 : 10;
     <!-- Layer 2: cut corner clip -->
     <span
       class:list={['cta-clip', `cta-clip-${variant}`]}
-      style={`clip-path: polygon(0 0, 100% 0, 100% calc(100% - ${corner}px), calc(100% - ${corner}px) 100%, 0 100%)`}
+      style={`--cta-corner: ${corner}px`}
     >
       <!-- Layer 3: glass background + border + content -->
       <a
@@ -133,13 +133,20 @@ const corner = variant === 'green' ? 8 : 10;
   .cta-clip {
     display: inline-block;
     vertical-align: top;
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - var(--cta-corner) * var(--control-scale)),
+      calc(100% - var(--cta-corner) * var(--control-scale)) 100%,
+      0 100%
+    );
   }
 
   /* ===== Layer 3: glass background + border + content ===== */
   .cta-link {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: calc(10px * var(--control-scale));
     font-family: var(--font-display);
     font-weight: 700;
     text-decoration: none;
@@ -154,8 +161,8 @@ const corner = variant === 'green' ? 8 : 10;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 4px;
-    border-radius: 2px;
+    width: max(2px, calc(4px * var(--control-scale)));
+    border-radius: calc(2px * var(--control-scale));
     z-index: 2;
   }
 
@@ -219,16 +226,18 @@ const corner = variant === 'green' ? 8 : 10;
 
   /* === Sizing === */
   .cta-link-large {
-    padding: 14px 20px 14px 18px;
-    min-width: 194px;
-    min-height: 71px;
+    padding: calc(14px * var(--control-scale)) calc(20px * var(--control-scale))
+      calc(14px * var(--control-scale)) calc(18px * var(--control-scale));
+    min-width: calc(194px * var(--control-scale));
+    min-height: calc(71px * var(--control-scale));
   }
 
   .cta-link-small {
-    padding: 10px 18px 10px 12px;
-    gap: 16px;
-    min-width: 123px;
-    min-height: 45px;
+    padding: calc(10px * var(--control-scale)) calc(18px * var(--control-scale))
+      calc(10px * var(--control-scale)) calc(12px * var(--control-scale));
+    gap: calc(16px * var(--control-scale));
+    min-width: calc(123px * var(--control-scale));
+    min-height: calc(45px * var(--control-scale));
   }
 
   .cta-icon {
@@ -239,15 +248,15 @@ const corner = variant === 'green' ? 8 : 10;
   }
 
   .cta-wrap-large .cta-icon {
-    width: 36px;
-    height: 36px;
+    width: calc(36px * var(--control-scale));
+    height: calc(36px * var(--control-scale));
     filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
   }
 
   .cta-wrap-small .cta-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 4px;
+    width: calc(20px * var(--control-scale));
+    height: calc(20px * var(--control-scale));
+    margin-left: calc(4px * var(--control-scale));
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   }
 
@@ -259,26 +268,31 @@ const corner = variant === 'green' ? 8 : 10;
 
   .cta-label {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    font-size: 16px;
-    letter-spacing: 0.48px;
+    font-size: clamp(10px, calc(16px * var(--control-scale)), 25.6px);
+    letter-spacing: calc(0.48px * var(--control-scale));
   }
 
   .cta-wrap-large .cta-label {
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 24px;
-    letter-spacing: 0.72px;
+    font-size: clamp(14px, calc(24px * var(--control-scale)), 38.4px);
+    letter-spacing: calc(0.72px * var(--control-scale));
   }
 
   .cta-sublabel {
-    font-size: 12px;
+    font-size: clamp(8px, calc(12px * var(--control-scale)), 19.2px);
     opacity: 0.85;
-    letter-spacing: 0.36px;
+    letter-spacing: calc(0.36px * var(--control-scale));
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   }
 
   .cta-wrap-large .cta-sublabel {
-    font-size: 16px;
-    letter-spacing: 0.48px;
+    font-size: clamp(10px, calc(16px * var(--control-scale)), 25.6px);
+    letter-spacing: calc(0.48px * var(--control-scale));
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  :global(html[data-device='mobile']) .cta-link-small,
+  :global(html[data-device='mobile']) .cta-link-large {
+    min-height: 44px;
   }
 </style>

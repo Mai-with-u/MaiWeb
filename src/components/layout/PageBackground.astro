@@ -93,6 +93,10 @@
     background-position: 0 0;
   }
 
+  :global(html[data-layout='wide']) .bg-dots {
+    background-size: calc(48px * var(--ui-scale)) calc(48px * var(--ui-scale));
+  }
+
   /* Decorative crosses */
   .deco-crosses {
     position: fixed;
@@ -109,6 +113,11 @@
     stroke-width: 2;
     stroke-linecap: round;
     opacity: 0.4;
+  }
+
+  :global(html[data-layout='wide']) .cross {
+    width: max(8px, calc(20px * var(--ui-scale)));
+    height: max(8px, calc(20px * var(--ui-scale)));
   }
 
   :global([data-theme='dark']) .cross {
@@ -160,6 +169,10 @@
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
+  }
+
+  :global(html[data-layout='wide']) .deco-blocks > * {
+    scale: var(--ui-scale);
   }
 
   .block {

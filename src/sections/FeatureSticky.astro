@@ -52,7 +52,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     </div>
 
     <!-- === Left: Sticky Screen === -->
-    <div class="sticky-screen-wrap">
+    <div class="sticky-screen-wrap" aria-hidden="true" inert>
       <div class="sticky-screen">
         <!-- Chat mockup -->
         <div class="screen-scene screen-chat" data-scene="chat">
@@ -317,56 +317,48 @@ import maiAvatar from '../assets/mai-avatar.jpg';
   /* ===== Section Layout ===== */
   .sticky-section {
     position: relative;
-    padding: 160px 0 80px;
-  }
-
-  @media (max-width: 768px) {
-    .sticky-section {
-      padding: 80px 0 40px;
-    }
+    padding: clamp(80px, 16vw, 120px) 0 clamp(48px, 10vw, 72px);
   }
 
   .sticky-inner {
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    max-width: 1400px;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 720px;
     margin: 0 auto;
-    padding: 0 16px;
-  }
-
-  @media (min-width: 768px) {
-    .sticky-inner {
-      padding: 0 24px;
-    }
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
   }
 
   /* ===== Right: Scrolling Text Items ===== */
   .sticky-items {
-    width: 560px;
-    margin-right: 0px;
-    margin-left: 60px;
+    order: 1;
+    width: 100%;
+    max-width: 560px;
     display: flex;
     flex-direction: column;
   }
 
   .text-block {
-    min-height: 720px;
+    min-height: clamp(360px, 58vh, 560px);
+    min-height: clamp(360px, 58svh, 560px);
     width: 100%;
     display: flex;
     flex-direction: column;
     font-weight: 700;
     transition: opacity 0.36s ease-out;
-    padding-top: 140px;
+    padding-top: clamp(48px, 10vw, 72px);
   }
 
   .text-block:last-child {
-    min-height: 680px;
+    min-height: clamp(320px, 52vh, 520px);
+    min-height: clamp(320px, 52svh, 520px);
   }
 
   .text-block-title {
     font-family: var(--font-display);
-    font-size: clamp(32px, 4vw, 40px);
+    font-size: clamp(30px, 8vw, 40px);
     font-weight: 700;
     line-height: 1.2;
     color: #000;
@@ -380,7 +372,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
   .text-block-subtitle {
     font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(22px, 3vw, 32px);
+    font-size: clamp(20px, 5.8vw, 32px);
     font-weight: 700;
     color: #121938;
     margin-bottom: 28px;
@@ -389,7 +381,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
   .text-block-desc {
     font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: clamp(15px, 4.2vw, 20px);
     font-weight: 300;
     line-height: 1.6;
     color: rgba(0, 0, 0, 0.5);
@@ -406,19 +398,29 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
   /* ===== Left: Sticky Screen ===== */
   .sticky-screen-wrap {
-    position: relative;
-    margin-top: 140px;
-    width: 720px;
+    --mockup-scale: 1;
+    order: 0;
+    position: sticky;
+    top: max(calc(var(--safe-top) + 76px), 12px);
+    z-index: 5;
+    width: min(100%, 560px);
+    aspect-ratio: 3 / 2;
+    align-self: center;
     flex-shrink: 0;
+    overflow: hidden;
+    border-radius: clamp(18px, 6vw, 32px);
+    background: rgb(219, 131, 36);
   }
 
   .sticky-screen {
-    position: sticky;
+    position: absolute;
+    inset: 0 auto auto 0;
     width: 720px;
     height: 480px;
-    top: calc((100vh - 480px) / 2);
     border-radius: 32px;
     overflow: hidden;
+    transform: scale(var(--mockup-scale));
+    transform-origin: top left;
     transition: background 0.32s ease-in;
     background: rgb(219, 131, 36);
   }
@@ -913,36 +915,75 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     }
   }
 
-  /* ===== Responsive ===== */
-  @media (max-width: 1279px) {
-    .sticky-inner {
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      margin: 0;
-      padding: 0 24px;
-      gap: 0;
-    }
+  /* ===== Viewport modes ===== */
+  :global(html[data-layout='wide']) .sticky-section {
+    padding-top: calc(160px * var(--ui-scale));
+    padding-bottom: calc(80px * var(--ui-scale));
+  }
 
-    .sticky-items {
-      width: 100%;
-      max-width: 560px;
-      margin-left: 0;
-      order: 1;
-    }
+  :global(html[data-layout='wide']) .sticky-inner {
+    max-width: calc(1400px * var(--ui-scale));
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: flex-start;
+    padding-right: calc(24px * var(--ui-scale));
+    padding-left: calc(24px * var(--ui-scale));
+  }
 
-    .text-block {
-      min-height: auto;
-      padding-top: 48px;
-    }
+  :global(html[data-layout='wide']) .sticky-items {
+    order: initial;
+    width: calc(560px * var(--ui-scale));
+    max-width: none;
+    margin-left: calc(60px * var(--ui-scale));
+  }
 
-    .text-block:last-child {
-      min-height: auto;
-    }
+  :global(html[data-layout='wide']) .text-block {
+    min-height: calc(720px * var(--ui-scale));
+    padding-top: calc(140px * var(--ui-scale));
+  }
 
-    .sticky-screen-wrap {
-      display: none;
+  :global(html[data-layout='wide']) .text-block:last-child {
+    min-height: calc(680px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .text-block-title {
+    font-size: clamp(20px, calc(40px * var(--ui-scale)), 64px);
+    margin-bottom: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .text-block-subtitle {
+    font-size: clamp(16px, calc(32px * var(--ui-scale)), 51.2px);
+    margin-bottom: calc(28px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .text-block-desc {
+    font-size: clamp(13px, calc(20px * var(--ui-scale)), 32px);
+    letter-spacing: calc(1.2px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .text-block-desc p {
+    margin-bottom: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .sticky-screen-wrap {
+    order: initial;
+    top: calc((100vh - 480px * var(--ui-scale)) / 2);
+    top: calc((100svh - 480px * var(--ui-scale)) / 2);
+    width: calc(720px * var(--ui-scale));
+    margin-top: calc(140px * var(--ui-scale));
+    align-self: flex-start;
+    border-radius: calc(32px * var(--ui-scale));
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    :global(html[data-layout='wide']) .sticky-screen-wrap {
+      top: max(calc(12px + var(--safe-top)), calc(72px * var(--nav-scale)));
     }
+  }
+
+  :global(html[data-layout='wide'][data-nav='compact']) .sticky-screen-wrap {
+    top: max(calc(80px + var(--safe-top)), calc((100vh - 480px * var(--ui-scale)) / 2));
+    top: max(calc(80px + var(--safe-top)), calc((100svh - 480px * var(--ui-scale)) / 2));
   }
 
   /* === Dark mode === */
@@ -1117,23 +1158,22 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       scene.style.opacity = scene.dataset.scene === 'chat' ? '1' : '0';
     });
 
-    // Scale mockup to fit narrow screens
+    // Keep the 720x480 scene as one atomic canvas and scale it from its real wrapper.
     const stickyScreen = document.querySelector<HTMLElement>('.sticky-screen');
     const stickyWrap = document.querySelector<HTMLElement>('.sticky-screen-wrap');
     function updateMockupScale() {
       if (!stickyScreen || !stickyWrap) return;
-      const isNarrow = window.innerWidth <= 1279;
-      if (isNarrow) {
-        const designW = 720;
-        const scale = Math.min(1, stickyWrap.clientWidth / designW);
-        stickyScreen.style.setProperty('--mockup-scale', String(scale));
-        stickyWrap.style.height = `${480 * scale}px`;
-      } else {
-        stickyScreen.style.setProperty('--mockup-scale', '1');
-        stickyWrap.style.height = '';
-      }
+      const scale = stickyWrap.clientWidth / 720;
+      stickyWrap.style.setProperty('--mockup-scale', String(scale));
     }
+
     window.addEventListener('resize', updateMockupScale);
+    window.addEventListener('viewportmodechange', updateMockupScale);
+    if ('ResizeObserver' in window && stickyWrap) {
+      const mockupResizeObserver = new ResizeObserver(updateMockupScale);
+      mockupResizeObserver.observe(stickyWrap);
+    }
     updateMockupScale();
+    update();
   }
 </script>

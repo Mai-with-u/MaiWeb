@@ -96,10 +96,12 @@ import notFoundMai from '../assets/404-mai.png';
     position: relative;
     z-index: 1;
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 80px 24px 80px;
+    padding: max(80px, calc(64px + var(--safe-top))) max(24px, var(--safe-right)) max(80px, var(--safe-bottom))
+      max(24px, var(--safe-left));
     overflow: hidden;
   }
 
@@ -332,30 +334,131 @@ import notFoundMai from '../assets/404-mai.png';
     color: rgba(255, 122, 48, 0.35);
   }
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .not-found-page {
-      padding: 100px 20px 60px;
-    }
+  /* Viewport modes */
+  :global(html[data-layout='wide']) .not-found-page {
+    padding-top: max(calc(80px * var(--ui-scale)), var(--safe-top));
+    padding-right: max(calc(24px * var(--ui-scale)), var(--safe-right));
+    padding-bottom: max(calc(80px * var(--ui-scale)), var(--safe-bottom));
+    padding-left: max(calc(24px * var(--ui-scale)), var(--safe-left));
+  }
 
-    .square-1,
-    .square-2,
-    .square-3,
-    .square-4,
-    .square-5,
-    .question-1,
-    .question-2,
-    .question-3 {
-      display: none;
-    }
+  :global(html[data-layout='wide']) .not-found-bg-text {
+    width: min(100vw, calc(1600px * var(--ui-scale)));
+  }
 
-    .not-found-actions {
-      flex-direction: column;
-      width: 100%;
-    }
+  :global(html[data-layout='wide']) .square-1 {
+    top: calc(150px * var(--ui-scale));
+    width: calc(24px * var(--ui-scale));
+    height: calc(24px * var(--ui-scale));
+  }
 
-    .not-found-btn {
-      width: 100%;
-    }
+  :global(html[data-layout='wide']) .square-2 {
+    top: calc(196px * var(--ui-scale));
+    width: calc(18px * var(--ui-scale));
+    height: calc(18px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .square-3 {
+    top: calc(650px * var(--ui-scale));
+    width: calc(32px * var(--ui-scale));
+    height: calc(32px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .square-4 {
+    top: calc(690px * var(--ui-scale));
+    width: calc(20px * var(--ui-scale));
+    height: calc(20px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .square-5 {
+    top: calc(100px * var(--ui-scale));
+    width: calc(12px * var(--ui-scale));
+    height: calc(12px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .question-1,
+  :global(html[data-layout='wide']) .question-2 {
+    width: calc(48px * var(--ui-scale));
+    height: calc(48px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .question-1 {
+    top: calc(236px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .question-2 {
+    top: calc(300px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .question-3 {
+    top: calc(600px * var(--ui-scale));
+    width: calc(40px * var(--ui-scale));
+    height: calc(40px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .not-found-content {
+    max-width: calc(800px * var(--ui-scale));
+    gap: calc(40px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .not-found-illustration {
+    max-width: calc(420px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .not-found-text {
+    gap: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .not-found-title {
+    font-size: clamp(20px, calc(48px * var(--ui-scale)), 76.8px);
+  }
+
+  :global(html[data-layout='wide']) .not-found-subtitle {
+    font-size: clamp(13px, calc(20px * var(--ui-scale)), 32px);
+  }
+
+  :global(html[data-layout='wide']) .not-found-actions {
+    gap: calc(20px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .not-found-btn {
+    min-width: calc(140px * var(--ui-scale));
+    padding: calc(12px * var(--ui-scale)) calc(18px * var(--ui-scale));
+    border-radius: calc(16px * var(--ui-scale));
+    font-size: clamp(12px, calc(18px * var(--ui-scale)), 28.8px);
+  }
+
+  :global(html[data-layout='wide']) .btn-icon {
+    width: calc(24px * var(--ui-scale));
+    height: calc(24px * var(--ui-scale));
+  }
+
+  :global(html[data-device='mobile']) .not-found-btn {
+    min-height: 44px;
+  }
+
+  :global(html[data-layout='compact']) .not-found-page {
+    padding: max(100px, calc(76px + var(--safe-top))) max(20px, var(--safe-right)) max(60px, var(--safe-bottom))
+      max(20px, var(--safe-left));
+  }
+
+  :global(html[data-layout='compact']) .square-1,
+  :global(html[data-layout='compact']) .square-2,
+  :global(html[data-layout='compact']) .square-3,
+  :global(html[data-layout='compact']) .square-4,
+  :global(html[data-layout='compact']) .square-5,
+  :global(html[data-layout='compact']) .question-1,
+  :global(html[data-layout='compact']) .question-2,
+  :global(html[data-layout='compact']) .question-3 {
+    display: none;
+  }
+
+  :global(html[data-layout='compact']) .not-found-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  :global(html[data-layout='compact']) .not-found-btn {
+    width: 100%;
   }
 </style>

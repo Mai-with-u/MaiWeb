@@ -24,6 +24,48 @@
   --transition-fast: 0.2s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease;
+
+  /* Runtime viewport tokens. 1600x900 resolves to --ui-scale: 1. */
+  --ui-scale: 1;
+  --viewport-width: 100vw;
+  --viewport-height: 100vh;
+  --page-gutter: 24px;
+  --container-max: 1400px;
+  --container-wide-max: 1500px;
+  --nav-scale: 1;
+  --control-scale: 1;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+html[data-layout='wide'] {
+  --page-gutter: clamp(12px, calc(48px * var(--ui-scale)), 76.8px);
+  --container-max: calc(1400px * var(--ui-scale));
+  --container-wide-max: calc(1500px * var(--ui-scale));
+}
+
+html[data-layout='compact'] {
+  --page-gutter: clamp(16px, 5vw, 24px);
+  --container-max: 100%;
+  --container-wide-max: 100%;
+}
+
+html[data-nav='full'] {
+  --nav-scale: max(0.75, var(--ui-scale));
+}
+
+html[data-nav='compact'] {
+  --nav-scale: 1;
+}
+
+html[data-layout='wide'][data-device='desktop'] {
+  --control-scale: var(--ui-scale);
+}
+
+html[data-layout='wide'][data-device='mobile'] {
+  --control-scale: max(0.78, var(--ui-scale));
 }
 
 /* Hard color values for compatibility */
@@ -69,6 +111,7 @@
 }
 
 html {
+  min-width: 0;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -107,6 +150,16 @@ body {
   color: rgb(var(--color-text));
   background: rgb(var(--color-bg));
   overflow-x: hidden;
+  min-width: 0;
+  min-height: 100%;
+}
+
+html[data-layout='wide'] body {
+  font-size: clamp(13px, calc(16px * var(--ui-scale)), 25.6px);
+}
+
+html[data-layout='compact'] body {
+  font-size: clamp(15px, calc(16px * var(--ui-scale)), 18px);
 }
 
 a {
@@ -165,48 +218,24 @@ h4 {
 /* === Utility Classes === */
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 16px;
+  padding-right: max(var(--page-gutter), var(--safe-right));
+  padding-left: max(var(--page-gutter), var(--safe-left));
   min-width: 0;
-}
-
-@media (min-width: 480px) {
-  .container {
-    padding: 0 24px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding: 0 48px;
-  }
 }
 
 .container-wide {
   width: 100%;
-  max-width: 1500px;
+  max-width: var(--container-wide-max);
   margin: 0 auto;
-  padding: 0 16px;
+  padding-right: max(var(--page-gutter), var(--safe-right));
+  padding-left: max(var(--page-gutter), var(--safe-left));
   min-width: 0;
 }
 
-@media (min-width: 480px) {
-  .container-wide {
-    padding: 0 24px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container-wide {
-    padding: 0 48px;
-  }
-}
-
-@media (max-width: 767px) {
-  .hide-mobile {
-    display: none !important;
-  }
+html[data-device='mobile'] .hide-mobile {
+  display: none !important;
 }
 
 .animate-fade-in {
@@ -251,99 +280,6 @@ h4 {
 }
 .reveal-delay-3 {
   transition-delay: 0.3s;
-}
-
-/* === Shared Feature Section Styles === */
-.feature-section {
-  position: relative;
-  min-height: 872px;
-  display: flex;
-  align-items: center;
-  padding: 100px 0;
-  overflow: hidden;
-}
-
-.feature-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 56px;
-}
-
-.feature-visual {
-  flex-shrink: 0;
-  width: 100%;
-  max-width: 720px;
-}
-
-.feature-mockup-base {
-  width: 100%;
-  aspect-ratio: 720 / 480;
-  border-radius: 32px;
-  overflow: hidden;
-  position: relative;
-}
-
-.feature-content {
-  flex: 1;
-  max-width: 520px;
-  min-width: 0;
-}
-
-.feature-title {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 700;
-  line-height: normal;
-  margin-bottom: 16px;
-}
-
-.feature-title span {
-  display: block;
-}
-
-.feature-subtitle {
-  font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 700;
-  color: #121938;
-  margin-bottom: 28px;
-  line-height: normal;
-}
-
-.feature-desc {
-  font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: clamp(16px, 2vw, 24px);
-  line-height: 1.6;
-  color: rgba(0, 0, 0, 0.5);
-  letter-spacing: 1.2px;
-}
-
-.feature-desc p {
-  margin-bottom: 16px;
-}
-
-.feature-desc p:last-child {
-  margin-bottom: 0;
-}
-
-@media (min-width: 1100px) {
-  .feature-inner {
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 80px;
-  }
-
-  .feature-visual {
-    flex: 0 0 720px;
-  }
-
-  .feature-content {
-    flex: 1;
-    max-width: 520px;
-    padding-top: 20px;
-  }
 }
 
 /* === Focus Visible (keyboard navigation) === */

@@ -212,6 +212,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-top: max(16px, var(--safe-top));
+    padding-right: max(16px, var(--safe-right));
+    padding-bottom: max(16px, var(--safe-bottom));
+    padding-left: max(16px, var(--safe-left));
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
@@ -227,9 +231,9 @@
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
     padding: 32px 36px;
-    max-width: 560px;
-    width: calc(100vw - 48px);
+    width: min(560px, 100%);
     max-height: 80vh;
+    max-height: min(80vh, calc(100dvh - max(32px, var(--safe-top)) - max(32px, var(--safe-bottom))));
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -278,6 +282,7 @@
     border-radius: 24px;
     padding: 40px;
     max-width: 760px;
+    width: min(760px, 100%);
     box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
     backdrop-filter: none;
   }
@@ -596,6 +601,7 @@
     .modal-card--qq {
       padding: 28px 22px;
       max-height: 86vh;
+      max-height: min(86vh, calc(100dvh - max(24px, var(--safe-top)) - max(24px, var(--safe-bottom))));
     }
 
     .modal-card--qq .modal-close {
@@ -966,6 +972,7 @@
     .modal-card.modal-card--qq {
       padding: 28px 22px;
       max-height: 86vh;
+      max-height: min(86vh, calc(100dvh - max(24px, var(--safe-top)) - max(24px, var(--safe-bottom))));
     }
 
     .modal-card--qq .modal-close {

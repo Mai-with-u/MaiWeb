@@ -4,6 +4,7 @@ import SeoHead from '../components/layout/SeoHead.astro';
 import PageBackground from '../components/layout/PageBackground.astro';
 import GlobalModal from '../components/layout/GlobalModal.astro';
 import RevealScript from '../components/layout/RevealScript.astro';
+import ViewportModeScript from '../components/layout/ViewportModeScript.astro';
 
 interface Props {
   title?: string;
@@ -19,9 +20,10 @@ const {
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-device="desktop" data-layout="compact" data-nav="compact" data-orientation="portrait">
   <head>
     <SeoHead title={title} description={description} canonicalPath={canonicalPath} />
+    <ViewportModeScript />
   </head>
   <body>
     <PageBackground />

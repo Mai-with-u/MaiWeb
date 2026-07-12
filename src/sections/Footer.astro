@@ -73,7 +73,7 @@ import easterEgg from '../assets/easter-egg.png';
   .footer {
     position: relative;
     min-height: 160px;
-    padding: 40px 0 60px;
+    padding: 40px 0 max(60px, var(--safe-bottom));
     text-align: center;
     overflow: hidden;
   }
@@ -154,7 +154,7 @@ import easterEgg from '../assets/easter-egg.png';
     }
     12.5%,
     87.5% {
-      transform: translateX(-50%) translateY(-95px);
+      transform: translateX(-50%) translateY(calc(-95px * var(--ui-scale)));
     }
     100% {
       transform: translateX(-50%) translateY(0);
@@ -198,37 +198,82 @@ import easterEgg from '../assets/easter-egg.png';
     color: #f9fafc;
   }
 
-  @media (max-width: 768px) {
-    .easter-egg {
-      width: 80px;
-      height: 80px;
-      bottom: -60px;
-    }
+  :global(html[data-layout='wide']) .footer {
+    min-height: calc(160px * var(--ui-scale));
+    padding-top: calc(40px * var(--ui-scale));
+    padding-bottom: max(calc(60px * var(--ui-scale)), var(--safe-bottom));
+  }
 
-    .easter-bubble {
-      bottom: -40px;
-      transform: translateX(calc(-50% + 100px)) translateY(-60px);
-    }
+  :global(html[data-layout='wide']) .footer-inner {
+    gap: calc(12px * var(--ui-scale));
+  }
 
-    .easter-bubble-text {
-      font-size: 13px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      border-bottom-left-radius: 3px;
-      max-width: 160px;
-    }
+  :global(html[data-layout='wide']) .footer-copyright,
+  :global(html[data-layout='wide']) .footer-credit {
+    font-size: clamp(10px, calc(12px * var(--ui-scale)), 19.2px);
+  }
 
-    @keyframes easterRise {
-      0% {
-        transform: translateX(-50%) translateY(0);
-      }
-      12.5%,
-      87.5% {
-        transform: translateX(-50%) translateY(-60px);
-      }
-      100% {
-        transform: translateX(-50%) translateY(0);
-      }
+  :global(html[data-layout='wide']) .footer-copyright {
+    max-width: calc(640px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .easter-egg {
+    bottom: calc(-95px * var(--ui-scale));
+    width: calc(120px * var(--ui-scale));
+    height: calc(120px * var(--ui-scale));
+    border-radius: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .easter-egg img {
+    border-radius: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .easter-bubble {
+    bottom: calc(-64px * var(--ui-scale));
+    transform: translateX(calc(-50% + 138px * var(--ui-scale))) translateY(calc(-95px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .easter-bubble-text {
+    padding: calc(12px * var(--ui-scale)) calc(18px * var(--ui-scale));
+    border-radius: calc(20px * var(--ui-scale));
+    border-bottom-left-radius: calc(4px * var(--ui-scale));
+    font-size: clamp(10px, calc(16px * var(--ui-scale)), 25.6px);
+  }
+
+  :global(html[data-layout='compact']) .easter-egg {
+    left: max(15%, var(--safe-left));
+    width: 80px;
+    height: 80px;
+    bottom: -60px;
+  }
+
+  :global(html[data-layout='compact']) .easter-egg.is-rising {
+    animation-name: easterRiseCompact;
+  }
+
+  :global(html[data-layout='compact']) .easter-bubble {
+    bottom: -40px;
+    transform: translateX(calc(-50% + 100px)) translateY(-60px);
+  }
+
+  :global(html[data-layout='compact']) .easter-bubble-text {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border-bottom-left-radius: 3px;
+    max-width: 160px;
+  }
+
+  @keyframes easterRiseCompact {
+    0% {
+      transform: translateX(-50%) translateY(0);
+    }
+    12.5%,
+    87.5% {
+      transform: translateX(-50%) translateY(-60px);
+    }
+    100% {
+      transform: translateX(-50%) translateY(0);
     }
   }
 </style>

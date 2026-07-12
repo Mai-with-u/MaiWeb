@@ -111,9 +111,10 @@ import logoIcon from '../assets/logo-icon.png';
   /* === Layer 0: backdrop blur only === */
   .navbar-blur {
     position: fixed;
-    top: 16px;
+    top: max(var(--safe-top), calc(16px * var(--nav-scale)));
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(var(--nav-scale));
+    transform-origin: top center;
     z-index: 100;
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -490,7 +491,7 @@ import logoIcon from '../assets/logo-icon.png';
 
   .nav-hamburger:hover {
     background: rgba(233, 127, 15, 0.08);
-    color: var(--color-primary);
+    color: var(--color-primary);1280
   }
 
   .nav-menu-mobile {
@@ -508,10 +509,6 @@ import logoIcon from '../assets/logo-icon.png';
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
     z-index: 99;
-  }
-
-  .nav-menu-mobile.is-open {
-    display: flex;
   }
 
   .nav-item-mobile {
@@ -532,43 +529,47 @@ import logoIcon from '../assets/logo-icon.png';
     color: var(--color-primary);
   }
 
-  @media (max-width: 639px) {
-    .navbar-glass {
-      width: auto;
-      min-width: 300px;
-      max-width: calc(100vw - 32px);
-      gap: 6px;
-      padding: 0 8px;
-    }
-
-    .nav-divider {
-      display: none;
-    }
-
-    .logo-title {
-      font-size: 14px;
-    }
-
-    .logo-subtitle {
-      font-size: 10px;
-    }
-
-    .nav-cta {
-      padding: 6px 14px;
-      height: 36px;
-      min-width: 0;
-      font-size: 14px;
-    }
-
-    .nav-hamburger {
-      display: flex;
-    }
+  :global(html[data-nav='compact']) .navbar-glass {
+    width: auto;
+    min-width: min(300px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
+    max-width: calc(100vw - 32px - var(--safe-left) - var(--safe-right));
+    gap: 6px;
+    padding: 0 8px;
   }
 
-  @media (min-width: 640px) {
-    .nav-menu {
-      display: flex;
-    }
+  :global(html[data-nav='compact']) .nav-divider {
+    display: none;
+  }
+
+  :global(html[data-nav='compact']) .logo-title {
+    font-size: 14px;
+  }
+
+  :global(html[data-nav='compact']) .logo-subtitle {
+    font-size: 10px;
+  }
+
+  :global(html[data-nav='compact']) .nav-cta {
+    height: 36px;
+    min-width: 0;
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+
+  :global(html[data-nav='compact']) .nav-hamburger {
+    display: flex;
+  }
+
+  :global(html[data-nav='compact']) .nav-menu-mobile.is-open {
+    display: flex;
+  }
+
+  :global(html[data-nav='full']) .nav-menu {
+    display: flex;
+  }
+
+  :global(html[data-nav='full']) .nav-menu-mobile.is-open {
+    display: none;
   }
 </style>
 
@@ -636,17 +637,21 @@ import logoIcon from '../assets/logo-icon.png';
   const hamburger = document.querySelector('.nav-hamburger');
   const mobileMenu = document.querySelector('.nav-menu-mobile');
   if (hamburger && mobileMenu) {
+    const closeMobileMenu = () => {
+      mobileMenu.classList.remove('is-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    };
+
     hamburger.addEventListener('click', () => {
       const open = mobileMenu.classList.toggle('is-open');
       hamburger.setAttribute('aria-expanded', String(open));
     });
 
     mobileMenu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('is-open');
-        hamburger.setAttribute('aria-expanded', 'false');
-      });
+      link.addEventListener('click', closeMobileMenu);
     });
+
+    window.addEventListener('viewportmodechange', closeMobileMenu);
   }
 
   const themeToggle = document.querySelector('.theme-toggle');

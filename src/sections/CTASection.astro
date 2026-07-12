@@ -22,8 +22,9 @@ import CtaButton from '../components/CtaButton.astro';
 <style>
   .cta-section {
     position: relative;
-    min-height: calc(100vh - 160px);
-    padding: 165px 0 0px;
+    min-height: 72vh;
+    min-height: 72svh;
+    padding: clamp(96px, 22vw, 165px) 0 max(48px, var(--safe-bottom));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,10 +40,10 @@ import CtaButton from '../components/CtaButton.astro';
 
   .cta-title {
     font-family: var(--font-display);
-    font-size: clamp(32px, 6vw, 72px);
+    font-size: clamp(30px, 8.5vw, 56px);
     font-weight: 700;
     line-height: 1.15;
-    letter-spacing: 3.6px;
+    letter-spacing: clamp(1.2px, 0.5vw, 3.6px);
   }
 
   .title-orange {
@@ -54,17 +55,32 @@ import CtaButton from '../components/CtaButton.astro';
   }
 
   .cta-action {
-    margin-top: 32px;
+    margin-top: clamp(24px, calc(32px * var(--ui-scale)), 40px);
   }
 
-  .cta-action :global(.cta-btn-primary) {
+  .cta-action :global(.cta-link-primary) {
     min-width: 194px;
     min-height: 71px;
   }
 
-  @media (max-width: 768px) {
-    .cta-section {
-      padding: 165px 0 0px;
+  :global(html[data-layout='wide']) .cta-section {
+    min-height: calc(100vh - 160px * var(--ui-scale));
+    min-height: calc(100svh - 160px * var(--ui-scale));
+    padding-top: calc(165px * var(--ui-scale));
+    padding-bottom: var(--safe-bottom);
+  }
+
+  :global(html[data-layout='wide']) .cta-title {
+    font-size: clamp(24px, calc(72px * var(--ui-scale)), 115.2px);
+    letter-spacing: calc(3.6px * var(--ui-scale));
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    :global(html[data-layout='wide']) .cta-section {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding-top: calc(80px * var(--ui-scale));
+      padding-bottom: calc(48px * var(--ui-scale));
     }
   }
 </style>

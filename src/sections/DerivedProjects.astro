@@ -1070,7 +1070,248 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     }
   }
 
-  @media (max-width: 767px) {
+  :global(html[data-layout='wide']) .projects-page {
+    padding-top: max(calc(95px * var(--ui-scale)), calc(80px * var(--nav-scale) + var(--safe-top)));
+    padding-bottom: max(calc(120px * var(--ui-scale)), var(--safe-bottom));
+  }
+
+  :global(html[data-layout='wide'][data-nav='compact']) .projects-page {
+    padding-top: max(calc(88px + var(--safe-top)), calc(95px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .projects-container {
+    max-width: calc(1448px * var(--ui-scale));
+    padding-right: max(calc(52px * var(--ui-scale)), var(--safe-right));
+    padding-left: max(calc(52px * var(--ui-scale)), var(--safe-left));
+  }
+
+  :global(html[data-layout='wide']) .sub-page-header {
+    min-height: calc(220px * var(--ui-scale));
+    gap: calc(12px * var(--ui-scale));
+    padding-top: calc(40px * var(--ui-scale));
+    padding-bottom: calc(36px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .breadcrumb {
+    gap: calc(8px * var(--ui-scale));
+    font-size: clamp(10px, calc(13px * var(--ui-scale)), 20.8px);
+  }
+
+  :global(html[data-layout='wide']) .title-block {
+    gap: calc(8px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .eyebrow {
+    font-size: clamp(10px, calc(14px * var(--ui-scale)), 22.4px);
+  }
+
+  :global(html[data-layout='wide']) .title-block h1 {
+    font-size: clamp(22px, calc(48px * var(--ui-scale)), 76.8px);
+  }
+
+  :global(html[data-layout='wide']) .header-desc {
+    max-width: calc(620px * var(--ui-scale));
+    font-size: clamp(12px, calc(16px * var(--ui-scale)), 25.6px);
+  }
+
+  :global(html[data-layout='wide']) .project-chapter {
+    gap: calc(40px * var(--ui-scale));
+    padding-bottom: calc(72px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .featured-grid {
+    grid-template-columns: minmax(0, calc(720px * var(--ui-scale))) minmax(0, 1fr);
+    gap: calc(24px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .right-stack {
+    display: flex;
+    grid-template-columns: none;
+    gap: calc(24px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .compact-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: calc(24px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .project-card {
+    min-height: max(130px, calc(215px * var(--ui-scale)));
+    padding: max(12px, calc(24px * var(--ui-scale)));
+    border-radius: max(12px, calc(24px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .project-card-large {
+    min-height: max(210px, calc(454px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .card-content {
+    max-width: calc(460px * var(--ui-scale));
+    gap: max(5px, calc(10px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .card-content h3 {
+    font-size: clamp(16px, calc(28px * var(--ui-scale)), 44.8px);
+  }
+
+  :global(html[data-layout='wide']) .project-card-small .card-content h3 {
+    font-size: clamp(14px, calc(22px * var(--ui-scale)), 35.2px);
+  }
+
+  :global(html[data-layout='wide']) .card-content p,
+  :global(html[data-layout='wide']) .card-link {
+    font-size: clamp(11px, calc(14px * var(--ui-scale)), 22.4px);
+  }
+
+  :global(html[data-layout='wide']) .compact-card {
+    min-height: max(72px, calc(96px * var(--ui-scale)));
+    gap: max(8px, calc(16px * var(--ui-scale)));
+    padding: max(12px, calc(20px * var(--ui-scale)));
+    border-radius: max(10px, calc(16px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .compact-marker {
+    width: max(3px, calc(6px * var(--ui-scale)));
+    flex-basis: max(3px, calc(6px * var(--ui-scale)));
+    border-radius: max(2px, calc(3px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .compact-copy strong {
+    font-size: clamp(13px, calc(18px * var(--ui-scale)), 28.8px);
+  }
+
+  :global(html[data-layout='wide']) .compact-copy span {
+    font-size: clamp(10px, calc(13px * var(--ui-scale)), 20.8px);
+  }
+
+  :global(html[data-layout='wide']) .market-spotlight {
+    min-height: max(280px, calc(540px * var(--ui-scale)));
+    gap: calc(48px * var(--ui-scale));
+    padding: max(14px, calc(24px * var(--ui-scale)));
+    border-radius: max(14px, calc(24px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .market-copy {
+    max-width: calc(900px * var(--ui-scale));
+    gap: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .spotlight-label {
+    height: max(20px, calc(28px * var(--ui-scale)));
+    padding-right: max(8px, calc(12px * var(--ui-scale)));
+    padding-left: max(8px, calc(12px * var(--ui-scale)));
+    font-size: clamp(10px, calc(13px * var(--ui-scale)), 20.8px);
+  }
+
+  :global(html[data-layout='wide']) .market-copy h2 {
+    font-size: clamp(20px, calc(40px * var(--ui-scale)), 64px);
+  }
+
+  :global(html[data-layout='wide']) .market-copy p,
+  :global(html[data-layout='wide']) .spotlight-link {
+    font-size: clamp(12px, calc(16px * var(--ui-scale)), 25.6px);
+  }
+
+  :global(html[data-layout='wide']) .manifesto-section {
+    padding-top: calc(120px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .manifesto-intro {
+    max-width: calc(760px * var(--ui-scale));
+    gap: calc(16px * var(--ui-scale));
+    margin-bottom: calc(39px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .manifesto-intro h2 {
+    font-size: clamp(20px, calc(36px * var(--ui-scale)), 57.6px);
+  }
+
+  :global(html[data-layout='wide']) .manifesto-intro p {
+    max-width: calc(560px * var(--ui-scale));
+    font-size: clamp(12px, calc(16px * var(--ui-scale)), 25.6px);
+  }
+
+  :global(html[data-layout='wide']) .manifesto-grid {
+    grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
+    gap: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .quote-card {
+    min-height: max(240px, calc(381px * var(--ui-scale)));
+    padding: max(22px, calc(68px * var(--ui-scale)));
+    border-radius: max(14px, calc(24px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .contributors-bg,
+  :global(html[data-layout='wide']) .contributors-track {
+    gap: max(6px, calc(14px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .contributor-avatar {
+    width: max(24px, calc(42px * var(--ui-scale)));
+    height: max(24px, calc(42px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .quote-mark,
+  :global(html[data-layout='wide']) .quote-mark svg {
+    width: max(28px, calc(56px * var(--ui-scale)));
+    height: max(28px, calc(56px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .quote-text {
+    max-width: calc(560px * var(--ui-scale));
+    margin-top: calc(24px * var(--ui-scale));
+    font-size: clamp(12px, calc(18px * var(--ui-scale)), 28.8px);
+  }
+
+  :global(html[data-layout='wide']) .quote-text strong {
+    font-size: clamp(16px, calc(24px * var(--ui-scale)), 38.4px);
+  }
+
+  :global(html[data-layout='wide']) .quote-subtext {
+    margin-top: calc(22px * var(--ui-scale));
+    font-size: clamp(10px, calc(14px * var(--ui-scale)), 22.4px);
+  }
+
+  :global(html[data-layout='wide']) .action-stack {
+    gap: calc(16px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='wide']) .action-card {
+    min-height: max(112px, calc(177px * var(--ui-scale)));
+    gap: calc(20px * var(--ui-scale));
+    padding: max(14px, calc(24px * var(--ui-scale)));
+    border-radius: max(12px, calc(20px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .action-copy {
+    max-width: calc(320px * var(--ui-scale));
+    gap: max(5px, calc(10px * var(--ui-scale)));
+  }
+
+  :global(html[data-layout='wide']) .action-copy strong {
+    font-size: clamp(14px, calc(22px * var(--ui-scale)), 35.2px);
+  }
+
+  :global(html[data-layout='wide']) .action-copy span {
+    font-size: clamp(10px, calc(14px * var(--ui-scale)), 22.4px);
+  }
+
+  :global(html[data-layout='wide']) .action-button {
+    min-width: max(56px, calc(129px * var(--ui-scale)));
+    height: max(28px, calc(48px * var(--ui-scale)));
+    padding-right: calc(16px * var(--ui-scale));
+    padding-left: calc(16px * var(--ui-scale));
+    border-radius: max(7px, calc(12px * var(--ui-scale)));
+    font-size: clamp(11px, calc(18px * var(--ui-scale)), 28.8px);
+  }
+
+  :global(html[data-device='mobile']) .action-button {
+    min-width: 96px;
+    min-height: 44px;
+  }
+
+  @media (max-width: 767px) and (orientation: portrait) {
     .projects-page {
       padding: 88px 0 80px;
     }
@@ -1176,7 +1417,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     }
   }
 
-  @media (max-width: 420px) {
+  @media (max-width: 420px) and (orientation: portrait) {
     .projects-container {
       padding: 0 16px;
     }
@@ -1185,6 +1426,13 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     .action-card,
     .project-card {
       padding: 18px;
+    }
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .card-link {
+      opacity: 1;
+      transform: none;
     }
   }
 </style>
