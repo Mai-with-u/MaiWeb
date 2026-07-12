@@ -58,11 +58,6 @@ import CtaButton from '../components/CtaButton.astro';
     margin-top: clamp(24px, calc(32px * var(--ui-scale)), 40px);
   }
 
-  .cta-action :global(.cta-link-primary) {
-    min-width: 194px;
-    min-height: 71px;
-  }
-
   :global(html[data-layout='wide']) .cta-section {
     min-height: calc(100vh - 160px * var(--ui-scale));
     min-height: calc(100svh - 160px * var(--ui-scale));
@@ -73,6 +68,29 @@ import CtaButton from '../components/CtaButton.astro';
   :global(html[data-layout='wide']) .cta-title {
     font-size: clamp(24px, calc(72px * var(--ui-scale)), 115.2px);
     letter-spacing: calc(3.6px * var(--ui-scale));
+  }
+
+  :global(html[data-layout='compact']) .cta-section {
+    min-height: calc(100vh - 160px);
+    min-height: calc(100svh - 160px);
+    padding-top: calc(160px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+  }
+
+  :global(html[data-layout='compact']) .cta-action :global(.cta-link-large) {
+    min-width: 160px;
+    min-height: 56px;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  :global(html[data-layout='compact']) .cta-action :global(.cta-icon) {
+    width: 28px;
+    height: 28px;
+  }
+
+  :global(html[data-layout='compact']) .cta-action :global(.cta-label) {
+    font-size: 18px;
   }
 
   @media (max-height: 520px) and (orientation: landscape) {

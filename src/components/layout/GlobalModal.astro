@@ -37,17 +37,132 @@
     }
   }
 
+  function escapeHtml(value: string): string {
+    return value.replace(
+      /[&<>'"]/g,
+      (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] || character
+    );
+  }
+
+  function safeGitHubUrl(value: string | undefined, fallback: string): string {
+    try {
+      const url = new URL(value || fallback);
+      const isGitHub = url.hostname === 'github.com' || url.hostname.endsWith('.github.com');
+      return url.protocol === 'https:' && isGitHub ? url.href : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function platformIcon(platform: 'android' | 'windows'): string {
+    if (platform === 'android') {
+      return `
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M10.2 9.4 7.8 5.8M21.8 9.4l2.4-3.6M8.4 13.2h15.2M9 13.2v8.6a2.2 2.2 0 0 0 2.2 2.2h9.6a2.2 2.2 0 0 0 2.2-2.2v-8.6M9 14H6.8v7M23 14h2.2v7M12 24v3M20 24v3" />
+          <path d="M9 13.2a7 7 0 0 1 14 0" />
+          <circle cx="12.5" cy="11" r=".8" class="versions-icon__fill" />
+          <circle cx="19.5" cy="11" r=".8" class="versions-icon__fill" />
+        </svg>`;
+    }
+    return `
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path class="versions-icon__fill" d="m4 6 10-1.4v10.2H4V6Zm12-1.7L28 2.6v12.2H16V4.3ZM4 17.2h10v10.2L4 26v-8.8Zm12 0h12v12.2l-12-1.7V17.2Z" />
+      </svg>`;
+  }
+
+  function versionsMarkup(trigger: HTMLElement): string {
+    const currentPlatform = trigger.dataset.currentPlatform === 'android' ? 'android' : 'windows';
+    const otherPlatform = currentPlatform === 'android' ? 'windows' : 'android';
+    const isAndroid = otherPlatform === 'android';
+    const fallbackUrl = isAndroid
+      ? 'https://github.com/Mai-with-u/MaiDroid/releases'
+      : 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
+    const downloadUrl = safeGitHubUrl(isAndroid ? trigger.dataset.androidUrl : trigger.dataset.windowsUrl, fallbackUrl);
+    const projectUrl = isAndroid
+      ? 'https://github.com/Mai-with-u/MaiDroid'
+      : 'https://github.com/Mai-with-u/MaiBotOneKey';
+    const version = isAndroid ? trigger.dataset.androidVersion : trigger.dataset.windowsVersion;
+    const safeVersion = version ? `版本 ${escapeHtml(version)}` : '自动获取最新 Release';
+    const currentName = currentPlatform === 'android' ? 'Android 版' : 'Windows 版';
+    const productName = isAndroid ? 'MaiDroid Android 客户端' : 'MaiBot Windows 一键包';
+    const packageName = isAndroid ? 'APK 安装包' : 'EXE 一键包';
+    const description = isAndroid
+      ? '在 Android 手机上直接运行麦麦客户端，适合移动设备安装与体验。'
+      : '已整合运行环境与启动工具，适合在 Windows 电脑上快速完成部署。';
+    const note = isAndroid
+      ? '<strong>Beta 提示</strong><span>MaiDroid 目前仍在测试阶段，安装前请确认允许安装来自浏览器的应用。</span>'
+      : '<strong>Windows 提示</strong><span>一键包适用于 Windows 设备；下载完成后按引导启动即可。</span>';
+
+    return `
+      <div class="versions-modal versions-modal--${otherPlatform}">
+        <header class="versions-modal__header">
+          <p class="versions-modal__eyebrow"><span aria-hidden="true"></span> OTHER VERSIONS</p>
+          <h2 class="versions-modal__title" id="modal-title">其他版本</h2>
+          <p class="versions-modal__subtitle">当前已为你优先推荐 ${currentName}，这里可以获取另一平台版本或选择高级部署方式。</p>
+        </header>
+
+        <section class="versions-feature" aria-labelledby="versions-platform-title">
+          <div class="versions-feature__icon versions-icon">${platformIcon(otherPlatform)}</div>
+          <div class="versions-feature__content">
+            <div class="versions-feature__topline">
+              <span class="versions-feature__badge">另一平台</span>
+              <span class="versions-feature__version">${safeVersion}</span>
+            </div>
+            <h3 id="versions-platform-title">${productName}</h3>
+            <p>${description}</p>
+            <div class="versions-feature__actions">
+              <a class="versions-download" href="${downloadUrl}" target="_blank" rel="noopener noreferrer">
+                <span>立即下载 ${packageName}</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" /></svg>
+              </a>
+              <a class="versions-project" href="${projectUrl}" target="_blank" rel="noopener noreferrer">查看项目</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="versions-methods" aria-labelledby="versions-methods-title">
+          <div class="versions-methods__heading">
+            <h3 id="versions-methods-title">高级部署</h3>
+            <span>ADVANCED SETUP</span>
+          </div>
+          <div class="versions-methods__grid">
+            <a class="versions-method" href="https://github.com/Mai-with-u/MaiBot/releases/latest" target="_blank" rel="noopener noreferrer">
+              <span class="versions-method__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3M14 3h7v7M10 14 21 3" /></svg>
+              </span>
+              <span class="versions-method__copy"><strong>源码安装</strong><small>自行配置运行环境与依赖</small></span>
+              <span class="versions-method__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="versions-method versions-method--docker" href="https://docs.mai-mai.org/manual/deployment/" target="_blank" rel="noopener noreferrer">
+              <span class="versions-method__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 15h16M6 11h3v4H6zM10.5 11h3v4h-3zM15 11h3v4h-3zM10.5 6h3v4h-3zM3 15c.4 4 3.2 6 7.5 6 5.2 0 8.4-2.3 9.5-6 1.5 0 2.5-.8 3-2-1-.7-2.2-.8-3.4-.3C18.8 10.9 17 10 15 10" /></svg>
+              </span>
+              <span class="versions-method__copy"><strong>Docker 部署</strong><small>查看容器化部署完整文档</small></span>
+              <span class="versions-method__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
+
+        <aside class="versions-note">
+          <span class="versions-note__mark" aria-hidden="true">i</span>
+          <span class="versions-note__copy">${note}</span>
+        </aside>
+      </div>`;
+  }
+
   function openModal(trigger: HTMLElement) {
     if (!modal || !modalBody) return;
     lastTrigger = trigger;
     const content = trigger.getAttribute('data-modal');
     modalCard?.classList.toggle('modal-card--qq', content === 'qq');
+    modalCard?.classList.toggle('modal-card--versions', content === 'versions');
+    trigger.setAttribute('aria-expanded', 'true');
     if (content === 'qq') {
       modalBody.innerHTML = `
         <div class="qq-modal">
           <header class="qq-modal__header">
             <div class="qq-modal__title-wrap">
-              <h2 class="qq-modal__title">QQ 交流群</h2>
+              <h2 class="qq-modal__title" id="modal-title">QQ 交流群</h2>
               <span class="qq-modal__accent" aria-hidden="true"></span>
             </div>
             <p class="qq-modal__subtitle">MaiBot 有多个 QQ 交流群，按不同用途划分</p>
@@ -136,33 +251,15 @@
           </aside>
         </div>`;
     } else if (content === 'versions') {
-      modalBody.innerHTML =
-        '<h2>📦 选择安装方式</h2>' +
-        '<div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">' +
-        '<a href="https://github.com/Mai-with-u/MaiBot/releases/latest" target="_blank" rel="noopener noreferrer" style="display:block;padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px;text-decoration:none;color:inherit;transition:all 0.2s">' +
-        '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">📋 源码安装</div>' +
-        '<div style="font-size:13px;color:var(--c-text-muted)">适合人群：适合喜欢用源码部署的人</div>' +
-        '</a>' +
-        '<div style="padding:20px;border:1.5px solid rgba(var(--color-primary),0.3);border-radius:16px">' +
-        '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:4px">🐳 Docker 安装</div>' +
-        '<div style="font-size:13px;color:var(--c-text-muted);margin-bottom:12px">适合人群：适合喜欢用 Docker 的人</div>' +
-        '<div style="background:rgba(var(--color-text-muted),0.06);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.7">' +
-        '<p style="font-weight:700;margin-bottom:8px">🚀 5 分钟快速部署</p>' +
-        '<p style="font-weight:600;margin:8px 0 4px">1. 下载 MaiBot</p>' +
-        '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">git clone https://github.com/Mai-with-u/MaiBot.git\ncd MaiBot</pre>' +
-        '<p style="font-weight:600;margin:12px 0 4px">2. 一键启动！</p>' +
-        '<pre style="background:rgba(0,0,0,0.05);padding:8px 12px;border-radius:8px;overflow-x:auto;font-size:12px;margin:4px 0">docker compose up -d</pre>' +
-        '<p style="font-size:12px;color:var(--c-text-muted);margin-top:4px">第一次启动会自动生成配置文件，然后会停下来等你配置。</p>' +
-        '<p style="margin-top:12px;font-weight:600">已经下载？</p>' +
-        '<p style="font-size:13px">运行后浏览器打开 <code style="background:rgba(var(--color-primary),0.1);padding:2px 6px;border-radius:4px;font-size:12px">http://127.0.0.1:8001</code> 即可进入 WebUI 配置界面！</p>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
+      modalBody.innerHTML = versionsMarkup(trigger);
     } else {
-      modalBody.innerHTML = '<p style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</p>';
+      modalBody.innerHTML =
+        '<h2 id="modal-title" style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</h2>';
     }
     modal.classList.add('is-open');
     document.documentElement.classList.add('modal-open');
+    modal.removeAttribute('aria-label');
+    modal.setAttribute('aria-labelledby', 'modal-title');
     modal.setAttribute('aria-hidden', 'false');
     document.addEventListener('keydown', handleKeyDown);
     requestAnimationFrame(() => modalClose?.focus());
@@ -172,10 +269,13 @@
     if (!modal) return;
     modal.classList.remove('is-open');
     document.documentElement.classList.remove('modal-open');
+    modal.removeAttribute('aria-labelledby');
+    modal.setAttribute('aria-label', '弹窗');
     modal.setAttribute('aria-hidden', 'true');
-    modalCard?.classList.remove('modal-card--qq');
+    modalCard?.classList.remove('modal-card--qq', 'modal-card--versions');
     document.removeEventListener('keydown', handleKeyDown);
     if (modalBody) modalBody.innerHTML = '';
+    lastTrigger?.setAttribute('aria-expanded', 'false');
     lastTrigger?.focus();
     lastTrigger = null;
   }
@@ -1000,6 +1100,685 @@
 
     .qq-card__button:hover,
     .qq-card__button:focus-visible {
+      transform: none;
+    }
+  }
+
+  html.modal-open {
+    overflow: hidden;
+  }
+
+  .modal-card.modal-card--versions {
+    width: min(760px, 100%);
+    max-height: min(88vh, calc(100dvh - max(32px, var(--safe-top)) - max(32px, var(--safe-bottom))));
+    overflow-x: hidden;
+    padding: 0;
+    border: 1px solid rgba(18, 24, 49, 0.08);
+    border-radius: 24px;
+    background: #ffffff;
+    color: #121831;
+    box-shadow: 0 24px 72px rgba(18, 24, 49, 0.22);
+    backdrop-filter: none;
+  }
+
+  [data-theme='dark'] .modal-card.modal-card--versions {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: #1e2026;
+    color: #f9fafc;
+  }
+
+  .modal-card--versions .modal-close {
+    top: 28px;
+    right: 32px;
+    z-index: 4;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid rgba(18, 24, 49, 0.06);
+    border-radius: 12px;
+    background: #f1f3f6;
+    color: #8f98a8;
+    font-size: 0;
+  }
+
+  .modal-card--versions .modal-close::before,
+  .modal-card--versions .modal-close::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .modal-card--versions .modal-close::before {
+    transform: rotate(45deg);
+  }
+
+  .modal-card--versions .modal-close::after {
+    transform: rotate(-45deg);
+  }
+
+  .modal-card--versions .modal-close:hover,
+  .modal-card--versions .modal-close:focus-visible {
+    border-color: rgba(233, 127, 15, 0.18);
+    background: #fff4e8;
+    color: #e97f0f;
+  }
+
+  [data-theme='dark'] .modal-card--versions .modal-close {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: #2b2f36;
+    color: #9ca5b5;
+  }
+
+  [data-theme='dark'] .modal-card--versions .modal-close:hover,
+  [data-theme='dark'] .modal-card--versions .modal-close:focus-visible {
+    border-color: rgba(245, 148, 25, 0.3);
+    background: rgba(245, 148, 25, 0.12);
+    color: #f59419;
+  }
+
+  .modal-card--versions .modal-body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .versions-modal {
+    --versions-accent: #30ccef;
+    --versions-accent-rgb: 48, 204, 239;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 40px;
+    overflow: hidden;
+  }
+
+  .versions-modal--android {
+    --versions-accent: #80de41;
+    --versions-accent-rgb: 128, 222, 65;
+  }
+
+  .versions-modal::before {
+    content: '';
+    position: absolute;
+    top: -160px;
+    right: -130px;
+    width: 360px;
+    height: 360px;
+    border: 1px solid rgba(233, 127, 15, 0.1);
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 44px rgba(233, 127, 15, 0.025),
+      0 0 0 88px rgba(233, 127, 15, 0.018);
+    pointer-events: none;
+  }
+
+  .versions-modal__header,
+  .versions-feature,
+  .versions-methods,
+  .versions-note {
+    position: relative;
+    z-index: 1;
+  }
+
+  .versions-modal__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-right: 56px;
+  }
+
+  .versions-modal__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #e97f0f;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1;
+  }
+
+  .versions-modal__eyebrow span {
+    width: 24px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .versions-modal__title {
+    margin: 0;
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  [data-theme='dark'] .versions-modal__title {
+    color: #f9fafc;
+  }
+
+  .versions-modal__subtitle {
+    max-width: 560px;
+    margin: 0;
+    color: #8f98a8;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  [data-theme='dark'] .versions-modal__subtitle {
+    color: #a3acbb;
+  }
+
+  .versions-feature {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: center;
+    gap: 24px;
+    min-height: 220px;
+    overflow: hidden;
+    padding: 28px 32px 30px;
+    border: 1px solid rgba(var(--versions-accent-rgb), 0.3);
+    border-radius: 16px;
+    background:
+      linear-gradient(135deg, rgba(var(--versions-accent-rgb), 0.16), rgba(var(--versions-accent-rgb), 0.04) 58%),
+      #fbfcfd;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+  }
+
+  .versions-feature::after {
+    content: '';
+    position: absolute;
+    right: -54px;
+    bottom: -76px;
+    width: 190px;
+    height: 190px;
+    border: 32px solid rgba(var(--versions-accent-rgb), 0.08);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  [data-theme='dark'] .versions-feature {
+    border-color: rgba(var(--versions-accent-rgb), 0.32);
+    background:
+      linear-gradient(135deg, rgba(var(--versions-accent-rgb), 0.18), rgba(var(--versions-accent-rgb), 0.05) 58%),
+      #24272e;
+  }
+
+  .versions-feature__icon {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: 92px;
+    height: 92px;
+    place-items: center;
+    border: 1px solid rgba(var(--versions-accent-rgb), 0.28);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.84);
+    color: var(--versions-accent);
+    box-shadow: 0 12px 24px rgba(var(--versions-accent-rgb), 0.14);
+    transform: rotate(-3deg);
+  }
+
+  [data-theme='dark'] .versions-feature__icon {
+    background: rgba(18, 24, 49, 0.58);
+  }
+
+  .versions-icon svg {
+    width: 52px;
+    height: 52px;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+
+  .versions-icon .versions-icon__fill {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .versions-feature__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .versions-feature__topline {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+  }
+
+  .versions-feature__badge {
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--versions-accent);
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .versions-feature__version {
+    color: #8f98a8;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  [data-theme='dark'] .versions-feature__version {
+    color: #a3acbb;
+  }
+
+  .versions-feature h3 {
+    margin: 2px 0 0;
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  [data-theme='dark'] .versions-feature h3 {
+    color: #f9fafc;
+  }
+
+  .versions-feature p {
+    max-width: 470px;
+    margin: 0;
+    color: #737d8e;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  [data-theme='dark'] .versions-feature p {
+    color: #aab2c0;
+  }
+
+  .versions-feature__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .modal-card--versions .versions-download,
+  .modal-card--versions .versions-project {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .modal-card--versions .versions-download {
+    gap: 8px;
+    padding: 11px 16px;
+    background: var(--versions-accent);
+    color: #121831;
+    box-shadow: 0 8px 18px rgba(var(--versions-accent-rgb), 0.2);
+  }
+
+  .versions-download svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+
+  .modal-card--versions .versions-project {
+    padding: 10px 15px;
+    border: 1px solid rgba(18, 24, 49, 0.12);
+    background: rgba(255, 255, 255, 0.7);
+    color: #596274;
+  }
+
+  [data-theme='dark'] .modal-card--versions .versions-project {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #d5dae2;
+  }
+
+  .modal-card--versions .versions-download:hover,
+  .modal-card--versions .versions-download:focus-visible,
+  .modal-card--versions .versions-project:hover,
+  .modal-card--versions .versions-project:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .modal-card--versions .versions-download:hover,
+  .modal-card--versions .versions-download:focus-visible {
+    color: #121831;
+    box-shadow: 0 12px 24px rgba(var(--versions-accent-rgb), 0.28);
+  }
+
+  .modal-card--versions .versions-project:hover,
+  .modal-card--versions .versions-project:focus-visible {
+    background: #ffffff;
+    color: #121831;
+  }
+
+  [data-theme='dark'] .modal-card--versions .versions-project:hover,
+  [data-theme='dark'] .modal-card--versions .versions-project:focus-visible {
+    background: rgba(255, 255, 255, 0.09);
+    color: #ffffff;
+  }
+
+  .versions-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .versions-methods__heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .versions-methods__heading h3 {
+    margin: 0;
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  [data-theme='dark'] .versions-methods__heading h3 {
+    color: #f9fafc;
+  }
+
+  .versions-methods__heading > span {
+    color: #b0b7c3;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .versions-methods__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .modal-card--versions .versions-method {
+    display: grid;
+    min-width: 0;
+    min-height: 82px;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid rgba(18, 24, 49, 0.08);
+    border-radius: 12px;
+    background: #f7f8fa;
+    color: #121831;
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  [data-theme='dark'] .modal-card--versions .versions-method {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: #262930;
+    color: #f9fafc;
+  }
+
+  .modal-card--versions .versions-method:hover,
+  .modal-card--versions .versions-method:focus-visible {
+    border-color: rgba(233, 127, 15, 0.28);
+    background: #fff8f0;
+    color: #121831;
+    transform: translateY(-2px);
+  }
+
+  [data-theme='dark'] .modal-card--versions .versions-method:hover,
+  [data-theme='dark'] .modal-card--versions .versions-method:focus-visible {
+    border-color: rgba(245, 148, 25, 0.32);
+    background: rgba(245, 148, 25, 0.1);
+    color: #ffffff;
+  }
+
+  .versions-method__icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 10px;
+    background: rgba(233, 127, 15, 0.1);
+    color: #e97f0f;
+  }
+
+  .versions-method--docker .versions-method__icon {
+    background: rgba(48, 204, 239, 0.12);
+    color: #1ab8dd;
+  }
+
+  .versions-method__icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+  }
+
+  .versions-method__copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .versions-method__copy strong {
+    overflow: hidden;
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .versions-method__copy small {
+    overflow: hidden;
+    color: #8f98a8;
+    font-size: 11px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-theme='dark'] .versions-method__copy small {
+    color: #a3acbb;
+  }
+
+  .versions-method__arrow {
+    color: #b0b7c3;
+    font-size: 18px;
+  }
+
+  .versions-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--versions-accent);
+    border-radius: 8px;
+    background: rgba(var(--versions-accent-rgb), 0.08);
+  }
+
+  .versions-note__mark {
+    display: grid;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--versions-accent);
+    color: #121831;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .versions-note__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #737d8e;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .versions-note__copy strong {
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 12px;
+  }
+
+  [data-theme='dark'] .versions-note__copy {
+    color: #aab2c0;
+  }
+
+  [data-theme='dark'] .versions-note__copy strong {
+    color: #f9fafc;
+  }
+
+  @media (max-width: 640px) {
+    .modal-card.modal-card--versions {
+      max-height: min(92vh, calc(100dvh - max(20px, var(--safe-top)) - max(20px, var(--safe-bottom))));
+      border-radius: 20px;
+    }
+
+    .modal-card--versions .modal-close {
+      top: 20px;
+      right: 20px;
+      width: 38px;
+      height: 38px;
+    }
+
+    .versions-modal {
+      gap: 22px;
+      padding: 28px 20px 24px;
+    }
+
+    .versions-modal__header {
+      gap: 8px;
+      padding-right: 46px;
+    }
+
+    .versions-modal__title {
+      font-size: 26px;
+    }
+
+    .versions-modal__subtitle {
+      font-size: 13px;
+    }
+
+    .versions-feature {
+      grid-template-columns: 64px minmax(0, 1fr);
+      align-items: start;
+      gap: 16px;
+      min-height: 0;
+      padding: 22px 20px 24px;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+    }
+
+    .versions-feature__icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+    }
+
+    .versions-icon svg {
+      width: 38px;
+      height: 38px;
+    }
+
+    .versions-feature h3 {
+      font-size: 18px;
+    }
+
+    .versions-feature__actions {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .versions-methods__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .versions-feature {
+      grid-template-columns: 1fr;
+    }
+
+    .versions-feature__icon {
+      width: 58px;
+      height: 58px;
+    }
+
+    .versions-feature__actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .modal-card--versions .versions-download,
+    .modal-card--versions .versions-project {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .modal-card--versions .versions-download,
+    .modal-card--versions .versions-project,
+    .modal-card--versions .versions-method {
+      transition: none;
+    }
+
+    .modal-card--versions .versions-download:hover,
+    .modal-card--versions .versions-download:focus-visible,
+    .modal-card--versions .versions-project:hover,
+    .modal-card--versions .versions-project:focus-visible,
+    .modal-card--versions .versions-method:hover,
+    .modal-card--versions .versions-method:focus-visible {
       transform: none;
     }
   }

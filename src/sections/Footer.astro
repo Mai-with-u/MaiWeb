@@ -87,7 +87,7 @@ import easterEgg from '../assets/easter-egg.png';
 
   .footer-copyright {
     font-family: var(--font-display);
-    font-size: 12px;
+    font-size: clamp(9px, 2.6vw, 12px);
     font-weight: 700;
     color: var(--color-text-muted);
     letter-spacing: 0.36px;
@@ -107,7 +107,7 @@ import easterEgg from '../assets/easter-egg.png';
 
   .footer-credit {
     font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: 12px;
+    font-size: clamp(9px, 2.6vw, 12px);
     font-weight: 700;
     color: #000;
   }
@@ -210,7 +210,8 @@ import easterEgg from '../assets/easter-egg.png';
 
   :global(html[data-layout='wide']) .footer-copyright,
   :global(html[data-layout='wide']) .footer-credit {
-    font-size: clamp(10px, calc(12px * var(--ui-scale)), 19.2px);
+    font-size: clamp(7px, calc(12px * var(--ui-scale)), 19.2px);
+    letter-spacing: calc(0.36px * var(--ui-scale));
   }
 
   :global(html[data-layout='wide']) .footer-copyright {

@@ -986,6 +986,10 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     top: max(calc(80px + var(--safe-top)), calc((100svh - 480px * var(--ui-scale)) / 2));
   }
 
+  :global(html[data-layout='compact']) .sticky-screen-wrap {
+    top: max(calc(96px + var(--safe-top)), 24px);
+  }
+
   /* === Dark mode === */
   :global([data-theme='dark']) .text-block-subtitle {
     color: #fafafa;

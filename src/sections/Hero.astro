@@ -37,6 +37,7 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
           <CtaButton
             variant="green"
             size="small"
+            id="hero-versions"
             href="#"
             icon="download"
             delay={0.4}
@@ -112,39 +113,183 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
 
 <script>
   (async function () {
-    const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'MaiWeb/1.0' };
+    type Platform = 'android' | 'windows';
+    type ReleaseAsset = {
+      name?: string;
+      browser_download_url?: string;
+      content_type?: string;
+      state?: string;
+    };
+    type GitHubRelease = {
+      name?: string;
+      tag_name?: string;
+      draft?: boolean;
+      published_at?: string;
+      created_at?: string;
+      assets?: ReleaseAsset[];
+    };
+    type DownloadInfo = { url: string; version?: string };
+    type DownloadCache = Partial<Record<Platform, DownloadInfo>>;
 
-    try {
-      const res = await fetch('https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest', { headers });
-      if (res.ok) {
-        const data = await res.json();
-        const version = (data.tag_name || data.name || '').replace(/^v/, '');
-        if (version) {
-          const el = document.getElementById('hero-version');
-          if (el) el.textContent = version;
-        }
+    const apiHeaders = { Accept: 'application/vnd.github+json' };
+    const cacheKey = 'maisaka-download-links-v1';
+    const fallbackDownloads: Record<Platform, DownloadInfo> = {
+      windows: { url: 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest' },
+      android: { url: 'https://github.com/Mai-with-u/MaiDroid/releases' },
+    };
+    const userAgent = navigator.userAgent || '';
+    const currentPlatform: Platform =
+      /Android/i.test(userAgent) && !/Windows Phone/i.test(userAgent) ? 'android' : 'windows';
+    const mainDownload = document.getElementById('hero-download') as HTMLAnchorElement | null;
+    const mainDownloadSublabel = mainDownload?.querySelector<HTMLElement>('.cta-sublabel');
+    const versionsTrigger = document.getElementById('hero-versions') as HTMLAnchorElement | null;
+
+    document.documentElement.dataset.downloadPlatform = currentPlatform;
+
+    function readCache(): DownloadCache {
+      try {
+        const cached = sessionStorage.getItem(cacheKey);
+        return cached ? (JSON.parse(cached) as DownloadCache) : {};
+      } catch {
+        return {};
       }
-    } catch {
-      // Ignore network errors and keep fallback text
     }
 
-    try {
-      const res = await fetch('https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest', { headers });
-      if (res.ok) {
-        const data = await res.json();
-        const asset = data.assets?.find(
-          (a: { name: string; browser_download_url?: string }) =>
-            a.name.endsWith('.exe') && !a.name.endsWith('.blockmap')
+    function writeCache(cache: DownloadCache) {
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify(cache));
+      } catch {
+        // Storage may be unavailable in private browsing; the links still work without it.
+      }
+    }
+
+    function releaseVersion(release: GitHubRelease): string | undefined {
+      return release.tag_name || release.name || undefined;
+    }
+
+    function uploadedAssets(release: GitHubRelease): ReleaseAsset[] {
+      return (release.assets || []).filter((asset) => !asset.state || asset.state === 'uploaded');
+    }
+
+    function findWindowsAsset(release: GitHubRelease): ReleaseAsset | undefined {
+      return uploadedAssets(release).find(
+        (asset) => /\.exe$/i.test(asset.name || '') && !/\.blockmap$/i.test(asset.name || '')
+      );
+    }
+
+    function findAndroidAsset(release: GitHubRelease): ReleaseAsset | undefined {
+      const candidates = uploadedAssets(release).filter(
+        (asset) => /\.apk$/i.test(asset.name || '') || asset.content_type === 'application/vnd.android.package-archive'
+      );
+      if (candidates.length === 1) return candidates[0];
+
+      const safeCandidates = candidates.filter((asset) => !/(debug|unsigned)/i.test(asset.name || ''));
+      const canonicalName = release.tag_name ? `maidroid_${release.tag_name}.apk`.toLowerCase() : '';
+      const canonical = canonicalName
+        ? safeCandidates.find((asset) => (asset.name || '').toLowerCase() === canonicalName)
+        : undefined;
+      if (canonical) return canonical;
+
+      const universal = safeCandidates.find((asset) => /universal/i.test(asset.name || ''));
+      if (universal) return universal;
+
+      const namedCandidates = safeCandidates.filter((asset) => /^MaiDroid(?:[_-].*)?\.apk$/i.test(asset.name || ''));
+      if (namedCandidates.length === 1) return namedCandidates[0];
+      return safeCandidates.length === 1 ? safeCandidates[0] : undefined;
+    }
+
+    async function fetchJson<T>(url: string): Promise<T | undefined> {
+      try {
+        const response = await fetch(url, { headers: apiHeaders });
+        return response.ok ? ((await response.json()) as T) : undefined;
+      } catch {
+        return undefined;
+      }
+    }
+
+    function toDownloadInfo(
+      release: GitHubRelease | undefined,
+      findAsset: (_release: GitHubRelease) => ReleaseAsset | undefined
+    ): DownloadInfo | undefined {
+      if (!release) return undefined;
+      const asset = findAsset(release);
+      return asset?.browser_download_url
+        ? { url: asset.browser_download_url, version: releaseVersion(release) }
+        : undefined;
+    }
+
+    async function resolveWindowsDownload(): Promise<DownloadInfo | undefined> {
+      const latest = await fetchJson<GitHubRelease>(
+        'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest'
+      );
+      return toDownloadInfo(latest, findWindowsAsset);
+    }
+
+    async function resolveAndroidDownload(): Promise<DownloadInfo | undefined> {
+      const releases = await fetchJson<GitHubRelease[]>(
+        'https://api.github.com/repos/Mai-with-u/MaiDroid/releases?per_page=10'
+      );
+      const sortedReleases = (releases || [])
+        .filter((release) => !release.draft)
+        .sort((a, b) => {
+          const bDate = Date.parse(b.published_at || b.created_at || '') || 0;
+          const aDate = Date.parse(a.published_at || a.created_at || '') || 0;
+          return bDate - aDate;
+        });
+      for (const release of sortedReleases) {
+        const info = toDownloadInfo(release, findAndroidAsset);
+        if (info) return info;
+      }
+      return undefined;
+    }
+
+    const downloads: DownloadCache = readCache();
+
+    function applyDownloadLinks() {
+      const selectedDownload = downloads[currentPlatform] || fallbackDownloads[currentPlatform];
+      if (mainDownload) {
+        mainDownload.href = selectedDownload.url;
+        mainDownload.setAttribute(
+          'aria-label',
+          currentPlatform === 'android' ? '立即下载 Android 安装包' : '立即下载 Windows 一键包'
         );
-        const assetUrl = asset?.browser_download_url;
-        if (assetUrl) {
-          const link = document.getElementById('hero-download') as HTMLAnchorElement | null;
-          if (link) link.href = assetUrl;
-        }
       }
-    } catch {
-      // Ignore network errors and keep fallback link
+      if (mainDownloadSublabel) {
+        mainDownloadSublabel.textContent = currentPlatform === 'android' ? 'Android 安装包' : 'Windows 一键包';
+      }
+      if (versionsTrigger) {
+        versionsTrigger.dataset.currentPlatform = currentPlatform;
+        versionsTrigger.dataset.windowsUrl = (downloads.windows || fallbackDownloads.windows).url;
+        versionsTrigger.dataset.androidUrl = (downloads.android || fallbackDownloads.android).url;
+        versionsTrigger.dataset.windowsVersion = downloads.windows?.version || '';
+        versionsTrigger.dataset.androidVersion = downloads.android?.version || '';
+      }
     }
+
+    applyDownloadLinks();
+
+    const coreVersionPromise = fetchJson<GitHubRelease>(
+      'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest'
+    ).then((release) => {
+      const version = releaseVersion(release || {})?.replace(/^v/, '');
+      const versionElement = document.getElementById('hero-version');
+      if (version && versionElement) versionElement.textContent = version;
+    });
+
+    const windowsPromise = downloads.windows
+      ? Promise.resolve()
+      : resolveWindowsDownload().then((download) => {
+          if (download) downloads.windows = download;
+        });
+    const androidPromise = downloads.android
+      ? Promise.resolve()
+      : resolveAndroidDownload().then((download) => {
+          if (download) downloads.android = download;
+        });
+
+    await Promise.allSettled([coreVersionPromise, windowsPromise, androidPromise]);
+    writeCache(downloads);
+    applyDownloadLinks();
   })();
 </script>
 
@@ -239,10 +384,10 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
 
   .hero-license {
     font-family: var(--font-display);
-    font-size: clamp(11px, calc(12px * var(--ui-scale)), 14px);
+    font-size: clamp(9px, 2.6vw, 11px);
     font-weight: 700;
     color: #a2abbc;
-    letter-spacing: 0.36px;
+    letter-spacing: 0.03em;
     line-height: 1.5;
     max-width: min(100%, calc(500px * var(--ui-scale)));
   }
@@ -376,6 +521,12 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
     font-size: clamp(12px, calc(20px * var(--ui-scale)), 32px);
   }
 
+  :global(html[data-layout='wide']) .hero-license {
+    max-width: min(100%, calc(500px * var(--ui-scale)));
+    font-size: clamp(7px, calc(12px * var(--ui-scale)), 19.2px);
+    letter-spacing: calc(0.36px * var(--ui-scale));
+  }
+
   :global(html[data-layout='wide']) .hero-visual {
     width: calc(648px * var(--ui-scale));
     height: calc(724px * var(--ui-scale));
@@ -415,6 +566,15 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
     padding-right: 12px;
     padding-left: 10px;
     gap: 8px;
+  }
+
+  :global(html[data-layout='compact']) .hero {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  :global(html[data-layout='compact']) .hero-visual {
+    display: none;
   }
 
   @media (max-height: 520px) and (orientation: landscape) {
