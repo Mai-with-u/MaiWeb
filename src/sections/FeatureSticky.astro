@@ -315,8 +315,8 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
 <style>
   /* ===== 区块布局 =====
-     单栏（< 1024px，手机和竖屏平板）：不显示演示屏，三段文案按正常文档流依次排列；
-     桌面（>= 1024px）：演示屏吸附在左侧垂直居中，文案在右侧滚动，
+     单栏（手机、竖屏平板、横屏手机）：不显示演示屏，三段文案按正常文档流依次排列；
+     宽屏（>= 1024px 且宽高比 >= 5:4）：演示屏吸附在左侧垂直居中，文案在右侧滚动，
      滚到哪段文案压住视口中线，演示屏就切换到对应场景，其余文案变淡。 */
   .sticky-section {
     position: relative;
@@ -416,7 +416,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     width: var(--screen-width);
     aspect-ratio: 3 / 2;
     overflow: hidden;
-    border-radius: 32px;
+    border-radius: 2rem;
     background: rgb(219, 131, 36);
   }
 
@@ -929,9 +929,13 @@ import maiAvatar from '../assets/mai-avatar.jpg';
   }
 
   /* ===== 桌面两栏 ===== */
-  @media (min-width: 1024px) {
+  /* 宽屏两栏（与 global.css 的等比缩放条件一致），尺寸取 1600×900 设计稿的值：
+     演示屏 720px、文案 560px、间距 60px、每段文案高 720px、区块上下 160/80px。
+     vw 上限只在根字号触到 12px 下限的窄桌面上起作用，防止横向溢出 */
+  @media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
     .sticky-section {
       --screen-width: min(45rem, 50vw);
+      padding: 10rem 0 5rem;
     }
 
     /* 非当前段落变淡，脚本在场景切换时加减 is-active */
@@ -939,11 +943,15 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       opacity: 0.3;
     }
 
+    /* 设计稿容器 1400px、左右内边距 24px，正好放下 720 + 60 + 560 的两栏 */
     .sticky-inner {
       flex-direction: row-reverse;
       align-items: flex-start;
       justify-content: center;
-      gap: clamp(2rem, 4vw, 3.75rem);
+      gap: 3.75rem;
+      max-width: 87.5rem;
+      padding-right: max(1.5rem, var(--safe-right));
+      padding-left: max(1.5rem, var(--safe-left));
     }
 
     .sticky-items {
@@ -952,17 +960,29 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
     .text-block,
     .text-block + .text-block {
-      min-height: 80vh;
-      min-height: 80svh;
+      min-height: 45rem;
       justify-content: center;
       padding-top: 0;
+    }
+
+    .text-block-title {
+      font-size: 2.5rem;
+    }
+
+    .text-block-subtitle {
+      margin-bottom: 1.75rem;
+      font-size: 2rem;
+    }
+
+    .text-block-desc {
+      font-size: 1.25rem;
     }
 
     /* 演示屏高度是宽度的 2/3，所以 top = 视口一半 - 宽度的 1/3 即可垂直居中，且不压到导航栏 */
     .sticky-screen-wrap {
       display: block;
       top: max(var(--nav-offset), calc(50svh - var(--screen-width) / 3));
-      margin-top: 10svh;
+      margin-top: 8.75rem;
     }
   }
 </style>
