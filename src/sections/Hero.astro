@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
+import VersionsDialog from '../components/dialog/VersionsDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
 
 import { links } from '../data/links';
@@ -40,12 +41,11 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
           <CtaButton
             variant="green"
             size="small"
-            id="hero-versions"
-            href="#"
+            href={links.manual}
             icon="download"
             delay={0.4}
             label="其他版本"
-            modal="versions"
+            dialog="versions"
           />
           <CtaButton
             variant="green"
@@ -123,6 +123,7 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
 </section>
 
 <QqGroupsDialog />
+<VersionsDialog />
 
 <script>
   (async function () {
@@ -155,7 +156,6 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
       /Android/i.test(userAgent) && !/Windows Phone/i.test(userAgent) ? 'android' : 'windows';
     const mainDownload = document.getElementById('hero-download') as HTMLAnchorElement | null;
     const mainDownloadSublabel = mainDownload?.querySelector<HTMLElement>('.cta-sublabel');
-    const versionsTrigger = document.getElementById('hero-versions') as HTMLAnchorElement | null;
 
     document.documentElement.dataset.downloadPlatform = currentPlatform;
 
@@ -173,6 +173,15 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
         sessionStorage.setItem(cacheKey, JSON.stringify(cache));
       } catch {
         // Storage may be unavailable in private browsing; the links still work without it.
+      }
+    }
+
+    function isGitHubUrl(value: string): boolean {
+      try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && (url.hostname === 'github.com' || url.hostname.endsWith('.github.com'));
+      } catch {
+        return false;
       }
     }
 
@@ -270,13 +279,18 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
       if (mainDownloadSublabel) {
         mainDownloadSublabel.textContent = currentPlatform === 'android' ? 'Android 安装包' : 'Windows 一键包';
       }
-      if (versionsTrigger) {
-        versionsTrigger.dataset.currentPlatform = currentPlatform;
-        versionsTrigger.dataset.windowsUrl = (downloads.windows || fallbackDownloads.windows).url;
-        versionsTrigger.dataset.androidUrl = (downloads.android || fallbackDownloads.android).url;
-        versionsTrigger.dataset.windowsVersion = downloads.windows?.version || '';
-        versionsTrigger.dataset.androidVersion = downloads.android?.version || '';
-      }
+      // 回填“其他版本”弹窗里两个平台的下载地址和版本号；
+      // 缓存来自 sessionStorage，只接受 https 的 GitHub 地址，避免被篡改成其他协议
+      document.querySelectorAll<HTMLAnchorElement>('a[data-download]').forEach((link) => {
+        const platform = link.dataset.download === 'android' ? 'android' : 'windows';
+        const url = downloads[platform]?.url;
+        link.href = url && isGitHubUrl(url) ? url : fallbackDownloads[platform].url;
+      });
+      document.querySelectorAll<HTMLElement>('[data-download-version]').forEach((label) => {
+        const platform = label.dataset.downloadVersion === 'android' ? 'android' : 'windows';
+        const version = downloads[platform]?.version;
+        if (version) label.textContent = `版本 ${version}`;
+      });
     }
 
     applyDownloadLinks();

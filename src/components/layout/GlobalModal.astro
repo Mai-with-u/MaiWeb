@@ -10,7 +10,6 @@
   // Global modal
   const modal = document.getElementById('global-modal') as HTMLElement | null;
   const modalBody = document.getElementById('modal-body') as HTMLElement | null;
-  const modalCard = modal?.querySelector('.modal-card') as HTMLElement | null;
   const modalClose = modal?.querySelector('.modal-close') as HTMLElement | null;
   let lastTrigger: HTMLElement | null = null;
 
@@ -37,131 +36,12 @@
     }
   }
 
-  function escapeHtml(value: string): string {
-    return value.replace(
-      /[&<>'"]/g,
-      (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] || character
-    );
-  }
-
-  function safeGitHubUrl(value: string | undefined, fallback: string): string {
-    try {
-      const url = new URL(value || fallback);
-      const isGitHub = url.hostname === 'github.com' || url.hostname.endsWith('.github.com');
-      return url.protocol === 'https:' && isGitHub ? url.href : fallback;
-    } catch {
-      return fallback;
-    }
-  }
-
-  function platformIcon(platform: 'android' | 'windows'): string {
-    if (platform === 'android') {
-      return `
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M10.2 9.4 7.8 5.8M21.8 9.4l2.4-3.6M8.4 13.2h15.2M9 13.2v8.6a2.2 2.2 0 0 0 2.2 2.2h9.6a2.2 2.2 0 0 0 2.2-2.2v-8.6M9 14H6.8v7M23 14h2.2v7M12 24v3M20 24v3" />
-          <path d="M9 13.2a7 7 0 0 1 14 0" />
-          <circle cx="12.5" cy="11" r=".8" class="versions-icon__fill" />
-          <circle cx="19.5" cy="11" r=".8" class="versions-icon__fill" />
-        </svg>`;
-    }
-    return `
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <path class="versions-icon__fill" d="m4 6 10-1.4v10.2H4V6Zm12-1.7L28 2.6v12.2H16V4.3ZM4 17.2h10v10.2L4 26v-8.8Zm12 0h12v12.2l-12-1.7V17.2Z" />
-      </svg>`;
-  }
-
-  function versionsMarkup(trigger: HTMLElement): string {
-    const currentPlatform = trigger.dataset.currentPlatform === 'android' ? 'android' : 'windows';
-    const otherPlatform = currentPlatform === 'android' ? 'windows' : 'android';
-    const isAndroid = otherPlatform === 'android';
-    const fallbackUrl = isAndroid
-      ? 'https://github.com/Mai-with-u/MaiDroid/releases'
-      : 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
-    const downloadUrl = safeGitHubUrl(isAndroid ? trigger.dataset.androidUrl : trigger.dataset.windowsUrl, fallbackUrl);
-    const projectUrl = isAndroid
-      ? 'https://github.com/Mai-with-u/MaiDroid'
-      : 'https://github.com/Mai-with-u/MaiBotOneKey';
-    const version = isAndroid ? trigger.dataset.androidVersion : trigger.dataset.windowsVersion;
-    const safeVersion = version ? `版本 ${escapeHtml(version)}` : '自动获取最新 Release';
-    const currentName = currentPlatform === 'android' ? 'Android 版' : 'Windows 版';
-    const productName = isAndroid ? 'MaiDroid Android 客户端' : 'MaiBot Windows 一键包';
-    const packageName = isAndroid ? 'APK 安装包' : 'EXE 一键包';
-    const description = isAndroid
-      ? '在 Android 手机上直接运行麦麦客户端，适合移动设备安装与体验。'
-      : '已整合运行环境与启动工具，适合在 Windows 电脑上快速完成部署。';
-    const note = isAndroid
-      ? '<strong>Beta 提示</strong><span>MaiDroid 目前仍在测试阶段，安装前请确认允许安装来自浏览器的应用。</span>'
-      : '<strong>Windows 提示</strong><span>一键包适用于 Windows 设备；下载完成后按引导启动即可。</span>';
-
-    return `
-      <div class="versions-modal versions-modal--${otherPlatform}">
-        <header class="versions-modal__header">
-          <p class="versions-modal__eyebrow"><span aria-hidden="true"></span> OTHER VERSIONS</p>
-          <h2 class="versions-modal__title" id="modal-title">其他版本</h2>
-          <p class="versions-modal__subtitle">当前已为你优先推荐 ${currentName}，这里可以获取另一平台版本或选择高级部署方式。</p>
-        </header>
-
-        <section class="versions-feature" aria-labelledby="versions-platform-title">
-          <div class="versions-feature__icon versions-icon">${platformIcon(otherPlatform)}</div>
-          <div class="versions-feature__content">
-            <div class="versions-feature__topline">
-              <span class="versions-feature__badge">另一平台</span>
-              <span class="versions-feature__version">${safeVersion}</span>
-            </div>
-            <h3 id="versions-platform-title">${productName}</h3>
-            <p>${description}</p>
-            <div class="versions-feature__actions">
-              <a class="versions-download" href="${downloadUrl}" target="_blank" rel="noopener noreferrer">
-                <span>立即下载 ${packageName}</span>
-                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" /></svg>
-              </a>
-              <a class="versions-project" href="${projectUrl}" target="_blank" rel="noopener noreferrer">查看项目</a>
-            </div>
-          </div>
-        </section>
-
-        <section class="versions-methods" aria-labelledby="versions-methods-title">
-          <div class="versions-methods__heading">
-            <h3 id="versions-methods-title">高级部署</h3>
-            <span>ADVANCED SETUP</span>
-          </div>
-          <div class="versions-methods__grid">
-            <a class="versions-method" href="https://github.com/Mai-with-u/MaiBot/releases/latest" target="_blank" rel="noopener noreferrer">
-              <span class="versions-method__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3M14 3h7v7M10 14 21 3" /></svg>
-              </span>
-              <span class="versions-method__copy"><strong>源码安装</strong><small>自行配置运行环境与依赖</small></span>
-              <span class="versions-method__arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="versions-method versions-method--docker" href="https://docs.mai-mai.org/manual/deployment/" target="_blank" rel="noopener noreferrer">
-              <span class="versions-method__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M4 15h16M6 11h3v4H6zM10.5 11h3v4h-3zM15 11h3v4h-3zM10.5 6h3v4h-3zM3 15c.4 4 3.2 6 7.5 6 5.2 0 8.4-2.3 9.5-6 1.5 0 2.5-.8 3-2-1-.7-2.2-.8-3.4-.3C18.8 10.9 17 10 15 10" /></svg>
-              </span>
-              <span class="versions-method__copy"><strong>Docker 部署</strong><small>查看容器化部署完整文档</small></span>
-              <span class="versions-method__arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
-        </section>
-
-        <aside class="versions-note">
-          <span class="versions-note__mark" aria-hidden="true">i</span>
-          <span class="versions-note__copy">${note}</span>
-        </aside>
-      </div>`;
-  }
-
   function openModal(trigger: HTMLElement) {
     if (!modal || !modalBody) return;
     lastTrigger = trigger;
-    const content = trigger.getAttribute('data-modal');
-    modalCard?.classList.toggle('modal-card--versions', content === 'versions');
     trigger.setAttribute('aria-expanded', 'true');
-    if (content === 'versions') {
-      modalBody.innerHTML = versionsMarkup(trigger);
-    } else {
-      modalBody.innerHTML =
-        '<h2 id="modal-title" style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</h2>';
-    }
+    modalBody.innerHTML =
+      '<h2 id="modal-title" style="text-align:center;font-size:20px;padding:20px">呃啊还没做……</h2>';
     modal.classList.add('is-open');
     document.documentElement.classList.add('modal-open');
     modal.removeAttribute('aria-label');
@@ -178,7 +58,6 @@
     modal.removeAttribute('aria-labelledby');
     modal.setAttribute('aria-label', '弹窗');
     modal.setAttribute('aria-hidden', 'true');
-    modalCard?.classList.remove('modal-card--versions');
     document.removeEventListener('keydown', handleKeyDown);
     if (modalBody) modalBody.innerHTML = '';
     lastTrigger?.setAttribute('aria-expanded', 'false');

@@ -1,0 +1,310 @@
+---
+import Dialog from './Dialog.astro';
+import { links } from '../../data/links';
+
+// “其他版本”弹窗：首屏“其他版本”按钮带 data-dialog="versions"，点击后打开。
+// 两个平台的安装包都静态列出；下载地址和版本号先用发布页兜底，
+// 首屏脚本查到 GitHub Releases 后再回填到带 data-download / data-download-version 的元素上。
+const platforms = [
+  {
+    id: 'windows',
+    name: 'MaiBot Windows 一键包',
+    package: 'EXE 一键包',
+    description: '已整合运行环境与启动工具，适合在 Windows 电脑上快速完成部署。',
+    downloadUrl: links.oneKeyLatest,
+    projectUrl: links.oneKeyRepo,
+    note: '',
+  },
+  {
+    id: 'android',
+    name: 'MaiDroid Android 客户端',
+    package: 'APK 安装包',
+    description: '在 Android 手机上直接运行麦麦，适合移动设备安装与体验。',
+    downloadUrl: links.droidReleases,
+    projectUrl: links.droidRepo,
+    note: '目前仍是测试版，安装前请允许安装来自浏览器的应用。',
+  },
+];
+
+const methods = [
+  { name: 'uv 安装', description: 'Windows / Linux / macOS 通用', href: links.deployUv },
+  { name: 'Docker 部署', description: '容器化部署完整文档', href: links.deployDocker },
+  { name: 'Linux 部署', description: '在 Linux 服务器上长期运行', href: links.deployLinux },
+  { name: '全部发行版', description: '源码包与更新日志', href: links.releases },
+];
+---
+
+<Dialog id="versions" labelledby="versions-dialog-title">
+  <div class="versions">
+    <header class="versions-header">
+      <p class="versions-eyebrow"><span aria-hidden="true"></span> OTHER VERSIONS</p>
+      <h2 id="versions-dialog-title" class="versions-title">其他版本</h2>
+      <p class="versions-subtitle">已按你的设备推荐了安装包，这里可以获取其他平台的版本，或选择高级部署方式。</p>
+    </header>
+
+    <div class="platforms">
+      {
+        platforms.map((platform) => (
+          <section class={`platform platform-${platform.id}`} data-platform={platform.id} aria-label={platform.name}>
+            <div class="platform-topline">
+              <span class="platform-current">当前设备</span>
+              <span class="platform-version" data-download-version={platform.id}>
+                自动获取最新版本
+              </span>
+            </div>
+            <h3>{platform.name}</h3>
+            <p>{platform.description}</p>
+            {platform.note && <p class="platform-note">{platform.note}</p>}
+            <div class="platform-actions">
+              <a
+                class="platform-download"
+                href={platform.downloadUrl}
+                data-download={platform.id}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                下载 {platform.package}
+              </a>
+              <a class="platform-project" href={platform.projectUrl} target="_blank" rel="noopener noreferrer">
+                查看项目
+              </a>
+            </div>
+          </section>
+        ))
+      }
+    </div>
+
+    <section class="methods" aria-labelledby="versions-methods-title">
+      <h3 id="versions-methods-title" class="methods-title">高级部署</h3>
+      <div class="methods-grid">
+        {
+          methods.map((method) => (
+            <a class="method" href={method.href} target="_blank" rel="noopener noreferrer">
+              <strong>{method.name}</strong>
+              <small>{method.description}</small>
+              <span class="method-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Dialog>
+
+<style>
+  .versions {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .versions-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-right: 56px;
+  }
+
+  .versions-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1;
+  }
+
+  .versions-eyebrow span {
+    width: 24px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .versions-title {
+    font-size: clamp(1.5rem, 1.3rem + 1vw, 1.875rem);
+  }
+
+  .versions-subtitle {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+
+  .platforms {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 12px;
+  }
+
+  /* Windows 用蓝色、Android 用绿色，卡片底色、按钮都由 --tone 派生 */
+  .platform {
+    --tone: var(--c-blue-rgb);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    border: 1px solid rgba(var(--tone), 0.3);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, rgba(var(--tone), 0.16), rgba(var(--tone), 0.04) 60%), var(--surface-muted);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  }
+
+  .platform-android {
+    --tone: var(--c-green-rgb);
+  }
+
+  .platform-topline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    min-height: 24px;
+  }
+
+  /* 首屏脚本按 UA 在 html 上写入 data-download-platform，命中的平台卡片显示“当前设备” */
+  .platform-current {
+    display: none;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgb(var(--tone));
+    color: #121831;
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  :global(html[data-download-platform='windows']) .platform-windows .platform-current,
+  :global(html[data-download-platform='android']) .platform-android .platform-current {
+    display: inline-flex;
+  }
+
+  .platform-version {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+
+  .platform h3 {
+    font-size: 1.25rem;
+    line-height: 1.25;
+  }
+
+  .platform p {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  .platform .platform-note {
+    color: var(--text-body);
+  }
+
+  .platform-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .platform-download,
+  .platform-project {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .platform-download {
+    background: rgb(var(--tone));
+    color: #121831;
+    box-shadow: 0 8px 18px rgba(var(--tone), 0.2);
+  }
+
+  .platform-project {
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-body);
+  }
+
+  .platform-download:hover,
+  .platform-download:focus-visible,
+  .platform-project:hover,
+  .platform-project:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .methods {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .methods-title {
+    font-size: 1rem;
+  }
+
+  /* 四个部署方式：宽屏两列两行，窄屏单列，避免出现 3+1 的落单排列 */
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 10px;
+  }
+
+  .method {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--surface-muted);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .method:hover,
+  .method:focus-visible {
+    border-color: rgba(var(--c-primary-rgb), 0.35);
+    transform: translateY(-2px);
+  }
+
+  .method strong {
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+  }
+
+  .method small {
+    grid-row: 2;
+    color: var(--text-muted);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+  }
+
+  .method-arrow {
+    grid-row: 1 / 3;
+    grid-column: 2;
+    color: var(--text-subtle);
+    font-size: 1.125rem;
+  }
+</style>
