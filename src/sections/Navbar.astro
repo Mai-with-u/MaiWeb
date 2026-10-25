@@ -2,13 +2,17 @@
 import { Image } from 'astro:assets';
 import logoIcon from '../assets/logo-icon.png';
 import { links } from '../data/links';
+
+// 当前页对应的导航项加 aria-current，屏幕阅读器能读出“当前页面”，样式上也高亮
+const pathname = Astro.url.pathname.replace(/\/?$/, '/');
+const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 ---
 
 <div class="navbar-blur">
-  <div class="navbar-wrap">
+  <nav class="navbar-wrap" aria-label="主导航">
     <div class="navbar-glass">
       <div class="navbar-accent"></div>
-      <a href="/" class="navbar-logo">
+      <a href="/" class="navbar-logo" aria-label="麦麦Bot 首页">
         <div class="logo-icon">
           <Image src={logoIcon} alt="" width={40} height={40} loading="eager" decoding="async" />
         </div>
@@ -21,36 +25,33 @@ import { links } from '../data/links';
       <div class="nav-divider"></div>
 
       <div class="nav-menu">
-        <a href="/projects/" class="nav-item">
-          衍生项目
-          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
-          </svg>
-        </a>
+        <a href="/projects/" class="nav-item" aria-current={isCurrent('/projects/')}>衍生项目</a>
         <div class="nav-separator"></div>
         <div class="nav-dropdown">
-          <button class="nav-item nav-dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+          <button
+            class="nav-item nav-dropdown-trigger"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="nav-docs-menu"
+          >
             使用文档
-            <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+            <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
               <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
             </svg>
           </button>
-          <div class="nav-dropdown-menu" role="menu">
-            <a href={links.manual} class="nav-dropdown-link" role="menuitem">用户手册</a>
-            <a href={links.develop} class="nav-dropdown-link" role="menuitem">开发文档</a>
+          <div class="nav-dropdown-menu" id="nav-docs-menu">
+            <a href={links.manual} class="nav-dropdown-link">用户手册</a>
+            <a href={links.develop} class="nav-dropdown-link">开发文档</a>
+            <a href={links.faq} class="nav-dropdown-link">常见问题</a>
           </div>
         </div>
         <div class="nav-separator"></div>
-        <a href="/aboutus/" class="nav-item">
-          关于我们
-          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
-          </svg>
-        </a>
+        <a href="/about/" class="nav-item" aria-current={isCurrent('/about/')}>关于我们</a>
       </div>
 
       <div class="nav-actions">
-        <button class="theme-toggle" aria-label="切换深色模式">
+        <button class="theme-toggle" type="button" aria-label="切换深色模式">
           <svg
             class="icon-sun"
             viewBox="0 0 24 24"
@@ -60,6 +61,7 @@ import { links } from '../data/links';
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
+            aria-hidden="true"
           >
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
@@ -69,12 +71,26 @@ import { links } from '../data/links';
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"
             ></line>
           </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
           </svg>
         </button>
-        <button class="nav-hamburger" aria-label="展开菜单" aria-expanded="false">
-          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <button
+          class="nav-hamburger"
+          type="button"
+          aria-label="展开菜单"
+          aria-expanded="false"
+          aria-controls="nav-mobile-menu"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -86,24 +102,27 @@ import { links } from '../data/links';
       </div>
     </div>
 
-    <div class="nav-menu-mobile">
-      <a href="/projects/" class="nav-item-mobile">衍生项目</a>
+    <div class="nav-menu-mobile" id="nav-mobile-menu">
+      <a href="/projects/" class="nav-item-mobile" aria-current={isCurrent('/projects/')}>衍生项目</a>
       <a href={links.manual} class="nav-item-mobile">用户手册</a>
       <a href={links.develop} class="nav-item-mobile">开发文档</a>
-      <a href="/aboutus/" class="nav-item-mobile">关于我们</a>
+      <a href={links.faq} class="nav-item-mobile">常见问题</a>
+      <a href="/about/" class="nav-item-mobile" aria-current={isCurrent('/about/')}>关于我们</a>
     </div>
-  </div>
+  </nav>
 </div>
 
 <style>
-  /* === Layer 0: backdrop blur only === */
+  /* === Layer 0: backdrop blur only ===
+     左右 0 + margin auto + fit-content 实现水平居中，不再用 transform 缩放（缩放会让文字发糊） */
   .navbar-blur {
     position: fixed;
-    top: max(var(--safe-top), calc(16px * var(--nav-scale)));
-    left: 50%;
-    transform: translateX(-50%) scale(var(--nav-scale));
-    transform-origin: top center;
+    top: max(var(--safe-top), 16px);
+    right: 0;
+    left: 0;
     z-index: 100;
+    width: fit-content;
+    margin-inline: auto;
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
@@ -131,7 +150,7 @@ import { links } from '../data/links';
     display: flex;
     align-items: center;
     gap: 8px;
-    width: 600px;
+    width: min(600px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
     height: 56px;
     padding: 0 12px;
     background: transparent;
@@ -248,7 +267,7 @@ import { links } from '../data/links';
   .nav-item:hover,
   .nav-dropdown.is-open .nav-dropdown-trigger,
   .nav-dropdown:focus-within .nav-dropdown-trigger {
-    color: var(--color-primary);
+    color: var(--c-primary);
     background: rgba(233, 127, 15, 0.08);
   }
 
@@ -292,7 +311,6 @@ import { links } from '../data/links';
   }
 
   .nav-dropdown.is-open .nav-dropdown-menu,
-  .nav-dropdown:hover .nav-dropdown-menu,
   .nav-dropdown:focus-within .nav-dropdown-menu {
     opacity: 1;
     pointer-events: auto;
@@ -300,9 +318,27 @@ import { links } from '../data/links';
   }
 
   .nav-dropdown.is-open .nav-arrow,
-  .nav-dropdown:hover .nav-arrow,
   .nav-dropdown:focus-within .nav-arrow {
     transform: rotate(180deg);
+  }
+
+  /* 只有能悬停的设备才在悬停时展开，触屏平板上靠点击切换，避免“点一下就卡在展开状态” */
+  @media (hover: hover) {
+    .nav-dropdown:hover .nav-dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    .nav-dropdown:hover .nav-arrow {
+      transform: rotate(180deg);
+    }
+  }
+
+  /* 当前所在页面的导航项保持高亮 */
+  .nav-item[aria-current='page'],
+  .nav-item-mobile[aria-current='page'] {
+    color: var(--c-primary);
   }
 
   .nav-dropdown-link {
@@ -347,7 +383,7 @@ import { links } from '../data/links';
   }
 
   .theme-toggle:hover {
-    color: var(--color-primary);
+    color: var(--c-primary);
     background: rgba(233, 127, 15, 0.08);
   }
 
@@ -458,13 +494,13 @@ import { links } from '../data/links';
 
   .nav-hamburger:hover {
     background: rgba(233, 127, 15, 0.08);
-    color: var(--color-primary);
+    color: var(--c-primary);
   }
 
   .nav-menu-mobile {
     display: none;
     position: absolute;
-    top: 80px;
+    top: calc(100% + 12px);
     left: 0;
     right: 0;
     flex-direction: column;
@@ -493,50 +529,74 @@ import { links } from '../data/links';
 
   .nav-item-mobile:hover {
     background: rgba(233, 127, 15, 0.08);
-    color: var(--color-primary);
+    color: var(--c-primary);
   }
 
-  :global(html[data-nav='compact']) .navbar-glass {
-    width: auto;
-    min-width: min(300px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
-    max-width: calc(100vw - 32px - var(--safe-left) - var(--safe-right));
-    gap: 6px;
-    padding: 0 8px;
+  /* 窄屏（< 768px）：收起文字菜单，改用汉堡按钮展开下拉面板 */
+  @media (max-width: 767.98px) {
+    .navbar-glass {
+      width: auto;
+      min-width: min(300px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
+      max-width: calc(100vw - 32px - var(--safe-left) - var(--safe-right));
+      gap: 6px;
+      padding: 0 8px;
+    }
+
+    .nav-divider {
+      display: none;
+    }
+
+    .logo-title {
+      font-size: 14px;
+    }
+
+    .logo-subtitle {
+      font-size: 10px;
+    }
+
+    .nav-cta {
+      height: 36px;
+      min-width: 0;
+      padding: 6px 14px;
+      font-size: 14px;
+    }
+
+    .nav-hamburger {
+      display: flex;
+    }
+
+    .nav-menu-mobile.is-open {
+      display: flex;
+    }
   }
 
-  :global(html[data-nav='compact']) .nav-divider {
-    display: none;
+  /* 宽屏（>= 768px）：展示完整文字菜单 */
+  @media (min-width: 768px) {
+    .nav-menu {
+      display: flex;
+    }
   }
 
-  :global(html[data-nav='compact']) .logo-title {
-    font-size: 14px;
+  /* 触屏设备把图标按钮放大，接近 44px 的推荐点击尺寸 */
+  @media (pointer: coarse) {
+    .theme-toggle,
+    .nav-hamburger {
+      width: 40px;
+      height: 40px;
+    }
   }
 
-  :global(html[data-nav='compact']) .logo-subtitle {
-    font-size: 10px;
+  /* 超大屏整体放大导航栏；zoom 会重新排版而不是位图缩放，文字保持清晰 */
+  @media (min-width: 1920px) {
+    .navbar-blur {
+      zoom: 1.125;
+    }
   }
 
-  :global(html[data-nav='compact']) .nav-cta {
-    height: 36px;
-    min-width: 0;
-    padding: 6px 14px;
-    font-size: 14px;
-  }
-
-  :global(html[data-nav='compact']) .nav-hamburger {
-    display: flex;
-  }
-
-  :global(html[data-nav='compact']) .nav-menu-mobile.is-open {
-    display: flex;
-  }
-
-  :global(html[data-nav='full']) .nav-menu {
-    display: flex;
-  }
-
-  :global(html[data-nav='full']) .nav-menu-mobile.is-open {
-    display: none;
+  @media (min-width: 2560px) {
+    .navbar-blur {
+      zoom: 1.25;
+    }
   }
 </style>
 
@@ -601,24 +661,37 @@ import { links } from '../data/links';
     });
   }
 
-  const hamburger = document.querySelector('.nav-hamburger');
-  const mobileMenu = document.querySelector('.nav-menu-mobile');
+  // 汉堡菜单：点击按钮展开或收起；点菜单里的链接、按 Esc、点菜单外部、或窗口变宽到显示完整菜单时自动收起
+  const hamburger = document.querySelector<HTMLButtonElement>('.nav-hamburger');
+  const mobileMenu = document.querySelector<HTMLElement>('.nav-menu-mobile');
   if (hamburger && mobileMenu) {
-    const closeMobileMenu = () => {
-      mobileMenu.classList.remove('is-open');
-      hamburger.setAttribute('aria-expanded', 'false');
+    const setMobileMenu = (open: boolean) => {
+      mobileMenu.classList.toggle('is-open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+      hamburger.setAttribute('aria-label', open ? '收起菜单' : '展开菜单');
     };
 
-    hamburger.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('is-open');
-      hamburger.setAttribute('aria-expanded', String(open));
-    });
+    hamburger.addEventListener('click', () => setMobileMenu(!mobileMenu.classList.contains('is-open')));
 
     mobileMenu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', closeMobileMenu);
+      link.addEventListener('click', () => setMobileMenu(false));
     });
 
-    window.addEventListener('viewportmodechange', closeMobileMenu);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('is-open')) {
+        setMobileMenu(false);
+        hamburger.focus();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as Node;
+      if (!mobileMenu.contains(target) && !hamburger.contains(target)) setMobileMenu(false);
+    });
+
+    window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => {
+      if (e.matches) setMobileMenu(false);
+    });
   }
 
   const themeToggle = document.querySelector('.theme-toggle');
