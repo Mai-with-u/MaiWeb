@@ -410,11 +410,30 @@ const relatedProjects = [
     line-height: 1.8;
   }
 
-  /* 设定里的小标题：比区块标题小一号，和上一小节拉开距离 */
+  /* 设定里的小标题：正文和标题是同一套粗体字，只靠字号拉不开层级，
+     所以再大一档、左边加一道品牌橙短竖条（和“最像”那段的竖条同色），并和上一小节空开 */
   .persona-subtitle {
-    margin-top: 0.75rem;
+    position: relative;
+    margin-top: 1.25rem;
+    padding-left: 0.875rem;
     color: var(--text-strong);
-    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+    font-size: clamp(1.375rem, 1.15rem + 1vw, 1.75rem);
+    line-height: 1.3;
+  }
+
+  .persona-subtitle::before {
+    position: absolute;
+    top: 0.15em;
+    bottom: 0.15em;
+    left: 0;
+    width: 0.25rem;
+    content: '';
+    background: var(--c-primary);
+  }
+
+  /* 每段第一个小标题紧跟在标题或段首那句话后面，不需要额外的上边距 */
+  .persona-human .persona-subtitle:first-child {
+    margin-top: 0;
   }
 
   /* 头发、眼睛两项写成“标签 + 值”，标签用品牌橙 */
