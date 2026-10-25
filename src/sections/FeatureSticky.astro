@@ -8,7 +8,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     <!-- === Right: Scrolling Text Blocks === -->
     <div class="sticky-items">
       <div class="text-block" data-mockup="chat">
-        <h2 class="text-block-title" style="color:#e97f0f">
+        <h2 class="text-block-title tone-primary">
           <span>你是否厌倦了</span>
           <span>GPT人机式的回复？</span>
         </h2>
@@ -24,7 +24,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       </div>
 
       <div class="text-block" data-mockup="config">
-        <h2 class="text-block-title" style="color:#80de41">
+        <h2 class="text-block-title tone-green">
           <span>不想面对</span>
           <span>复杂的配置过程？</span>
         </h2>
@@ -39,7 +39,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       </div>
 
       <div class="text-block" data-mockup="plugins">
-        <h2 class="text-block-title" style="color:#30ccef">
+        <h2 class="text-block-title tone-blue">
           <span>功能太少</span>
           <span>止步于聊天机器人？</span>
         </h2>
@@ -314,10 +314,14 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 </section>
 
 <style>
-  /* ===== Section Layout ===== */
+  /* ===== 区块布局 =====
+     手机和平板：演示屏吸顶在上方，三段文案依次从下面滚过；
+     桌面（>= 1024px）：演示屏吸附在左侧垂直居中，文案在右侧滚动。
+     无论哪种布局，滚到哪段文案中线附近，演示屏就切换到对应场景。 */
   .sticky-section {
+    --screen-width: min(100%, 35rem);
     position: relative;
-    padding: clamp(80px, 16vw, 120px) 0 clamp(48px, 10vw, 72px);
+    padding: clamp(3rem, 10vw, 7.5rem) 0 clamp(3rem, 8vw, 4.5rem);
   }
 
   .sticky-inner {
@@ -325,30 +329,28 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 720px;
+    max-width: calc(80rem + var(--page-gutter) * 2);
     margin: 0 auto;
     padding-right: max(var(--page-gutter), var(--safe-right));
     padding-left: max(var(--page-gutter), var(--safe-left));
   }
 
-  /* ===== Right: Scrolling Text Items ===== */
   .sticky-items {
     order: 1;
-    width: 100%;
-    max-width: 560px;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 35rem;
   }
 
   .text-block {
+    display: flex;
     min-height: clamp(360px, 58vh, 560px);
     min-height: clamp(360px, 58svh, 560px);
-    width: 100%;
-    display: flex;
     flex-direction: column;
+    padding-top: clamp(3rem, 10vw, 4.5rem);
     font-weight: 700;
     transition: opacity 0.36s ease-out;
-    padding-top: clamp(48px, 10vw, 72px);
   }
 
   .text-block:last-child {
@@ -356,59 +358,77 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     min-height: clamp(320px, 52svh, 520px);
   }
 
+  /* 非当前段落变淡，脚本在场景切换时加减 is-active */
+  html.js .text-block:not(.is-active) {
+    opacity: 0.3;
+  }
+
   .text-block-title {
-    font-family: var(--font-display);
-    font-size: clamp(30px, 8vw, 40px);
-    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--tone-text);
+    font-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.5rem);
     line-height: 1.2;
-    color: #000;
-    margin-bottom: 16px;
-    z-index: 1;
   }
 
   .text-block-title span {
     display: block;
   }
 
+  /* 浅绿、浅蓝直接做白底文字对比度太低，亮色模式用深一档的同色系，暗色模式恢复品牌色 */
+  .tone-primary {
+    --tone-text: var(--c-primary);
+  }
+
+  .tone-green {
+    --tone-text: var(--c-green-strong);
+  }
+
+  .tone-blue {
+    --tone-text: #0f9fc2;
+  }
+
+  :global([data-theme='dark']) .tone-green {
+    --tone-text: var(--c-green);
+  }
+
+  :global([data-theme='dark']) .tone-blue {
+    --tone-text: var(--c-blue);
+  }
+
   .text-block-subtitle {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(20px, 5.8vw, 32px);
-    font-weight: 700;
-    color: #121938;
-    margin-bottom: 28px;
-    line-height: normal;
+    margin-bottom: 1.75rem;
+    color: var(--text-strong);
+    font-family: var(--font-reading);
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    line-height: 1.3;
   }
 
   .text-block-desc {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(15px, 4.2vw, 20px);
+    color: var(--text-muted);
+    font-family: var(--font-reading);
+    font-size: clamp(0.9375rem, 0.875rem + 0.35vw, 1.25rem);
     font-weight: 300;
+    letter-spacing: 0.06em;
     line-height: 1.6;
-    color: rgba(0, 0, 0, 0.5);
-    letter-spacing: 1.2px;
   }
 
-  .text-block-desc p {
-    margin-bottom: 16px;
+  .text-block-desc p + p {
+    margin-top: 1rem;
   }
 
-  .text-block-desc p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* ===== Left: Sticky Screen ===== */
+  /* ===== 演示屏 =====
+     内部是一张固定 720×480 的画布，由脚本按外框实际宽度算出缩放比例，整体等比缩放 */
   .sticky-screen-wrap {
     --mockup-scale: 1;
-    order: 0;
     position: sticky;
-    top: max(calc(var(--safe-top) + 76px), 12px);
+    top: calc(var(--nav-offset) + 8px);
     z-index: 5;
-    width: min(100%, 560px);
-    aspect-ratio: 3 / 2;
-    align-self: center;
+    order: 0;
     flex-shrink: 0;
+    width: var(--screen-width);
+    aspect-ratio: 3 / 2;
     overflow: hidden;
-    border-radius: clamp(18px, 6vw, 32px);
+    border-radius: clamp(18px, 4vw, 32px);
     background: rgb(219, 131, 36);
   }
 
@@ -417,18 +437,23 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     inset: 0 auto auto 0;
     width: 720px;
     height: 480px;
-    border-radius: 32px;
     overflow: hidden;
+    border-radius: 32px;
+    background: rgb(219, 131, 36);
     transform: scale(var(--mockup-scale));
     transform-origin: top left;
     transition: background 0.32s ease-in;
-    background: rgb(219, 131, 36);
   }
 
   .screen-scene {
     position: absolute;
     inset: 0;
     transition: opacity 0.32s ease-out;
+  }
+
+  /* 首帧只显示聊天场景，脚本加载前也不会三个场景叠在一起 */
+  .screen-scene:not(.screen-chat) {
+    opacity: 0;
   }
 
   /* ===== Chat Mockup ===== */
@@ -915,269 +940,171 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     }
   }
 
-  /* ===== Viewport modes ===== */
-  :global(html[data-layout='wide']) .sticky-section {
-    padding-top: calc(160px * var(--ui-scale));
-    padding-bottom: calc(80px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .sticky-inner {
-    max-width: calc(1400px * var(--ui-scale));
-    flex-direction: row-reverse;
-    justify-content: center;
-    align-items: flex-start;
-    padding-right: calc(24px * var(--ui-scale));
-    padding-left: calc(24px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .sticky-items {
-    order: initial;
-    width: calc(560px * var(--ui-scale));
-    max-width: none;
-    margin-left: calc(60px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .text-block {
-    min-height: calc(720px * var(--ui-scale));
-    padding-top: calc(140px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .text-block:last-child {
-    min-height: calc(680px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .text-block-title {
-    font-size: clamp(20px, calc(40px * var(--ui-scale)), 64px);
-    margin-bottom: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .text-block-subtitle {
-    font-size: clamp(16px, calc(32px * var(--ui-scale)), 51.2px);
-    margin-bottom: calc(28px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .text-block-desc {
-    font-size: clamp(13px, calc(20px * var(--ui-scale)), 32px);
-    letter-spacing: calc(1.2px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .text-block-desc p {
-    margin-bottom: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .sticky-screen-wrap {
-    order: initial;
-    top: calc((100vh - 480px * var(--ui-scale)) / 2);
-    top: calc((100svh - 480px * var(--ui-scale)) / 2);
-    width: calc(720px * var(--ui-scale));
-    margin-top: calc(140px * var(--ui-scale));
-    align-self: flex-start;
-    border-radius: calc(32px * var(--ui-scale));
-  }
-
-  @media (max-height: 520px) and (orientation: landscape) {
-    :global(html[data-layout='wide']) .sticky-screen-wrap {
-      top: max(calc(12px + var(--safe-top)), calc(72px * var(--nav-scale)));
+  /* ===== 桌面两栏 ===== */
+  @media (min-width: 1024px) {
+    .sticky-section {
+      --screen-width: min(45rem, 50vw);
     }
-  }
 
-  :global(html[data-layout='wide'][data-nav='compact']) .sticky-screen-wrap {
-    top: max(calc(80px + var(--safe-top)), calc((100vh - 480px * var(--ui-scale)) / 2));
-    top: max(calc(80px + var(--safe-top)), calc((100svh - 480px * var(--ui-scale)) / 2));
-  }
+    .sticky-inner {
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      justify-content: center;
+      gap: clamp(2rem, 4vw, 3.75rem);
+    }
 
-  :global(html[data-layout='compact']) .sticky-screen-wrap {
-    top: max(calc(96px + var(--safe-top)), 24px);
-  }
+    .sticky-items {
+      order: initial;
+      width: min(35rem, 38vw);
+    }
 
-  /* === Dark mode === */
-  :global([data-theme='dark']) .text-block-subtitle {
-    color: #fafafa;
-  }
+    .text-block,
+    .text-block:last-child {
+      min-height: 80vh;
+      min-height: 80svh;
+      justify-content: center;
+      padding-top: 0;
+    }
 
-  :global([data-theme='dark']) .text-block-desc {
-    color: #f9fafc;
+    /* 演示屏高度是宽度的 2/3，所以 top = 视口一半 - 宽度的 1/3 即可垂直居中，且不压到导航栏 */
+    .sticky-screen-wrap {
+      order: initial;
+      top: max(var(--nav-offset), calc(50svh - var(--screen-width) / 3));
+      margin-top: 10svh;
+    }
   }
 </style>
 
 <script>
-  const items = document.querySelectorAll<HTMLElement>('.text-block');
-  const scenes = document.querySelectorAll<HTMLElement>('.screen-scene');
-  const screen = document.querySelector<HTMLElement>('.sticky-screen');
+  // 特性区场景切换：
+  // 1. 区块第一次进入视口 -> 激活聊天场景并播放气泡入场动画；
+  // 2. 某段文案越过视口中线 -> 演示屏切到对应场景（换底色、淡入场景、播放该场景的入场动画），其余文案变淡；
+  // 3. 演示屏外框尺寸变化 -> 重新计算 720×480 画布的缩放比例。
   const section = document.querySelector<HTMLElement>('.sticky-section');
+  const screen = section?.querySelector<HTMLElement>('.sticky-screen');
+  const wrap = section?.querySelector<HTMLElement>('.sticky-screen-wrap');
 
-  if (screen && section) {
+  if (section && screen && wrap) {
+    const blocks = section.querySelectorAll<HTMLElement>('.text-block');
+    const scenes = section.querySelectorAll<HTMLElement>('.screen-scene');
     const bgColors: Record<string, string> = {
       chat: 'rgb(219, 131, 36)',
       config: '#80de41',
       plugins: '#30ccef',
     };
+    const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
+    let active = '';
 
-    let ticking = false;
-    let activeMockup = 'chat';
-    let initialAnimationPlayed = false;
+    // 先瞬间把元素放回起始位置，强制回流后再设置过渡和终点，保证每次切回来都能重新播放动画
+    function replay(element: HTMLElement | null, from: string, transition: string) {
+      if (!element) return;
+      element.style.transition = 'none';
+      element.style.opacity = '0';
+      element.style.transform = from;
+      void element.offsetHeight;
+      element.style.transition = transition;
+      element.style.opacity = '1';
+      element.style.transform = 'none';
+    }
 
-    function playChatAnimation() {
-      const chatScene = document.querySelector<HTMLElement>('.screen-chat');
-      if (!chatScene) return;
-      const bubbles = chatScene.querySelectorAll<HTMLElement>('.chat-bubble');
-      bubbles.forEach((b, i) => {
-        b.style.opacity = '0';
-        b.style.transform = b.classList.contains('user')
+    // 聊天场景：三条气泡每隔 0.6s 依次从两侧滑入
+    function playChat() {
+      section!.querySelectorAll<HTMLElement>('.screen-chat .chat-bubble').forEach((bubble, index) => {
+        bubble.style.opacity = '0';
+        bubble.style.transform = bubble.classList.contains('user')
           ? 'translateX(30px) scale(0.92)'
           : 'translateX(-30px) scale(0.92)';
         setTimeout(
           () => {
-            b.style.opacity = '1';
-            b.style.transform = 'translateX(0) scale(1)';
+            bubble.style.opacity = '1';
+            bubble.style.transform = 'none';
           },
-          600 + i * 600
+          600 + index * 600
         );
       });
     }
 
-    // Detect when section enters viewport
-    const sectionObserver = new IntersectionObserver(
+    // 配置场景：左侧编辑器先从左下滑入，0.5s 后右侧 WebUI 从右下滑入
+    function playConfig() {
+      replay(
+        section!.querySelector<HTMLElement>('.config-editor'),
+        'translate(-120px, 480px)',
+        `opacity 0.55s ease-out, transform 0.65s ${ease}`
+      );
+      replay(
+        section!.querySelector<HTMLElement>('.config-webui'),
+        'translate(120px, 480px)',
+        `opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s ${ease}`
+      );
+    }
+
+    // 插件场景：插件面板从右上角滑入，0.9s 后鼠标指针出现
+    function playPlugins() {
+      const scroll = section!.querySelector<HTMLElement>('.plugin-scroll');
+      if (scroll) {
+        scroll.style.opacity = '1';
+        scroll.style.transform = 'none';
+      }
+      replay(
+        section!.querySelector<HTMLElement>('.plugin-panel'),
+        'translate(120px, -480px)',
+        `opacity 0.55s ease-out, transform 0.85s ${ease}`
+      );
+      replay(
+        section!.querySelector<HTMLElement>('.plugin-cursor'),
+        'translate(40px, -30px)',
+        `opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s ${ease}`
+      );
+    }
+
+    const players: Record<string, () => void> = { chat: playChat, config: playConfig, plugins: playPlugins };
+
+    function activate(target: string) {
+      if (target === active) return;
+      active = target;
+      screen!.style.background = bgColors[target] || bgColors.chat;
+      scenes.forEach((scene) => {
+        scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
+      });
+      blocks.forEach((block) => block.classList.toggle('is-active', block.dataset.mockup === target));
+      players[target]?.();
+    }
+
+    // 区块进入视口时先激活聊天场景（顺带播放气泡动画），之后交给中线观察器切换
+    const enterObserver = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !initialAnimationPlayed) {
-            initialAnimationPlayed = true;
-            playChatAnimation();
-          }
-        });
+        if (entries.some((entry) => entry.isIntersecting)) {
+          activate('chat');
+          enterObserver.disconnect();
+        }
       },
       { threshold: 0.1 }
     );
-    sectionObserver.observe(section);
+    enterObserver.observe(section);
 
-    function getCentroid(block: HTMLElement) {
-      const rect = block.getBoundingClientRect();
-      return rect.top + rect.height / 2;
-    }
+    // rootMargin 把观察区域压成一条水平线，哪段文案压在线上就切到哪个场景。
+    // 桌面演示屏在左侧，线放在视口正中；手机演示屏吸顶占住上半屏，线下移到 70% 处，
+    // 让“当前段落”落在演示屏下方的可见区域里，标题不会被演示屏挡住。
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let centerObserver: IntersectionObserver | undefined;
+    const observeBlocks = () => {
+      centerObserver?.disconnect();
+      centerObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) activate((entry.target as HTMLElement).dataset.mockup || 'chat');
+          });
+        },
+        { rootMargin: desktop.matches ? '-50% 0px -50% 0px' : '-70% 0px -30% 0px' }
+      );
+      blocks.forEach((block) => centerObserver!.observe(block));
+    };
+    observeBlocks();
+    desktop.addEventListener('change', observeBlocks);
+    blocks[0]?.classList.add('is-active');
 
-    function update() {
-      if (!screen) return;
-      const viewCenter = window.innerHeight / 2;
-
-      // Find item closest to viewport center
-      let bestBlock = items[0];
-      let bestDist = Infinity;
-
-      items.forEach((block) => {
-        const dist = Math.abs(getCentroid(block) - viewCenter);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestBlock = block;
-        }
-      });
-
-      const target = bestBlock.dataset.mockup || 'chat';
-
-      // Set item opacities
-      items.forEach((item) => {
-        item.style.opacity = item.dataset.mockup === target ? '1' : '0.3';
-      });
-
-      // Only trigger scene change when target changes
-      if (target !== activeMockup) {
-        activeMockup = target;
-
-        // Change screen background
-        screen.style.background = bgColors[target] || bgColors.chat;
-
-        // Fade scenes
-        scenes.forEach((scene) => {
-          scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
-        });
-
-        // Animate chat bubbles when switching back to chat
-        if (target === 'chat' && initialAnimationPlayed) {
-          playChatAnimation();
-        }
-
-        // Staggered animation for config: editor first, webui second
-        if (target === 'config') {
-          const editor = document.querySelector<HTMLElement>('.config-editor');
-          const webui = document.querySelector<HTMLElement>('.config-webui');
-          if (editor && webui) {
-            editor.style.transition = 'none';
-            webui.style.transition = 'none';
-            editor.style.opacity = '0';
-            editor.style.transform = 'translate(-120px, 480px)';
-            webui.style.opacity = '0';
-            webui.style.transform = 'translate(120px, 480px)';
-            editor.offsetHeight; // force reflow
-            editor.style.transition = 'opacity 0.55s ease-out, transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            webui.style.transition =
-              'opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            editor.style.opacity = '1';
-            editor.style.transform = 'translate(0, 0)';
-            webui.style.opacity = '1';
-            webui.style.transform = 'translate(0, 0)';
-          }
-        }
-
-        // Plugins panel slides in from top-right corner (like second screen entrance)
-        if (target === 'plugins') {
-          const panel = document.querySelector<HTMLElement>('.plugin-panel');
-          const scroll = document.querySelector<HTMLElement>('.plugin-scroll');
-          const cursor = document.querySelector<HTMLElement>('.plugin-cursor');
-          if (panel && scroll && cursor) {
-            panel.style.transition = 'none';
-            cursor.style.transition = 'none';
-            scroll.style.opacity = '1';
-            scroll.style.transform = 'translate(0, 0)';
-            panel.style.opacity = '0';
-            panel.style.transform = 'translate(120px, -480px)';
-            cursor.style.opacity = '0';
-            cursor.style.transform = 'translate(40px, -30px)';
-            panel.offsetHeight; // force reflow
-            panel.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            cursor.style.transition =
-              'opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            panel.style.opacity = '1';
-            panel.style.transform = 'translate(0, 0)';
-            cursor.style.opacity = '1';
-            cursor.style.transform = 'translate(0, 0)';
-          }
-        }
-      }
-
-      ticking = false;
-    }
-
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (!ticking) {
-          requestAnimationFrame(update);
-          ticking = true;
-        }
-      },
-      { passive: true }
-    );
-
-    // Initial scene setup
-    scenes.forEach((scene) => {
-      scene.style.opacity = scene.dataset.scene === 'chat' ? '1' : '0';
-    });
-
-    // Keep the 720x480 scene as one atomic canvas and scale it from its real wrapper.
-    const stickyScreen = document.querySelector<HTMLElement>('.sticky-screen');
-    const stickyWrap = document.querySelector<HTMLElement>('.sticky-screen-wrap');
-    function updateMockupScale() {
-      if (!stickyScreen || !stickyWrap) return;
-      const scale = stickyWrap.clientWidth / 720;
-      stickyWrap.style.setProperty('--mockup-scale', String(scale));
-    }
-
-    window.addEventListener('resize', updateMockupScale);
-    window.addEventListener('viewportmodechange', updateMockupScale);
-    if ('ResizeObserver' in window && stickyWrap) {
-      const mockupResizeObserver = new ResizeObserver(updateMockupScale);
-      mockupResizeObserver.observe(stickyWrap);
-    }
-    updateMockupScale();
-    update();
+    const updateScale = () => wrap.style.setProperty('--mockup-scale', String(wrap.clientWidth / 720));
+    new ResizeObserver(updateScale).observe(wrap);
+    updateScale();
   }
 </script>
