@@ -1,5 +1,56 @@
 # MaiWeb
 
-麦麦Bot的官方网站，基于 Astro 构建。
+麦麦（MaiBot / MaiSaka）的官方网站，基于 [Astro](https://astro.build/) 构建的纯静态站点，部署在 Cloudflare。
 
-部署前记得 `npm run build`。
+## 开发
+
+需要 Node.js 22.12 及以上。
+
+```bash
+npm install
+npm run dev        # 本地开发，默认 http://localhost:4321
+npm run build      # 构建到 dist/
+npm run preview    # 预览构建产物
+```
+
+提交前请确保下面几项都通过（CI 会在 master / dev 的推送与 PR 上执行同样的检查）：
+
+```bash
+npm run check          # astro check 类型检查
+npm run lint           # ESLint
+npm run format:check   # Prettier 格式检查，可用 npm run format 自动修复
+npm run build
+```
+
+## 目录结构
+
+```text
+src/
+├─ data/          # 站点数据：外部链接、QQ 群与社交平台、衍生项目卡片
+├─ lib/github.ts  # 构建时拉取 GitHub 社区统计与贡献者，失败时退回快照
+├─ components/    # 按钮、原生 dialog 弹窗、布局辅助组件
+├─ sections/      # 页面区块：导航、首屏、特性区、页脚等
+├─ pages/         # 路由：首页、衍生项目、关于我们、404
+└─ styles/        # 全局设计 token 与基础样式
+```
+
+- 文档站路径、仓库地址变化时，改 `src/data/links.ts`。
+- QQ 群变化时，改 `src/data/community.ts`，与文档站“交流群”页面保持一致。
+- 衍生项目的增删和排序，改 `src/data/projects.ts`。
+
+## 配置
+
+- **正式域名**：`astro.config.mjs` 中的 `site` 字段，canonical、OpenGraph 链接都从这里生成。
+- **GITHUB_TOKEN（可选）**：构建时请求 GitHub 统计接口用的令牌。不配置也能构建，但未登录请求每小时只有 60 次额度，被限流时页面会显示内置的快照数字。
+
+## 响应式约定
+
+布局全部由 CSS 断点决定，不依赖运行时脚本：
+
+- `768px`：导航栏在汉堡菜单和完整菜单之间切换。
+- `1024px`：首屏、特性区从单栏切换为左右两栏；横屏手机（宽而矮）首屏也使用两栏。
+- 字号、间距使用 `clamp()` 流式缩放；`1920px` 与 `2560px` 以上放大根字号，超大屏整体等比放大。
+
+## 许可
+
+GPL-3.0，详见 [LICENSE.txt](LICENSE.txt)。
