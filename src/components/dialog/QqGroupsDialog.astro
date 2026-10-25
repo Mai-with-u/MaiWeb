@@ -9,52 +9,50 @@ import { qqGroupSections, socialLinks } from '../../data/community';
 <Dialog id="qq" labelledby="qq-dialog-title">
   <div class="qq">
     <header class="qq-header">
-      <h2 id="qq-dialog-title" class="qq-title">QQ 交流群</h2>
+      <h2 id="qq-dialog-title" class="qq-title">
+        QQ 交流群
+      </h2>
       <span class="qq-accent" aria-hidden="true"></span>
       <p class="qq-subtitle">MaiBot 有多个 QQ 交流群，按不同用途划分</p>
     </header>
 
-    {
-      qqGroupSections.map((section) => (
-        <section class={`qq-section tone-${section.tone}`} aria-label={section.title}>
-          <h3 class="qq-section-label">{section.title}</h3>
-          <div class="qq-grid">
-            {section.groups.map((group) => (
-              <article class="qq-card">
-                <div class="qq-card-body">
-                  <h4 class="qq-card-title">
-                    <span class="qq-dot" aria-hidden="true" />
-                    {group.name}
-                  </h4>
-                  <p class="qq-card-desc">{group.description}</p>
-                </div>
-                <a
-                  class="qq-join"
-                  href={group.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`加入 ${group.name} QQ 群`}
-                >
-                  加入群聊 →
-                </a>
-              </article>
-            ))}
-          </div>
-        </section>
-      ))
-    }
+    {qqGroupSections.map((section) => (
+      <section class={`qq-section tone-${section.tone}`} aria-label={section.title}>
+        <h3 class="qq-section-label">{section.title}</h3>
+        <div class="qq-grid">
+          {section.groups.map((group) => (
+            <article class="qq-card">
+              <div class="qq-card-body">
+                <h4 class="qq-card-title">
+                  <span class="qq-dot" aria-hidden="true" />
+                  {group.name}
+                </h4>
+                <p class="qq-card-desc">{group.description}</p>
+              </div>
+              <a
+                class="qq-join"
+                href={group.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`加入 ${group.name} QQ 群`}
+              >
+                加入群聊 →
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
 
     <section class="qq-section" aria-label="其他平台">
       <h3 class="qq-section-label tone-muted">其他平台</h3>
       <div class="qq-social">
-        {
-          socialLinks.map((item) => (
-            <a class="qq-social-link" href={item.url} target="_blank" rel="noopener noreferrer">
-              <strong>{item.name}</strong>
-              <span>{item.description}</span>
-            </a>
-          ))
-        }
+        {socialLinks.map((item) => (
+          <a class="qq-social-link" href={item.url} target="_blank" rel="noopener noreferrer">
+            <strong>{item.name}</strong>
+            <span>{item.description}</span>
+          </a>
+        ))}
       </div>
     </section>
 

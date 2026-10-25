@@ -89,7 +89,9 @@ const ecosystem = [
 
       <section class="philosophy reveal" aria-labelledby="philosophy-title">
         <p class="section-label">设计理念</p>
-        <h2 id="philosophy-title" class="philosophy-quote">“最像，而不是最好。”</h2>
+        <h2 id="philosophy-title" class="philosophy-quote">
+          “最像，而不是最好。”
+        </h2>
         <div class="philosophy-body">
           <p>
             项目最初只是想给群聊机器人加几个小功能，结果越写越多，最后干脆重写。目标是在群聊里创造一个“生命体”——不是一个功能齐全的机器人，而是一个能让你感觉到真实存在的家伙。
@@ -103,76 +105,74 @@ const ecosystem = [
       </section>
 
       <section class="block reveal" aria-labelledby="features-title">
-        <h2 id="features-title" class="block-title">她能做什么</h2>
+        <h2 id="features-title" class="block-title">
+          她能做什么
+        </h2>
         <div class="feature-grid">
-          {
-            features.map((feature) => (
-              <article class="feature-card">
-                <h3>{feature.title}</h3>
-                <p>{feature.text}</p>
-              </article>
-            ))
-          }
+          {features.map((feature) => (
+            <article class="feature-card">
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section class="block reveal" aria-labelledby="ecosystem-title">
-        <h2 id="ecosystem-title" class="block-title">项目生态</h2>
+        <h2 id="ecosystem-title" class="block-title">
+          项目生态
+        </h2>
         <div class="link-grid">
-          {
-            ecosystem.map((item) => (
-              <a
-                class="link-card"
-                href={item.href}
-                {...(item.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              >
-                <strong>{item.name}</strong>
-                <span>{item.text}</span>
-                <span class="link-arrow" aria-hidden="true">
-                  →
-                </span>
-              </a>
-            ))
-          }
+          {ecosystem.map((item) => (
+            <a
+              class="link-card"
+              href={item.href}
+              {...(item.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >
+              <strong>{item.name}</strong>
+              <span>{item.text}</span>
+              <span class="link-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          ))}
         </div>
       </section>
 
       <section class="block reveal" aria-labelledby="community-title">
-        <h2 id="community-title" class="block-title">社区</h2>
+        <h2 id="community-title" class="block-title">
+          社区
+        </h2>
         <dl class="stat-grid">
-          {
-            statItems.map((item) => (
-              <div class="stat">
-                <dt>{item.label}</dt>
-                <dd>{item.value}</dd>
-              </div>
-            ))
-          }
+          {statItems.map((item) => (
+            <div class="stat">
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
         </dl>
 
-        {
-          contributors.length > 0 && (
-            <div class="contributors">
-              <p class="contributors-caption">感谢每一位让麦麦变得更好的贡献者</p>
-              <ul class="avatar-grid">
-                {contributors.map((person) => (
-                  <li>
-                    <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" title={person.login}>
-                      <img
-                        src={person.avatarUrl}
-                        alt={person.login}
-                        width="48"
-                        height="48"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
+        {contributors.length > 0 && (
+          <div class="contributors">
+            <p class="contributors-caption">感谢每一位让麦麦变得更好的贡献者</p>
+            <ul class="avatar-grid">
+              {contributors.map((person) => (
+                <li>
+                  <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" title={person.login}>
+                    <img
+                      src={person.avatarUrl}
+                      alt={person.login}
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div class="join">
           <div class="join-copy">
@@ -180,31 +180,40 @@ const ecosystem = [
             <p>有问题想问、有想法想聊，或者只是想看麦麦整活，都欢迎来社区坐坐。</p>
           </div>
           <div class="join-actions">
-            <a class="btn btn-primary" href={links.community} data-dialog="qq" aria-haspopup="dialog">QQ 交流群</a>
-            {
-              socialLinks.map((item) => (
-                <a class="btn btn-ghost" href={item.url} target="_blank" rel="noopener noreferrer">
-                  {item.name}
-                </a>
-              ))
-            }
+            <a class="btn btn-primary" href={links.community} data-dialog="qq" aria-haspopup="dialog">
+              QQ 交流群
+            </a>
+            {socialLinks.map((item) => (
+              <a class="btn btn-ghost" href={item.url} target="_blank" rel="noopener noreferrer">
+                {item.name}
+              </a>
+            ))}
           </div>
         </div>
       </section>
 
       <section class="block license reveal" aria-labelledby="license-title">
-        <h2 id="license-title" class="block-title">开源与协议</h2>
+        <h2 id="license-title" class="block-title">
+          开源与协议
+        </h2>
         <p>
-          MaiBot 基于 <a href={links.license} target="_blank" rel="noopener noreferrer">GPL-3.0</a> 许可证开源。使用前请阅读<a
-            href={links.eula}
-            target="_blank"
-            rel="noopener noreferrer">「用户协议」</a
-          >和<a href={links.privacy} target="_blank" rel="noopener noreferrer">「隐私协议」</a>，AI
-          生成的内容请仔细甄别。也感谢一路相伴的<a
-            href={links.acknowledgements}
-            target="_blank"
-            rel="noopener noreferrer">项目与社区</a
-          >。
+          MaiBot 基于{' '}
+          <a href={links.license} target="_blank" rel="noopener noreferrer">
+            GPL-3.0
+          </a>{' '}
+          许可证开源。使用前请阅读
+          <a href={links.eula} target="_blank" rel="noopener noreferrer">
+            「用户协议」
+          </a>
+          和
+          <a href={links.privacy} target="_blank" rel="noopener noreferrer">
+            「隐私协议」
+          </a>
+          ，AI 生成的内容请仔细甄别。也感谢一路相伴的
+          <a href={links.acknowledgements} target="_blank" rel="noopener noreferrer">
+            项目与社区
+          </a>
+          。
         </p>
         <p class="warning">
           <strong>注意</strong>MaiBot 是开源项目，完全免费使用。如果你看到有人售卖 MaiBot，请注意辨别，避免上当受骗。

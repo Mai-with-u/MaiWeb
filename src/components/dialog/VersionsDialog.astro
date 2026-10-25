@@ -37,57 +37,59 @@ const methods = [
 <Dialog id="versions" labelledby="versions-dialog-title">
   <div class="versions">
     <header class="versions-header">
-      <p class="versions-eyebrow"><span aria-hidden="true"></span> OTHER VERSIONS</p>
-      <h2 id="versions-dialog-title" class="versions-title">其他版本</h2>
+      <p class="versions-eyebrow">
+        <span aria-hidden="true"></span> OTHER VERSIONS
+      </p>
+      <h2 id="versions-dialog-title" class="versions-title">
+        其他版本
+      </h2>
       <p class="versions-subtitle">已按你的设备推荐了安装包，这里可以获取其他平台的版本，或选择高级部署方式。</p>
     </header>
 
     <div class="platforms">
-      {
-        platforms.map((platform) => (
-          <section class={`platform platform-${platform.id}`} data-platform={platform.id} aria-label={platform.name}>
-            <div class="platform-topline">
-              <span class="platform-current">当前设备</span>
-              <span class="platform-version" data-download-version={platform.id}>
-                自动获取最新版本
-              </span>
-            </div>
-            <h3>{platform.name}</h3>
-            <p>{platform.description}</p>
-            {platform.note && <p class="platform-note">{platform.note}</p>}
-            <div class="platform-actions">
-              <a
-                class="platform-download"
-                href={platform.downloadUrl}
-                data-download={platform.id}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                下载 {platform.package}
-              </a>
-              <a class="platform-project" href={platform.projectUrl} target="_blank" rel="noopener noreferrer">
-                查看项目
-              </a>
-            </div>
-          </section>
-        ))
-      }
+      {platforms.map((platform) => (
+        <section class={`platform platform-${platform.id}`} data-platform={platform.id} aria-label={platform.name}>
+          <div class="platform-topline">
+            <span class="platform-current">当前设备</span>
+            <span class="platform-version" data-download-version={platform.id}>
+              自动获取最新版本
+            </span>
+          </div>
+          <h3>{platform.name}</h3>
+          <p>{platform.description}</p>
+          {platform.note && <p class="platform-note">{platform.note}</p>}
+          <div class="platform-actions">
+            <a
+              class="platform-download"
+              href={platform.downloadUrl}
+              data-download={platform.id}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              下载 {platform.package}
+            </a>
+            <a class="platform-project" href={platform.projectUrl} target="_blank" rel="noopener noreferrer">
+              查看项目
+            </a>
+          </div>
+        </section>
+      ))}
     </div>
 
     <section class="methods" aria-labelledby="versions-methods-title">
-      <h3 id="versions-methods-title" class="methods-title">高级部署</h3>
+      <h3 id="versions-methods-title" class="methods-title">
+        高级部署
+      </h3>
       <div class="methods-grid">
-        {
-          methods.map((method) => (
-            <a class="method" href={method.href} target="_blank" rel="noopener noreferrer">
-              <strong>{method.name}</strong>
-              <small>{method.description}</small>
-              <span class="method-arrow" aria-hidden="true">
-                →
-              </span>
-            </a>
-          ))
-        }
+        {methods.map((method) => (
+          <a class="method" href={method.href} target="_blank" rel="noopener noreferrer">
+            <strong>{method.name}</strong>
+            <small>{method.description}</small>
+            <span class="method-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        ))}
       </div>
     </section>
   </div>

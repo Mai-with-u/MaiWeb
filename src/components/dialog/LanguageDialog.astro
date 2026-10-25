@@ -11,31 +11,31 @@ const languages = [
 
 <Dialog id="lang" labelledby="lang-dialog-title" width="22.5rem">
   <div class="lang">
-    <h2 id="lang-dialog-title" class="lang-title">切换语言</h2>
+    <h2 id="lang-dialog-title" class="lang-title">
+      切换语言
+    </h2>
     <p class="lang-subtitle">Language</p>
     <ul class="lang-list">
-      {
-        languages.map((language) => (
-          <li>
-            {language.href && !language.current ? (
-              <a class="lang-option" href={language.href} lang={language.code}>
-                <span class="lang-name">{language.name}</span>
-                <span class="lang-note">{language.note}</span>
-              </a>
-            ) : (
-              <span
-                class:list={['lang-option', { 'is-current': language.current, 'is-disabled': !language.current }]}
-                lang={language.code}
-                aria-current={language.current ? 'true' : undefined}
-                aria-disabled={language.current ? undefined : 'true'}
-              >
-                <span class="lang-name">{language.name}</span>
-                <span class="lang-note">{language.note}</span>
-              </span>
-            )}
-          </li>
-        ))
-      }
+      {languages.map((language) => (
+        <li>
+          {language.href && !language.current ? (
+            <a class="lang-option" href={language.href} lang={language.code}>
+              <span class="lang-name">{language.name}</span>
+              <span class="lang-note">{language.note}</span>
+            </a>
+          ) : (
+            <span
+              class:list={['lang-option', { 'is-current': language.current, 'is-disabled': !language.current }]}
+              lang={language.code}
+              aria-current={language.current ? 'true' : undefined}
+              aria-disabled={language.current ? undefined : 'true'}
+            >
+              <span class="lang-name">{language.name}</span>
+              <span class="lang-note">{language.note}</span>
+            </span>
+          )}
+        </li>
+      ))}
     </ul>
   </div>
 </Dialog>

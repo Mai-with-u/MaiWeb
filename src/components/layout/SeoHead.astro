@@ -50,6 +50,8 @@ const fontStylesheet = 'https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/Do
 <!-- 字体异步加载：先 preload，加载完再切成样式表，避免外链 CSS 阻塞首屏渲染；不支持脚本时直接引用 -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="preload" href={fontStylesheet} as="style" onload="this.onload=null;this.rel='stylesheet'" />
-<noscript><link rel="stylesheet" href={fontStylesheet} /></noscript>
+<noscript>
+  <link rel="stylesheet" href={fontStylesheet} />
+</noscript>
 
 <ThemeBootScript />
