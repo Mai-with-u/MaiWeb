@@ -209,8 +209,10 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 <LeaveSiteDialog />
 
 <style>
-  /* === Layer 0: backdrop blur only ===
-     左右 0 + margin auto + fit-content 实现水平居中，不再用 transform 缩放（缩放会让文字发糊）
+  /* 定位层：左右 0 + margin auto + fit-content 实现水平居中，不再用 transform 缩放（缩放会让文字发糊）。
+     导航栏自身的毛玻璃和投影都画在 .navbar-glass 的伪元素上，外层容器不能再带 filter / backdrop-filter：
+     这两个属性会把外层变成“背景根”，下拉菜单和手机菜单的 backdrop-filter 就只能模糊导航栏自己，
+     透不到页面，毛玻璃会失效。
      本文件的 backdrop-filter 只写标准属性，Safari 需要的 -webkit- 前缀由构建时 Lightning CSS 按 cssTarget 补上；
      手写前缀会被它与标准写法合并成一条，反而让某一类浏览器失去毛玻璃 */
   .navbar-blur {
@@ -221,12 +223,9 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     z-index: 100;
     width: fit-content;
     margin-inline: auto;
-    backdrop-filter: saturate(180%) blur(1.25rem);
   }
 
-  /* === Layer 1: drop-shadow only === */
   .navbar-wrap {
-    filter: drop-shadow(0 0.25rem 1.25rem rgba(0, 0, 0, 0.12));
     animation: fadeInDown 0.48s ease-out;
   }
 
@@ -254,6 +253,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     isolation: isolate;
   }
 
+  /* 玻璃底：半透明白底 + 背景模糊，clip-path 切出右下角，模糊效果也随之切成同样的形状 */
   .navbar-glass::before {
     position: absolute;
     inset: 0;
@@ -261,6 +261,19 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     content: '';
     background: rgba(255, 255, 255, 0.7);
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.875rem), calc(100% - 0.875rem) 100%, 0 100%);
+    backdrop-filter: saturate(180%) blur(1.25rem);
+  }
+
+  /* 投影：单独一层模糊的暗色块垫在玻璃下面，效果等同原来外层的 drop-shadow，但不再包住下拉菜单 */
+  .navbar-glass::after {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    content: '';
+    background: rgba(0, 0, 0, 0.09);
+    filter: blur(0.625rem);
+    transform: translateY(0.25rem);
+    pointer-events: none;
   }
 
   .navbar-accent {
@@ -362,8 +375,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   }
 
   .nav-item:hover,
-  .nav-dropdown.is-open .nav-dropdown-trigger,
-  .nav-dropdown:focus-within .nav-dropdown-trigger {
+  .nav-dropdown.is-open .nav-dropdown-trigger {
     color: var(--c-primary);
     background: rgba(233, 127, 15, 0.08);
   }
@@ -377,6 +389,8 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     position: relative;
   }
 
+  /* 下拉菜单：是否展开只由脚本给 .nav-dropdown 加减 is-open 决定（不再用 :hover / :focus-within 直接显示）。
+     收起时用 visibility 延迟隐藏，让淡出和回缩动画播完；展开时从按钮下方轻微下落、放大、淡入，菜单项依次出现 */
   .nav-dropdown-menu {
     position: absolute;
     top: calc(100% + 0.875rem);
@@ -384,19 +398,22 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     display: grid;
     min-width: 8.5rem;
     padding: 0.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 0.875rem;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.72);
     box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.14);
     backdrop-filter: blur(1.25rem) saturate(180%);
+    visibility: hidden;
     opacity: 0;
-    pointer-events: none;
-    transform: translate(-50%, -0.375rem);
+    transform: translate(-50%, -0.5rem) scale(0.96);
+    transform-origin: top center;
     transition:
-      opacity var(--transition-fast),
-      transform var(--transition-fast);
+      opacity 0.16s ease,
+      transform 0.2s ease,
+      visibility 0s linear 0.2s;
   }
 
+  /* 按钮和菜单之间 14px 的空隙用透明块补上，鼠标移过去不会中途离开下拉区域 */
   .nav-dropdown-menu::before {
     position: absolute;
     top: -0.875rem;
@@ -406,29 +423,18 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     content: '';
   }
 
-  .nav-dropdown.is-open .nav-dropdown-menu,
-  .nav-dropdown:focus-within .nav-dropdown-menu {
+  .nav-dropdown.is-open .nav-dropdown-menu {
+    visibility: visible;
     opacity: 1;
-    pointer-events: auto;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0) scale(1);
+    transition:
+      opacity 0.18s ease,
+      transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15),
+      visibility 0s;
   }
 
-  .nav-dropdown.is-open .nav-arrow,
-  .nav-dropdown:focus-within .nav-arrow {
+  .nav-dropdown.is-open .nav-arrow {
     transform: rotate(180deg);
-  }
-
-  /* 只有能悬停的设备才在悬停时展开，触屏平板上靠点击切换，避免“点一下就卡在展开状态” */
-  @media (hover: hover) {
-    .nav-dropdown:hover .nav-dropdown-menu {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, 0);
-    }
-
-    .nav-dropdown:hover .nav-arrow {
-      transform: rotate(180deg);
-    }
   }
 
   /* 当前所在页面的导航项保持高亮 */
@@ -447,7 +453,38 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     font-weight: 700;
     color: #1b1b1b;
     white-space: nowrap;
-    transition: all var(--transition-fast);
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition:
+      color var(--transition-fast),
+      background-color var(--transition-fast),
+      opacity 0.2s ease var(--stagger, 0s),
+      transform 0.24s ease var(--stagger, 0s);
+  }
+
+  /* 展开时菜单项依次出现，每项晚 40ms */
+  .nav-dropdown.is-open .nav-dropdown-link,
+  .nav-menu-mobile.is-open .nav-item-mobile {
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-dropdown.is-open .nav-dropdown-link:nth-child(2),
+  .nav-menu-mobile.is-open .nav-item-mobile:nth-child(2) {
+    --stagger: 0.04s;
+  }
+
+  .nav-dropdown.is-open .nav-dropdown-link:nth-child(3),
+  .nav-menu-mobile.is-open .nav-item-mobile:nth-child(3) {
+    --stagger: 0.08s;
+  }
+
+  .nav-menu-mobile.is-open .nav-item-mobile:nth-child(4) {
+    --stagger: 0.12s;
+  }
+
+  .nav-menu-mobile.is-open .nav-item-mobile:nth-child(5) {
+    --stagger: 0.16s;
   }
 
   .nav-dropdown-link:hover,
@@ -515,7 +552,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   :global([data-theme='dark']) .nav-dropdown-menu {
     border-color: rgba(255, 255, 255, 0.08);
-    background: rgba(38, 38, 38, 0.96);
+    background: rgba(38, 38, 38, 0.72);
   }
 
   :global([data-theme='dark']) .nav-dropdown-link {
@@ -529,7 +566,6 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   :global([data-theme='dark']) .nav-item:hover,
   :global([data-theme='dark']) .nav-dropdown.is-open .nav-dropdown-trigger,
-  :global([data-theme='dark']) .nav-dropdown:focus-within .nav-dropdown-trigger,
   :global([data-theme='dark']) .nav-dropdown-link:hover,
   :global([data-theme='dark']) .nav-dropdown-link:focus-visible,
   :global([data-theme='dark']) .theme-toggle:hover,
@@ -540,7 +576,8 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   }
 
   :global([data-theme='dark']) .nav-menu-mobile {
-    background: rgba(38, 38, 38, 0.95);
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(38, 38, 38, 0.72);
   }
 
   /* deploy button */
@@ -597,20 +634,61 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     color: var(--c-primary);
   }
 
+  /* 汉堡图标：展开时上下两条线旋转成 ×，中间一条淡出 */
+  .nav-hamburger line {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15),
+      opacity 0.2s ease;
+  }
+
+  .nav-hamburger[aria-expanded='true'] line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .nav-hamburger[aria-expanded='true'] line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-hamburger[aria-expanded='true'] line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* 手机菜单：常驻在导航栏下方，收起时隐藏并上移缩小；展开时下落、放大、淡入，菜单项依次出现 */
   .nav-menu-mobile {
-    display: none;
     position: absolute;
     top: calc(100% + 0.75rem);
-    left: 0;
     right: 0;
+    left: 0;
+    z-index: 99;
+    display: flex;
     flex-direction: column;
     gap: 0.25rem;
     padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(1.25rem) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.72);
     box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.12);
-    z-index: 99;
+    backdrop-filter: blur(1.25rem) saturate(180%);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.97);
+    transform-origin: top center;
+    transition:
+      opacity 0.16s ease,
+      transform 0.2s ease,
+      visibility 0s linear 0.2s;
+  }
+
+  .nav-menu-mobile.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.18s ease,
+      transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15),
+      visibility 0s;
   }
 
   .nav-item-mobile {
@@ -623,7 +701,13 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     color: #1b1b1b;
     border-radius: 0.5rem;
     text-decoration: none;
-    transition: all var(--transition-fast);
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition:
+      color var(--transition-fast),
+      background-color var(--transition-fast),
+      opacity 0.2s ease var(--stagger, 0s),
+      transform 0.24s ease var(--stagger, 0s);
   }
 
   .nav-item-mobile:hover {
@@ -645,6 +729,16 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
       display: none;
     }
 
+    /* 触屏下图标按钮放大到 40px，按钮间距收紧一些，保证 Logo 文字不被挤成两行 */
+    .nav-actions {
+      gap: 0.25rem;
+    }
+
+    .logo-title,
+    .logo-subtitle {
+      white-space: nowrap;
+    }
+
     .logo-title {
       font-size: 0.875rem;
     }
@@ -663,16 +757,23 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     .nav-hamburger {
       display: flex;
     }
+  }
 
-    .nav-menu-mobile.is-open {
-      display: flex;
+  /* 极窄屏（< 360px）放不下 Logo 文字和四个按钮，只保留 Logo 图标 */
+  @media (max-width: 359.98px) {
+    .logo-text {
+      display: none;
     }
   }
 
-  /* 宽屏（>= 48rem）：展示完整文字菜单 */
+  /* 宽屏（>= 48rem）：展示完整文字菜单，手机菜单彻底不渲染 */
   @media (min-width: 768px) {
     .nav-menu {
       display: flex;
+    }
+
+    .nav-menu-mobile {
+      display: none;
     }
   }
 
@@ -698,53 +799,79 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     });
   }
 
+  // 文档下拉菜单：展开状态只由这里维护（.nav-dropdown 的 is-open + 按钮的 aria-expanded），CSS 只负责按状态显示和动画。
+  // 鼠标：移入按钮或菜单立即展开，移出 150ms 后收起（留出从按钮滑到菜单的时间）；
+  // 触屏和键盘：点击按钮切换；点菜单外部、按 Esc、焦点移出下拉区域、点击菜单项都会收起；
+  // 键盘额外支持在按钮上按 ↓ 展开并聚焦第一项，在菜单内用 ↑ ↓ 切换。
   const dropdown = document.querySelector<HTMLElement>('.nav-dropdown');
   const dropdownTrigger = dropdown?.querySelector<HTMLButtonElement>('.nav-dropdown-trigger');
   const dropdownMenu = dropdown?.querySelector<HTMLElement>('.nav-dropdown-menu');
-  const dropdownLinks = dropdownMenu?.querySelectorAll<HTMLAnchorElement>('a');
   if (dropdown && dropdownTrigger && dropdownMenu) {
-    const closeDropdown = () => {
-      dropdown.classList.remove('is-open');
-      dropdownTrigger.setAttribute('aria-expanded', 'false');
+    const items = Array.from(dropdownMenu.querySelectorAll<HTMLAnchorElement>('a'));
+    let closeTimer: ReturnType<typeof setTimeout> | undefined;
+    let openedByHover = false;
+    let lastPointerType = '';
+
+    const isOpen = () => dropdown.classList.contains('is-open');
+    const setOpen = (open: boolean) => {
+      clearTimeout(closeTimer);
+      dropdown.classList.toggle('is-open', open);
+      dropdownTrigger.setAttribute('aria-expanded', String(open));
+      if (!open) openedByHover = false;
     };
 
-    const openDropdown = () => {
-      dropdown.classList.add('is-open');
-      dropdownTrigger.setAttribute('aria-expanded', 'true');
-    };
+    dropdown.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(closeTimer);
+      if (!isOpen()) {
+        setOpen(true);
+        openedByHover = true;
+      }
+    });
+
+    dropdown.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => setOpen(false), 150);
+    });
+
+    dropdownTrigger.addEventListener('pointerdown', (e) => {
+      lastPointerType = e.pointerType;
+    });
 
     dropdownTrigger.addEventListener('click', () => {
-      const isOpen = dropdown.classList.contains('is-open');
-      if (isOpen) {
-        closeDropdown();
+      // 鼠标悬停刚把菜单展开时再点按钮，视为“确认要看”，保持展开；之后再点才收起
+      if (lastPointerType === 'mouse' && openedByHover) {
+        openedByHover = false;
       } else {
-        openDropdown();
+        setOpen(!isOpen());
       }
+      lastPointerType = '';
     });
 
-    dropdownTrigger.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        openDropdown();
-        dropdownLinks?.[0]?.focus();
-      }
-    });
-
-    dropdown.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeDropdown();
+    dropdown.addEventListener('keydown', (e) => {
+      const index = items.indexOf(document.activeElement as HTMLAnchorElement);
+      if (e.key === 'Escape' && isOpen()) {
+        setOpen(false);
         dropdownTrigger.focus();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (!isOpen()) setOpen(true);
+        items[(index + 1) % items.length]?.focus();
+      } else if (e.key === 'ArrowUp' && index >= 0) {
+        e.preventDefault();
+        items[(index - 1 + items.length) % items.length]?.focus();
       }
     });
 
-    dropdownLinks?.forEach((link) => {
-      link.addEventListener('click', closeDropdown);
+    dropdown.addEventListener('focusout', (e) => {
+      if (!dropdown.contains(e.relatedTarget as Node | null)) setOpen(false);
     });
+
+    items.forEach((link) => link.addEventListener('click', () => setOpen(false)));
 
     document.addEventListener('click', (e) => {
-      if (!dropdown.contains(e.target as Node)) {
-        closeDropdown();
-      }
+      if (isOpen() && !dropdown.contains(e.target as Node)) setOpen(false);
     });
   }
 
