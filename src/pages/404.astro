@@ -1,11 +1,19 @@
 ---
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../sections/Navbar.astro';
 import Footer from '../sections/Footer.astro';
+import { links } from '../data/links';
 import notFoundMai from '../assets/404-mai.png';
 ---
 
-<Layout title="404 - 页面未找到 | MaiBot" description="抱歉，您访问的页面不存在或已被移动。" canonicalPath="/404">
+<Layout
+  title="404 - 页面未找到 | MaiBot"
+  description="抱歉，您访问的页面不存在或已被移动。"
+  canonicalPath="/404"
+  noindex
+>
+  <Navbar />
   <main class="not-found-page">
     <!-- Large outline "404" in background -->
     <svg class="not-found-bg-text" viewBox="0 0 1000 420" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
@@ -64,7 +72,7 @@ import notFoundMai from '../assets/404-mai.png';
           回到首页
         </a>
         <a
-          href="https://github.com/Mai-with-u/MaiWeb/issues"
+          href={links.siteIssues}
           target="_blank"
           rel="noopener noreferrer"
           class="not-found-btn not-found-btn-outline"
@@ -100,8 +108,8 @@ import notFoundMai from '../assets/404-mai.png';
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: max(80px, calc(64px + var(--safe-top))) max(24px, var(--safe-right)) max(80px, var(--safe-bottom))
-      max(24px, var(--safe-left));
+    padding: calc(var(--nav-offset) + 1rem) max(var(--page-gutter), var(--safe-right)) max(4rem, var(--safe-bottom))
+      max(var(--page-gutter), var(--safe-left));
     overflow: hidden;
   }
 
@@ -122,7 +130,7 @@ import notFoundMai from '../assets/404-mai.png';
   .deco-square {
     position: absolute;
     border-radius: 4.8px;
-    background: #ff7a30;
+    background: var(--c-primary);
     pointer-events: none;
     z-index: 0;
   }
@@ -177,7 +185,7 @@ import notFoundMai from '../assets/404-mai.png';
     position: absolute;
     width: 48px;
     height: 48px;
-    color: rgba(255, 122, 48, 0.45);
+    color: rgba(var(--c-primary-rgb), 0.45);
     pointer-events: none;
     z-index: 0;
   }
@@ -243,17 +251,17 @@ import notFoundMai from '../assets/404-mai.png';
     font-size: clamp(28px, 5vw, 48px);
     font-weight: 700;
     line-height: 1.2;
-    color: #1a1a2e;
+    color: var(--text-strong);
   }
 
   .title-highlight {
-    color: #ff7a30;
+    color: var(--c-primary);
   }
 
   .not-found-subtitle {
     font-size: clamp(16px, 2.4vw, 20px);
     line-height: 1.6;
-    color: #6a6a80;
+    color: var(--text-muted);
   }
 
   .not-found-actions {
@@ -286,21 +294,21 @@ import notFoundMai from '../assets/404-mai.png';
   }
 
   .not-found-btn-primary {
-    background: #ff7a30;
+    background: var(--c-primary);
     color: #fff;
-    box-shadow: 0 8px 28px rgba(255, 122, 48, 0.32);
+    box-shadow: 0 8px 28px rgba(var(--c-primary-rgb), 0.32);
   }
 
   .not-found-btn-primary:hover {
-    background: #e86a24;
+    background: var(--c-primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(255, 122, 48, 0.4);
+    box-shadow: 0 12px 36px rgba(var(--c-primary-rgb), 0.4);
   }
 
   .not-found-btn-outline {
     background: transparent;
-    color: #1a1a2e;
-    border: 1.5px solid #1a1a2e;
+    color: var(--text-strong);
+    border: 1.5px solid currentColor;
   }
 
   .not-found-btn-outline:hover {
@@ -313,152 +321,35 @@ import notFoundMai from '../assets/404-mai.png';
     color: rgba(255, 255, 255, 0.06);
   }
 
-  :global([data-theme='dark']) .not-found-title {
-    color: #f9fafc;
-  }
-
-  :global([data-theme='dark']) .not-found-subtitle {
-    color: #a2abbc;
-  }
-
-  :global([data-theme='dark']) .not-found-btn-outline {
-    color: #f9fafc;
-    border-color: #f9fafc;
-  }
-
   :global([data-theme='dark']) .not-found-btn-outline:hover {
     background: rgba(255, 255, 255, 0.08);
   }
 
   :global([data-theme='dark']) .deco-question {
-    color: rgba(255, 122, 48, 0.35);
+    color: rgba(var(--c-primary-rgb), 0.35);
   }
 
-  /* Viewport modes */
-  :global(html[data-layout='wide']) .not-found-page {
-    padding-top: max(calc(80px * var(--ui-scale)), var(--safe-top));
-    padding-right: max(calc(24px * var(--ui-scale)), var(--safe-right));
-    padding-bottom: max(calc(80px * var(--ui-scale)), var(--safe-bottom));
-    padding-left: max(calc(24px * var(--ui-scale)), var(--safe-left));
+  /* 触屏设备保证按钮点击高度 */
+  @media (pointer: coarse) {
+    .not-found-btn {
+      min-height: 44px;
+    }
   }
 
-  :global(html[data-layout='wide']) .not-found-bg-text {
-    width: min(100vw, calc(1600px * var(--ui-scale)));
-  }
+  /* 窄屏：装饰元素会压到插画和文字上，直接隐藏；两个按钮改为纵向铺满 */
+  @media (max-width: 767.98px) {
+    .deco-square,
+    .deco-question {
+      display: none;
+    }
 
-  :global(html[data-layout='wide']) .square-1 {
-    top: calc(150px * var(--ui-scale));
-    width: calc(24px * var(--ui-scale));
-    height: calc(24px * var(--ui-scale));
-  }
+    .not-found-actions {
+      flex-direction: column;
+      width: 100%;
+    }
 
-  :global(html[data-layout='wide']) .square-2 {
-    top: calc(196px * var(--ui-scale));
-    width: calc(18px * var(--ui-scale));
-    height: calc(18px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .square-3 {
-    top: calc(650px * var(--ui-scale));
-    width: calc(32px * var(--ui-scale));
-    height: calc(32px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .square-4 {
-    top: calc(690px * var(--ui-scale));
-    width: calc(20px * var(--ui-scale));
-    height: calc(20px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .square-5 {
-    top: calc(100px * var(--ui-scale));
-    width: calc(12px * var(--ui-scale));
-    height: calc(12px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .question-1,
-  :global(html[data-layout='wide']) .question-2 {
-    width: calc(48px * var(--ui-scale));
-    height: calc(48px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .question-1 {
-    top: calc(236px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .question-2 {
-    top: calc(300px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .question-3 {
-    top: calc(600px * var(--ui-scale));
-    width: calc(40px * var(--ui-scale));
-    height: calc(40px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .not-found-content {
-    max-width: calc(800px * var(--ui-scale));
-    gap: calc(40px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .not-found-illustration {
-    max-width: calc(420px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .not-found-text {
-    gap: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .not-found-title {
-    font-size: clamp(20px, calc(48px * var(--ui-scale)), 76.8px);
-  }
-
-  :global(html[data-layout='wide']) .not-found-subtitle {
-    font-size: clamp(13px, calc(20px * var(--ui-scale)), 32px);
-  }
-
-  :global(html[data-layout='wide']) .not-found-actions {
-    gap: calc(20px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .not-found-btn {
-    min-width: calc(140px * var(--ui-scale));
-    padding: calc(12px * var(--ui-scale)) calc(18px * var(--ui-scale));
-    border-radius: calc(16px * var(--ui-scale));
-    font-size: clamp(12px, calc(18px * var(--ui-scale)), 28.8px);
-  }
-
-  :global(html[data-layout='wide']) .btn-icon {
-    width: calc(24px * var(--ui-scale));
-    height: calc(24px * var(--ui-scale));
-  }
-
-  :global(html[data-device='mobile']) .not-found-btn {
-    min-height: 44px;
-  }
-
-  :global(html[data-layout='compact']) .not-found-page {
-    padding: max(100px, calc(76px + var(--safe-top))) max(20px, var(--safe-right)) max(60px, var(--safe-bottom))
-      max(20px, var(--safe-left));
-  }
-
-  :global(html[data-layout='compact']) .square-1,
-  :global(html[data-layout='compact']) .square-2,
-  :global(html[data-layout='compact']) .square-3,
-  :global(html[data-layout='compact']) .square-4,
-  :global(html[data-layout='compact']) .square-5,
-  :global(html[data-layout='compact']) .question-1,
-  :global(html[data-layout='compact']) .question-2,
-  :global(html[data-layout='compact']) .question-3 {
-    display: none;
-  }
-
-  :global(html[data-layout='compact']) .not-found-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  :global(html[data-layout='compact']) .not-found-btn {
-    width: 100%;
+    .not-found-btn {
+      width: 100%;
+    }
   }
 </style>

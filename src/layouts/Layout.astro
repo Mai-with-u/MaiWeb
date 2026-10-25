@@ -9,19 +9,21 @@ interface Props {
   title?: string;
   description?: string;
   canonicalPath?: string;
+  noindex?: boolean;
 }
 
 const {
   title = 'MaiBot 官方网站',
   description = 'MaiBot - 一个正在努力成为人类的BOT',
   canonicalPath = '/',
+  noindex = false,
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="zh-CN" data-device="desktop" data-layout="compact" data-nav="compact" data-orientation="portrait">
   <head>
-    <SeoHead title={title} description={description} canonicalPath={canonicalPath} />
+    <SeoHead title={title} description={description} canonicalPath={canonicalPath} noindex={noindex} />
     <ViewportModeScript />
   </head>
   <body>
