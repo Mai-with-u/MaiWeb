@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import logoIcon from '../assets/logo-icon.png';
 import LanguageDialog from '../components/dialog/LanguageDialog.astro';
+import LeaveSiteDialog from '../components/dialog/LeaveSiteDialog.astro';
 import { links } from '../data/links';
 
 // 当前页对应的导航项加 aria-current，屏幕阅读器能读出“当前页面”，样式上也高亮
@@ -47,13 +48,34 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
             </svg>
           </button>
           <div class="nav-dropdown-menu" id="nav-docs-menu">
-            <a href={links.manual} class="nav-dropdown-link">
+            <a
+              href={links.manual}
+              class="nav-dropdown-link"
+              data-leave-confirm
+              data-leave-name="MaiBot 文档站"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               用户手册
             </a>
-            <a href={links.develop} class="nav-dropdown-link">
+            <a
+              href={links.develop}
+              class="nav-dropdown-link"
+              data-leave-confirm
+              data-leave-name="MaiBot 文档站"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               开发文档
             </a>
-            <a href={links.faq} class="nav-dropdown-link">
+            <a
+              href={links.faq}
+              class="nav-dropdown-link"
+              data-leave-confirm
+              data-leave-name="MaiBot 文档站"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               常见问题
             </a>
           </div>
@@ -128,7 +150,14 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
           </svg>
         </button>
         <span class="nav-cta-wrap">
-          <a href={links.manual} class="nav-cta">
+          <a
+            href={links.manual}
+            class="nav-cta"
+            data-leave-confirm
+            data-leave-name="MaiBot 文档站"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             部署
           </a>
         </span>
@@ -139,13 +168,34 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
       <a href="/projects/" class="nav-item-mobile" aria-current={isCurrent('/projects/')}>
         衍生项目
       </a>
-      <a href={links.manual} class="nav-item-mobile">
+      <a
+        href={links.manual}
+        class="nav-item-mobile"
+        data-leave-confirm
+        data-leave-name="MaiBot 文档站"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         用户手册
       </a>
-      <a href={links.develop} class="nav-item-mobile">
+      <a
+        href={links.develop}
+        class="nav-item-mobile"
+        data-leave-confirm
+        data-leave-name="MaiBot 文档站"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         开发文档
       </a>
-      <a href={links.faq} class="nav-item-mobile">
+      <a
+        href={links.faq}
+        class="nav-item-mobile"
+        data-leave-confirm
+        data-leave-name="MaiBot 文档站"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         常见问题
       </a>
       <a href="/about/" class="nav-item-mobile" aria-current={isCurrent('/about/')}>
@@ -156,6 +206,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 </div>
 
 <LanguageDialog />
+<LeaveSiteDialog />
 
 <style>
   /* === Layer 0: backdrop blur only ===

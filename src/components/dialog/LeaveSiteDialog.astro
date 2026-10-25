@@ -1,0 +1,204 @@
+---
+import Dialog from './Dialog.astro';
+
+// 离站确认弹窗：页面上带 data-leave-confirm 的链接被点击时，先说明要去哪个站点、哪个地址，
+// 用户点“继续前往”才在新标签页打开；勾选“本次浏览不再提醒”后，当前标签页内后续点击直接打开。
+// 链接可用 data-leave-name 指定站点名称，不写时显示域名。
+---
+
+<Dialog id="leave" labelledby="leave-dialog-title" width="26rem">
+  <div class="leave">
+    <span class="leave-icon" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path>
+      </svg>
+    </span>
+    <h2 id="leave-dialog-title" class="leave-title">
+      即将离开麦麦官网
+    </h2>
+    <p class="leave-desc">
+      你将在新标签页打开
+      <strong class="leave-name" data-leave-name>
+        外部页面
+      </strong>
+    </p>
+    <p class="leave-url" data-leave-url></p>
+    <label class="leave-skip">
+      <input type="checkbox" data-leave-skip />
+      本次浏览不再提醒
+    </label>
+    <div class="leave-actions">
+      <button type="button" class="leave-cancel" data-dialog-close>
+        留在本站
+      </button>
+      <a class="leave-go" data-leave-go href="/" target="_blank" rel="noopener noreferrer">
+        继续前往
+      </a>
+    </div>
+  </div>
+</Dialog>
+
+<script>
+  const SKIP_KEY = 'maiweb-leave-confirm-skip';
+  const dialog = document.getElementById('dialog-leave');
+  const nameLabel = dialog?.querySelector<HTMLElement>('[data-leave-name]');
+  const urlLabel = dialog?.querySelector<HTMLElement>('[data-leave-url]');
+  const skipBox = dialog?.querySelector<HTMLInputElement>('[data-leave-skip]');
+  const goLink = dialog?.querySelector<HTMLAnchorElement>('[data-leave-go]');
+
+  const skipped = () => {
+    try {
+      return sessionStorage.getItem(SKIP_KEY) === '1';
+    } catch {
+      return false;
+    }
+  };
+
+  if (dialog instanceof HTMLDialogElement && nameLabel && urlLabel && skipBox && goLink) {
+    // 拦截顺序：用户按住 Ctrl/⌘/Shift/Alt 或用中键时是明确想自己开新窗口，不拦截；已勾选不再提醒时也不拦截
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest<HTMLAnchorElement>('a[data-leave-confirm]');
+      if (!link || event.defaultPrevented || event.button !== 0) return;
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || skipped()) return;
+
+      event.preventDefault();
+      const url = new URL(link.href);
+      nameLabel.textContent = link.dataset.leaveName || url.hostname;
+      urlLabel.textContent = `${url.host}${url.pathname.replace(/\/$/, '')}`;
+      goLink.href = link.href;
+      skipBox.checked = false;
+      dialog.showModal();
+    });
+
+    // “继续前往”是真正的链接点击，由浏览器在新标签页打开，不会被拦截弹窗；同时记下“不再提醒”并关闭弹窗
+    goLink.addEventListener('click', () => {
+      if (skipBox.checked) {
+        try {
+          sessionStorage.setItem(SKIP_KEY, '1');
+        } catch {
+          // 隐私模式下可能无法写入，只影响“不再提醒”，跳转照常
+        }
+      }
+      dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .leave {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .leave-icon {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border-radius: var(--radius-md);
+    background: rgba(var(--c-primary-rgb), 0.12);
+    color: var(--c-primary);
+  }
+
+  .leave-title {
+    padding-right: 3rem;
+    font-size: 1.375rem;
+  }
+
+  .leave-desc {
+    color: var(--text-body);
+    font-size: var(--fs-small);
+  }
+
+  .leave-name {
+    margin-left: 0.25em;
+    color: var(--text-strong);
+  }
+
+  .leave-url {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    overflow-wrap: anywhere;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    font-size: var(--fs-xs);
+  }
+
+  .leave-skip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    cursor: pointer;
+  }
+
+  .leave-skip input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--c-primary);
+  }
+
+  .leave-actions {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    margin-top: 0.25rem;
+  }
+
+  .leave-cancel,
+  .leave-go {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.125rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .leave-cancel {
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-body);
+  }
+
+  .leave-cancel:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+  }
+
+  .leave-go {
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .leave-go:hover {
+    background: var(--c-primary-hover);
+    transform: translateY(-1px);
+  }
+</style>
