@@ -51,6 +51,9 @@ const { id, labelledby, width = '47.5rem' } = Astro.props;
 </script>
 
 <style>
+  /* 弹窗沿用导航栏的造型：右下角切角 + 左侧橙色竖条。
+     dialog 本身透明，只负责滚动和投影（drop-shadow 跟着切角的形状走）；
+     卡片 .dialog-card 负责底色和切角，切角用 clip-path，所以投影不能放在卡片上，否则会被一起切掉 */
   .dialog {
     width: min(var(--dialog-width), calc(100vw - 2rem));
     max-width: none;
@@ -60,11 +63,10 @@ const { id, labelledby, width = '47.5rem' } = Astro.props;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-xl);
-    background: var(--surface);
+    border: none;
+    background: transparent;
     color: var(--text-strong);
-    box-shadow: 0 1.5rem 4.5rem rgba(18, 24, 49, 0.22);
+    filter: drop-shadow(0 1.25rem 2.5rem rgba(18, 24, 49, 0.25));
     scrollbar-width: thin;
   }
 
@@ -74,7 +76,7 @@ const { id, labelledby, width = '47.5rem' } = Astro.props;
   }
 
   .dialog[open] {
-    animation: dialog-in 0.22s ease-out;
+    animation: dialog-in 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.15);
   }
 
   .dialog[open]::backdrop {
@@ -84,7 +86,7 @@ const { id, labelledby, width = '47.5rem' } = Astro.props;
   @keyframes dialog-in {
     from {
       opacity: 0;
-      transform: translateY(0.75rem) scale(0.98);
+      transform: translateY(0.75rem) scale(0.97);
     }
   }
 
@@ -96,33 +98,48 @@ const { id, labelledby, width = '47.5rem' } = Astro.props;
 
   .dialog-card {
     position: relative;
-    padding: clamp(1.5rem, 5vw, 2.5rem);
+    padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem)
+      clamp(1.75rem, 5vw, 2.75rem);
+    background: var(--surface);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.5rem), calc(100% - 1.5rem) 100%, 0 100%);
   }
 
+  /* 左侧橙色竖条，与导航栏、首屏按钮一致 */
+  .dialog-card::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0.25rem;
+    content: '';
+    background: rgba(var(--c-primary-rgb), 0.85);
+  }
+
+  /* 关闭按钮和导航栏的图标按钮一样：平时透明，悬停时浅橙底、橙色图标 */
   .dialog-close {
     position: absolute;
-    top: clamp(1rem, 4vw, 1.75rem);
-    right: clamp(1rem, 4vw, 1.75rem);
+    top: clamp(0.75rem, 3vw, 1.25rem);
+    right: clamp(0.75rem, 3vw, 1.25rem);
     z-index: 2;
     display: grid;
     width: 2.5rem;
     height: 2.5rem;
     place-items: center;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--surface-muted);
-    color: var(--text-muted);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-subtle);
     cursor: pointer;
     transition:
       background-color var(--transition-fast),
       color var(--transition-fast),
-      border-color var(--transition-fast);
+      transform var(--transition-fast);
   }
 
   .dialog-close:hover,
   .dialog-close:focus-visible {
-    border-color: rgba(var(--c-primary-rgb), 0.3);
     background: rgba(var(--c-primary-rgb), 0.1);
     color: var(--c-primary);
+    transform: rotate(90deg);
   }
 </style>

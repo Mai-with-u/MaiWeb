@@ -68,8 +68,8 @@ export interface SocialLink {
 
 // QQ 以外的官方平台
 export const socialLinks: SocialLink[] = [
-  { name: 'GitHub', description: '代码、Issue 与 PR', url: 'https://github.com/Mai-with-u/MaiBot' },
-  { name: 'X', description: '官方 X 账号', url: 'https://x.com/MaiWithYou' },
-  { name: 'Discord', description: 'Discord 服务器', url: 'https://discord.gg/UvgPVSVX' },
-  { name: 'Telegram', description: 'Telegram 频道', url: 'https://t.me/MaiWithYou' },
+  { name: 'GitHub', description: '看代码、提 Issue、交 PR', url: 'https://github.com/Mai-with-u/MaiBot' },
+  { name: 'X', description: '官方账号', url: 'https://x.com/MaiWithYou' },
+  { name: 'Discord', description: 'Discord 群', url: 'https://discord.gg/UvgPVSVX' },
+  { name: 'Telegram', description: '官方频道', url: 'https://t.me/MaiWithYou' },
 ];

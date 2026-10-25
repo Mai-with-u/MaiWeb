@@ -13,7 +13,7 @@ import { qqGroupSections, socialLinks } from '../../data/community';
         QQ 交流群
       </h2>
       <span class="qq-accent" aria-hidden="true"></span>
-      <p class="qq-subtitle">MaiBot 有多个 QQ 交流群，按不同用途划分</p>
+      <p class="qq-subtitle">按用途分了好几个群，挑一个进来吧</p>
     </header>
 
     {qqGroupSections.map((section) => (
@@ -44,21 +44,20 @@ import { qqGroupSections, socialLinks } from '../../data/community';
       </section>
     ))}
 
-    <section class="qq-section" aria-label="其他平台">
-      <h3 class="qq-section-label tone-muted">其他平台</h3>
+    <section class="qq-section" aria-label="不用 QQ 的话">
+      <h3 class="qq-section-label tone-muted">不用 QQ 的话</h3>
       <div class="qq-social">
         {socialLinks.map((item) => (
-          <a class="qq-social-link" href={item.url} target="_blank" rel="noopener noreferrer">
-            <strong>{item.name}</strong>
-            <span>{item.description}</span>
+          <a class="qq-social-link" href={item.url} target="_blank" rel="noopener noreferrer" title={item.description}>
+            {item.name}
           </a>
         ))}
       </div>
     </section>
 
     <aside class="qq-tip">
-      <strong>提示</strong>
-      <p>技术问题请优先在技术交流群中提问，闲聊群不提供技术答疑。如果你在开发 MaiBot 插件，欢迎加入插件开发群交流。</p>
+      <strong>先看一眼再进群</strong>
+      <p>技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。</p>
     </aside>
   </div>
 </Dialog>
@@ -133,8 +132,7 @@ import { qqGroupSections, socialLinks } from '../../data/community';
     color: var(--text-muted);
   }
 
-  .qq-grid,
-  .qq-social {
+  .qq-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
     gap: 0.75rem;
@@ -206,33 +204,32 @@ import { qqGroupSections, socialLinks } from '../../data/community';
     transform: translateY(-1px);
   }
 
-  .qq-social-link {
+  /* 不用 QQ 的入口：一排和“加入群聊”同款的小药丸，只是换成中性灰，避免抢过群聊按钮 */
+  .qq-social {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 0.875rem 1rem;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .qq-social-link {
+    padding: 0.375rem 0.875rem;
+    border-radius: var(--radius-sm);
     background: var(--surface-muted);
+    color: var(--text-body);
+    font-family: var(--font-display);
+    font-size: var(--fs-xs);
+    font-weight: 700;
     transition:
-      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      color var(--transition-fast),
       transform var(--transition-fast);
   }
 
   .qq-social-link:hover,
   .qq-social-link:focus-visible {
-    border-color: rgba(var(--c-primary-rgb), 0.4);
+    background: rgba(var(--c-primary-rgb), 0.12);
+    color: var(--c-primary);
     transform: translateY(-1px);
-  }
-
-  .qq-social-link strong {
-    font-family: var(--font-display);
-    font-size: var(--fs-small);
-  }
-
-  .qq-social-link span {
-    color: var(--text-muted);
-    font-size: var(--fs-xs);
   }
 
   .qq-tip {

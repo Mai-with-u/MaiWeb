@@ -18,21 +18,21 @@ export interface FeaturedProject {
 export const featuredProjects: FeaturedProject[] = [
   {
     name: 'Amaidesu',
-    description: '让麦麦当虚拟主播：读弹幕、听语音，自己决定什么时候开口，再驱动语音合成与虚拟形象完成直播。',
+    description: '麦麦去当虚拟主播了。她会自己看弹幕、挑时机接话，用虚拟形象和声音开播。',
     href: 'https://github.com/Mai-with-u/Amaidesu',
     image: amaidesuBg,
     tone: 'forest',
   },
   {
     name: 'MaiCraft',
-    description: '让麦麦以第一人称玩 Minecraft 的模组：大模型通过内嵌的 MCP 服务下达目标，由模组像真人玩家一样去完成。',
+    description: '让麦麦进 Minecraft 自己玩。跟她说“去砍树”“做几支火把”，她会像玩家一样一步步做完。',
     href: 'https://github.com/Mai-with-u/MaiCraftMod',
     image: maicraftBg,
     tone: 'earth',
   },
   {
     name: 'Neo-MoFox',
-    description: 'MoFox 团队全新重构的 AI 聊天机器人框架，前身是基于 MaiBot 的增强分支，同样以创造数字生命为目标。',
+    description: 'MoFox 团队重写的聊天机器人框架，前身是从 MaiBot 分出去的增强版 MoFox_Bot。',
     href: 'https://github.com/MoFox-Studio/Neo-MoFox',
     image: mofoxBg,
     tone: 'navy',
@@ -49,19 +49,19 @@ export interface CompactProject {
 export const compactProjects: CompactProject[] = [
   {
     name: 'MaiBot 文档站',
-    description: '部署教程、配置说明与插件开发指南。',
+    description: '怎么装、怎么配、怎么写插件，都在这。',
     href: links.docs,
     color: 'var(--c-primary)',
   },
   {
     name: 'MaiDroid',
-    description: '让麦麦直接运行在 Android 设备上，无需服务器（测试版）。',
+    description: '在安卓手机上直接跑麦麦，不用服务器（还在测试）。',
     href: links.droidRepo,
     color: 'var(--c-green-strong)',
   },
   {
     name: 'MaiWeb',
-    description: '麦麦官网，也就是你正在看的这个网站。',
+    description: '麦麦官网（？',
     href: links.siteRepo,
     color: '#007aff',
   },
