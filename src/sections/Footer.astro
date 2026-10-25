@@ -1,98 +1,105 @@
 ---
 import { Image } from 'astro:assets';
 import easterEgg from '../assets/easter-egg.png';
+import { links } from '../data/links';
+
+// 页脚：常用入口 + 开源协议说明。左下角藏着一个只用鼠标或手指才能点到的彩蛋。
+const footerLinks = [
+  { label: '使用文档', href: links.docs },
+  { label: '衍生项目', href: '/projects/' },
+  { label: '关于我们', href: '/about/' },
+  { label: 'GitHub', href: links.repo },
+];
 ---
 
 <footer class="footer">
   <div class="container footer-inner">
+    <nav class="footer-links" aria-label="页脚导航">
+      {footerLinks.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
     <p class="footer-copyright">
-      MaiSaka 以 <a
-        href="https://github.com/Mai-with-u/MaiBot/blob/main/LICENSE"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="footer-link">GPL-3.0</a
-      > 协议开源；使用即表示您同意并知悉<a
-        href="https://github.com/Mai-with-u/MaiBot/blob/main/EULA.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="footer-link">「用户协议」</a
-      >和<a
-        href="https://github.com/Mai-with-u/MaiBot/blob/main/PRIVACY.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="footer-link">「隐私协议」</a
-      >的相关内容。<br /> AI 生成内容请仔细甄别。
+      MaiSaka 以 <a href={links.license} target="_blank" rel="noopener noreferrer" class="footer-link">GPL-3.0</a>
+      协议开源；使用即表示您同意并知悉<a href={links.eula} target="_blank" rel="noopener noreferrer" class="footer-link"
+        >「用户协议」</a
+      >和<a href={links.privacy} target="_blank" rel="noopener noreferrer" class="footer-link">「隐私协议」</a
+      >的相关内容。<br />AI 生成内容请仔细甄别。
     </p>
-    <p class="footer-credit"></p>
   </div>
 
-  <div class="easter-egg" role="button" aria-label="彩蛋" tabindex="-1">
+  <div class="easter-egg" aria-hidden="true">
     <Image src={easterEgg} alt="" width={120} height={120} />
   </div>
-  <div class="easter-bubble">
+  <div class="easter-bubble" aria-hidden="true">
     <span class="easter-bubble-text">麦麦说得对</span>
   </div>
 </footer>
 
 <script>
-  const egg = document.querySelector('.easter-egg') as HTMLElement | null;
-  const bubble = document.querySelector('.easter-bubble') as HTMLElement | null;
+  // 彩蛋：点击露出半截的麦麦 -> 麦麦升起（0.5s 到顶）-> 气泡从左侧滑入 -> 3.5s 时气泡滑出 -> 4s 时麦麦落回原位。
+  // 动画进行中再次点击不会重复触发。
+  const egg = document.querySelector<HTMLElement>('.easter-egg');
+  const bubble = document.querySelector<HTMLElement>('.easter-bubble');
   if (egg && bubble) {
-    let timerShow: ReturnType<typeof setTimeout> | null = null;
-    let timerHide: ReturnType<typeof setTimeout> | null = null;
-    let timerReset: ReturnType<typeof setTimeout> | null = null;
+    let timers: ReturnType<typeof setTimeout>[] = [];
 
-    const clearTimers = () => {
-      if (timerShow) clearTimeout(timerShow);
-      if (timerHide) clearTimeout(timerHide);
-      if (timerReset) clearTimeout(timerReset);
-      timerShow = timerHide = timerReset = null;
-    };
-
-    const trigger = () => {
+    egg.addEventListener('click', () => {
       if (egg.classList.contains('is-rising')) return;
-      clearTimers();
+      timers.forEach(clearTimeout);
       egg.classList.add('is-rising');
-      // 彩蛋浮到顶点后气泡从左滑入
-      timerShow = setTimeout(() => bubble.classList.add('is-visible'), 500);
-      // 彩蛋开始下降前气泡滑出
-      timerHide = setTimeout(() => bubble.classList.remove('is-visible'), 3500);
-      // 动画结束复位
-      timerReset = setTimeout(() => {
-        egg.classList.remove('is-rising');
-        bubble.classList.remove('is-visible');
-      }, 4000);
-    };
-
-    egg.addEventListener('click', trigger);
-    // Keep keydown for keyboard users who tab to the element via tabindex=-1 still allows programmatic focus
+      timers = [
+        setTimeout(() => bubble.classList.add('is-visible'), 500),
+        setTimeout(() => bubble.classList.remove('is-visible'), 3500),
+        setTimeout(() => egg.classList.remove('is-rising'), 4000),
+      ];
+    });
   }
 </script>
 
 <style>
   .footer {
+    --egg-size: 80px;
+    --egg-hidden: 60px;
     position: relative;
     min-height: 160px;
-    padding: 40px 0 max(60px, var(--safe-bottom));
-    text-align: center;
+    padding: 2.5rem 0 max(3.75rem, var(--safe-bottom));
     overflow: hidden;
+    text-align: center;
   }
 
   .footer-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.25rem;
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 700;
+  }
+
+  .footer-links a {
+    color: var(--text-body);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-links a:hover {
+    color: var(--c-primary);
   }
 
   .footer-copyright {
+    max-width: 40rem;
+    color: var(--text-muted);
     font-family: var(--font-display);
-    font-size: clamp(9px, 2.6vw, 12px);
+    font-size: var(--fs-xs);
     font-weight: 700;
-    color: var(--color-text-muted);
-    letter-spacing: 0.36px;
-    line-height: 1.5;
-    max-width: 640px;
+    letter-spacing: 0.03em;
+    line-height: 1.6;
   }
 
   .footer-link {
@@ -105,29 +112,17 @@ import easterEgg from '../assets/easter-egg.png';
     color: var(--c-primary-hover);
   }
 
-  .footer-credit {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(9px, 2.6vw, 12px);
-    font-weight: 700;
-    color: #000;
-  }
-
-  :global([data-theme='dark']) .footer-credit {
-    color: var(--c-text);
-  }
-
+  /* 彩蛋：默认只露出头顶，点击后升起 --egg-hidden 的高度 */
   .easter-egg {
     position: absolute;
-    left: 15%;
-    bottom: -95px;
-    width: 120px;
-    height: 120px;
-    transform: translateX(-50%);
-    border-radius: 16px;
-    overflow: visible;
-    cursor: pointer;
+    bottom: calc(var(--egg-hidden) * -1);
+    left: max(15%, var(--safe-left));
     z-index: 2;
-    transition: filter 0.2s ease;
+    width: var(--egg-size);
+    height: var(--egg-size);
+    cursor: pointer;
+    transform: translateX(-50%);
+    transition: filter var(--transition-fast);
   }
 
   .easter-egg:hover {
@@ -137,50 +132,48 @@ import easterEgg from '../assets/easter-egg.png';
   .easter-egg img {
     width: 100%;
     height: 100%;
+    border-radius: var(--radius-lg);
     object-fit: cover;
-    display: block;
     pointer-events: none;
-    border-radius: 16px;
   }
 
   .easter-egg.is-rising {
-    animation: easterRise 4s ease-in-out forwards;
     pointer-events: none;
+    animation: easterRise 4s ease-in-out forwards;
   }
 
   @keyframes easterRise {
-    0% {
+    0%,
+    100% {
       transform: translateX(-50%) translateY(0);
     }
     12.5%,
     87.5% {
-      transform: translateX(-50%) translateY(calc(-95px * var(--ui-scale)));
-    }
-    100% {
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(calc(var(--egg-hidden) * -1));
     }
   }
 
+  /* 气泡定位在升起后的麦麦右侧 */
   .easter-bubble {
     position: absolute;
-    left: 15%;
-    bottom: -64px;
-    transform: translateX(calc(-50% + 138px)) translateY(-95px);
+    bottom: calc(var(--egg-size) * 0.26);
+    left: calc(max(15%, var(--safe-left)) + var(--egg-size) / 2 + 12px);
     z-index: 2;
     pointer-events: none;
   }
 
   .easter-bubble-text {
     display: inline-block;
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.4;
-    padding: 12px 18px;
-    border-radius: 20px;
-    border-bottom-left-radius: 4px;
+    max-width: 160px;
+    padding: 8px 12px;
+    border-radius: 12px 12px 12px 3px;
     background: #eeeef0;
     color: #2b2b2b;
+    font-family: var(--font-reading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap;
     opacity: 0;
     transform: translateX(-30px) scale(0.92);
     transition:
@@ -190,7 +183,7 @@ import easterEgg from '../assets/easter-egg.png';
 
   .easter-bubble.is-visible .easter-bubble-text {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: none;
   }
 
   :global([data-theme='dark']) .easter-bubble-text {
@@ -198,83 +191,16 @@ import easterEgg from '../assets/easter-egg.png';
     color: #f9fafc;
   }
 
-  :global(html[data-layout='wide']) .footer {
-    min-height: calc(160px * var(--ui-scale));
-    padding-top: calc(40px * var(--ui-scale));
-    padding-bottom: max(calc(60px * var(--ui-scale)), var(--safe-bottom));
-  }
-
-  :global(html[data-layout='wide']) .footer-inner {
-    gap: calc(12px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .footer-copyright,
-  :global(html[data-layout='wide']) .footer-credit {
-    font-size: clamp(7px, calc(12px * var(--ui-scale)), 19.2px);
-    letter-spacing: calc(0.36px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .footer-copyright {
-    max-width: calc(640px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .easter-egg {
-    bottom: calc(-95px * var(--ui-scale));
-    width: calc(120px * var(--ui-scale));
-    height: calc(120px * var(--ui-scale));
-    border-radius: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .easter-egg img {
-    border-radius: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .easter-bubble {
-    bottom: calc(-64px * var(--ui-scale));
-    transform: translateX(calc(-50% + 138px * var(--ui-scale))) translateY(calc(-95px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .easter-bubble-text {
-    padding: calc(12px * var(--ui-scale)) calc(18px * var(--ui-scale));
-    border-radius: calc(20px * var(--ui-scale));
-    border-bottom-left-radius: calc(4px * var(--ui-scale));
-    font-size: clamp(10px, calc(16px * var(--ui-scale)), 25.6px);
-  }
-
-  :global(html[data-layout='compact']) .easter-egg {
-    left: max(15%, var(--safe-left));
-    width: 80px;
-    height: 80px;
-    bottom: -60px;
-  }
-
-  :global(html[data-layout='compact']) .easter-egg.is-rising {
-    animation-name: easterRiseCompact;
-  }
-
-  :global(html[data-layout='compact']) .easter-bubble {
-    bottom: -40px;
-    transform: translateX(calc(-50% + 100px)) translateY(-60px);
-  }
-
-  :global(html[data-layout='compact']) .easter-bubble-text {
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: 12px;
-    border-bottom-left-radius: 3px;
-    max-width: 160px;
-  }
-
-  @keyframes easterRiseCompact {
-    0% {
-      transform: translateX(-50%) translateY(0);
+  @media (min-width: 768px) {
+    .footer {
+      --egg-size: 120px;
+      --egg-hidden: 95px;
     }
-    12.5%,
-    87.5% {
-      transform: translateX(-50%) translateY(-60px);
-    }
-    100% {
-      transform: translateX(-50%) translateY(0);
+
+    .easter-bubble-text {
+      padding: 12px 18px;
+      border-radius: 20px 20px 20px 4px;
+      font-size: 1rem;
     }
   }
 </style>

@@ -1,12 +1,16 @@
 ---
 import CtaButton from '../components/CtaButton.astro';
 import { links } from '../data/links';
+
+// 首页收尾的行动号召：两行标语 + “现在开始”按钮，按钮落到文档站的快速上手
 ---
 
 <section class="cta-section" id="cta">
   <div class="container cta-inner reveal">
-    <h2 class="cta-title title-orange">你想要的,一切尽在 MaiSaka!</h2>
-    <h2 class="cta-title title-dark">一个致力于了解你的数字生命。</h2>
+    <h2 class="cta-title">
+      <span class="title-orange">你想要的，一切尽在 MaiSaka！</span>
+      <span class="title-dark">一个致力于了解你的数字生命。</span>
+    </h2>
 
     <div class="cta-action reveal-delay-1">
       <CtaButton variant="primary" size="large" href={links.manual} icon="paperplane" label="现在开始" />
@@ -17,12 +21,12 @@ import { links } from '../data/links';
 <style>
   .cta-section {
     position: relative;
+    display: flex;
     min-height: 72vh;
     min-height: 72svh;
-    padding: clamp(96px, 22vw, 165px) 0 max(48px, var(--safe-bottom));
-    display: flex;
     align-items: center;
     justify-content: center;
+    padding: clamp(4rem, 12vw, 10rem) 0 clamp(3rem, 6vw, 4rem);
     text-align: center;
   }
 
@@ -30,15 +34,16 @@ import { links } from '../data/links';
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
   }
 
   .cta-title {
-    font-family: var(--font-display);
-    font-size: clamp(30px, 8.5vw, 56px);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: clamp(1.2px, 0.5vw, 3.6px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: clamp(1.875rem, 1rem + 3.6vw, 4.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    text-wrap: balance;
   }
 
   .title-orange {
@@ -46,54 +51,10 @@ import { links } from '../data/links';
   }
 
   .title-dark {
-    color: var(--color-dark);
+    color: var(--text-strong);
   }
 
   .cta-action {
-    margin-top: clamp(24px, calc(32px * var(--ui-scale)), 40px);
-  }
-
-  :global(html[data-layout='wide']) .cta-section {
-    min-height: calc(100vh - 160px * var(--ui-scale));
-    min-height: calc(100svh - 160px * var(--ui-scale));
-    padding-top: calc(165px * var(--ui-scale));
-    padding-bottom: var(--safe-bottom);
-  }
-
-  :global(html[data-layout='wide']) .cta-title {
-    font-size: clamp(24px, calc(72px * var(--ui-scale)), 115.2px);
-    letter-spacing: calc(3.6px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='compact']) .cta-section {
-    min-height: calc(100vh - 160px);
-    min-height: calc(100svh - 160px);
-    padding-top: calc(160px + var(--safe-bottom));
-    padding-bottom: var(--safe-bottom);
-  }
-
-  :global(html[data-layout='compact']) .cta-action :global(.cta-link-large) {
-    min-width: 160px;
-    min-height: 56px;
-    gap: 8px;
-    padding: 10px 16px;
-  }
-
-  :global(html[data-layout='compact']) .cta-action :global(.cta-icon) {
-    width: 28px;
-    height: 28px;
-  }
-
-  :global(html[data-layout='compact']) .cta-action :global(.cta-label) {
-    font-size: 18px;
-  }
-
-  @media (max-height: 520px) and (orientation: landscape) {
-    :global(html[data-layout='wide']) .cta-section {
-      min-height: 100vh;
-      min-height: 100svh;
-      padding-top: calc(80px * var(--ui-scale));
-      padding-bottom: calc(48px * var(--ui-scale));
-    }
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 </style>
