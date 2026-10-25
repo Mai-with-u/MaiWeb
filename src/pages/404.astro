@@ -118,7 +118,7 @@ import notFoundMai from '../assets/404-mai.png';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: min(100vw, 1600px);
+    width: min(100vw, 100rem);
     height: auto;
     transform: translate(-50%, -50%);
     color: rgba(0, 0, 0, 0.05);
@@ -129,7 +129,7 @@ import notFoundMai from '../assets/404-mai.png';
   /* Decorative squares */
   .deco-square {
     position: absolute;
-    border-radius: 4.8px;
+    border-radius: 0.3rem;
     background: var(--c-primary);
     pointer-events: none;
     z-index: 0;
@@ -137,45 +137,45 @@ import notFoundMai from '../assets/404-mai.png';
 
   .square-1 {
     left: 10%;
-    top: 150px;
-    width: 24px;
-    height: 24px;
+    top: 9.375rem;
+    width: 1.5rem;
+    height: 1.5rem;
     opacity: 0.6;
     transform: rotate(15deg);
   }
 
   .square-2 {
     right: 8%;
-    top: 196px;
-    width: 18px;
-    height: 18px;
+    top: 12.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
     opacity: 0.4;
     transform: rotate(-10deg);
   }
 
   .square-3 {
     right: 6%;
-    top: 650px;
-    width: 32px;
-    height: 32px;
+    top: 40.625rem;
+    width: 2rem;
+    height: 2rem;
     opacity: 0.8;
     transform: rotate(45deg);
   }
 
   .square-4 {
     left: 15%;
-    top: 690px;
-    width: 20px;
-    height: 20px;
+    top: 43.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
     opacity: 0.5;
     transform: rotate(-30deg);
   }
 
   .square-5 {
     right: 20%;
-    top: 100px;
-    width: 12px;
-    height: 12px;
+    top: 6.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
     opacity: 0.3;
     transform: rotate(10deg);
   }
@@ -183,8 +183,8 @@ import notFoundMai from '../assets/404-mai.png';
   /* Decorative question marks */
   .deco-question {
     position: absolute;
-    width: 48px;
-    height: 48px;
+    width: 3rem;
+    height: 3rem;
     color: rgba(var(--c-primary-rgb), 0.45);
     pointer-events: none;
     z-index: 0;
@@ -192,21 +192,21 @@ import notFoundMai from '../assets/404-mai.png';
 
   .question-1 {
     left: 20%;
-    top: 236px;
+    top: 14.75rem;
     transform: rotate(-12deg);
   }
 
   .question-2 {
     right: 18%;
-    top: 300px;
+    top: 18.75rem;
     transform: rotate(15deg);
   }
 
   .question-3 {
     left: 26%;
-    top: 600px;
-    width: 40px;
-    height: 40px;
+    top: 37.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     transform: rotate(20deg);
   }
 
@@ -217,16 +217,16 @@ import notFoundMai from '../assets/404-mai.png';
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 2.5rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 50rem;
     text-align: center;
     animation: fadeInUp 0.72s ease-out forwards;
   }
 
   .not-found-illustration {
     width: 100%;
-    max-width: 420px;
+    max-width: 26.25rem;
     aspect-ratio: 420 / 420;
     display: flex;
     align-items: center;
@@ -242,13 +242,13 @@ import notFoundMai from '../assets/404-mai.png';
   .not-found-text {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1rem;
     width: 100%;
   }
 
   .not-found-title {
     font-family: var(--font-display);
-    font-size: clamp(28px, 5vw, 48px);
+    font-size: clamp(1.75rem, 5vw, 3rem);
     font-weight: 700;
     line-height: 1.2;
     color: var(--text-strong);
@@ -259,7 +259,7 @@ import notFoundMai from '../assets/404-mai.png';
   }
 
   .not-found-subtitle {
-    font-size: clamp(16px, 2.4vw, 20px);
+    font-size: clamp(1rem, 2.4vw, 1.25rem);
     line-height: 1.6;
     color: var(--text-muted);
   }
@@ -269,40 +269,40 @@ import notFoundMai from '../assets/404-mai.png';
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 1.25rem;
   }
 
   .not-found-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    min-width: 140px;
-    padding: 12px 18px;
-    border-radius: 16px;
+    gap: 0.5rem;
+    min-width: 8.75rem;
+    padding: 0.75rem 1.125rem;
+    border-radius: 1rem;
     font-family: var(--font-display);
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
     text-decoration: none;
     transition: all var(--transition-fast);
   }
 
   .btn-icon {
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     flex-shrink: 0;
   }
 
   .not-found-btn-primary {
     background: var(--c-primary);
     color: #fff;
-    box-shadow: 0 8px 28px rgba(var(--c-primary-rgb), 0.32);
+    box-shadow: 0 0.5rem 1.75rem rgba(var(--c-primary-rgb), 0.32);
   }
 
   .not-found-btn-primary:hover {
     background: var(--c-primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(var(--c-primary-rgb), 0.4);
+    box-shadow: 0 0.75rem 2.25rem rgba(var(--c-primary-rgb), 0.4);
   }
 
   .not-found-btn-outline {

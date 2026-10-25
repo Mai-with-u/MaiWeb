@@ -55,10 +55,10 @@
   /* 固定导航栏占用的高度，首屏和子页面顶部按这个值让出空间 */
   --nav-offset: calc(5.5rem + var(--safe-top));
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
 
   --transition-fast: 0.2s ease;
 }

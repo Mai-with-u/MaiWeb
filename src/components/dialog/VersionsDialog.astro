@@ -97,21 +97,21 @@ const methods = [
   .versions {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 1.5rem;
   }
 
   .versions-header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding-right: 56px;
+    gap: 0.625rem;
+    padding-right: 3.5rem;
   }
 
   .versions-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     color: var(--c-primary);
     font-family: var(--font-display);
     font-size: 0.6875rem;
@@ -121,9 +121,9 @@ const methods = [
   }
 
   .versions-eyebrow span {
-    width: 24px;
-    height: 3px;
-    border-radius: 999px;
+    width: 1.5rem;
+    height: 0.1875rem;
+    border-radius: 62.4375rem;
     background: currentColor;
   }
 
@@ -139,8 +139,8 @@ const methods = [
 
   .platforms {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.25rem), 1fr));
+    gap: 0.75rem;
   }
 
   /* Windows 用蓝色、Android 用绿色，卡片底色、按钮都由 --tone 派生 */
@@ -148,12 +148,12 @@ const methods = [
     --tone: var(--c-blue-rgb);
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 24px;
+    gap: 0.5rem;
+    padding: 1.5rem;
     border: 1px solid rgba(var(--tone), 0.3);
     border-radius: var(--radius-lg);
     background: linear-gradient(135deg, rgba(var(--tone), 0.16), rgba(var(--tone), 0.04) 60%), var(--surface-muted);
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.25rem), calc(100% - 1.25rem) 100%, 0 100%);
   }
 
   .platform-android {
@@ -164,15 +164,15 @@ const methods = [
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px 12px;
-    min-height: 24px;
+    gap: 0.5rem 0.75rem;
+    min-height: 1.5rem;
   }
 
   /* 首屏脚本按 UA 在 html 上写入 data-download-platform，命中的平台卡片显示“当前设备” */
   .platform-current {
     display: none;
-    padding: 3px 10px;
-    border-radius: 999px;
+    padding: 0.1875rem 0.625rem;
+    border-radius: 62.4375rem;
     background: rgb(var(--tone));
     color: #121831;
     font-family: var(--font-display);
@@ -210,9 +210,9 @@ const methods = [
   .platform-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 0.625rem;
     margin-top: auto;
-    padding-top: 8px;
+    padding-top: 0.5rem;
   }
 
   .platform-download,
@@ -221,8 +221,8 @@ const methods = [
     min-height: 44px;
     align-items: center;
     justify-content: center;
-    padding: 10px 16px;
-    border-radius: 10px;
+    padding: 0.625rem 1rem;
+    border-radius: 0.625rem;
     font-family: var(--font-display);
     font-size: 0.8125rem;
     font-weight: 700;
@@ -235,7 +235,7 @@ const methods = [
   .platform-download {
     background: rgb(var(--tone));
     color: #121831;
-    box-shadow: 0 8px 18px rgba(var(--tone), 0.2);
+    box-shadow: 0 0.5rem 1.125rem rgba(var(--tone), 0.2);
   }
 
   .platform-project {
@@ -254,7 +254,7 @@ const methods = [
   .methods {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0.75rem;
   }
 
   .methods-title {
@@ -264,17 +264,17 @@ const methods = [
   /* 四个部署方式：宽屏两列两行，窄屏单列，避免出现 3+1 的落单排列 */
   .methods-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.625rem;
   }
 
   .method {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
-    column-gap: 12px;
+    column-gap: 0.75rem;
     align-items: center;
-    padding: 14px 16px;
+    padding: 0.875rem 1rem;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     background: var(--surface-muted);

@@ -8,7 +8,7 @@ interface Props {
   width?: string;
 }
 
-const { id, labelledby, width = '760px' } = Astro.props;
+const { id, labelledby, width = '47.5rem' } = Astro.props;
 ---
 
 <dialog id={`dialog-${id}`} class="dialog" aria-labelledby={labelledby} style={`--dialog-width: ${width}`}>
@@ -52,9 +52,9 @@ const { id, labelledby, width = '760px' } = Astro.props;
 
 <style>
   .dialog {
-    width: min(var(--dialog-width), calc(100vw - 32px));
+    width: min(var(--dialog-width), calc(100vw - 2rem));
     max-width: none;
-    max-height: min(88dvh, calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom)));
+    max-height: min(88dvh, calc(100dvh - 2rem - var(--safe-top) - var(--safe-bottom)));
     margin: auto;
     padding: 0;
     overflow-x: hidden;
@@ -64,13 +64,13 @@ const { id, labelledby, width = '760px' } = Astro.props;
     border-radius: var(--radius-xl);
     background: var(--surface);
     color: var(--text-strong);
-    box-shadow: 0 24px 72px rgba(18, 24, 49, 0.22);
+    box-shadow: 0 1.5rem 4.5rem rgba(18, 24, 49, 0.22);
     scrollbar-width: thin;
   }
 
   .dialog::backdrop {
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(0.25rem);
   }
 
   .dialog[open] {
@@ -84,7 +84,7 @@ const { id, labelledby, width = '760px' } = Astro.props;
   @keyframes dialog-in {
     from {
       opacity: 0;
-      transform: translateY(12px) scale(0.98);
+      transform: translateY(0.75rem) scale(0.98);
     }
   }
 
@@ -96,17 +96,17 @@ const { id, labelledby, width = '760px' } = Astro.props;
 
   .dialog-card {
     position: relative;
-    padding: clamp(24px, 5vw, 40px);
+    padding: clamp(1.5rem, 5vw, 2.5rem);
   }
 
   .dialog-close {
     position: absolute;
-    top: clamp(16px, 4vw, 28px);
-    right: clamp(16px, 4vw, 28px);
+    top: clamp(1rem, 4vw, 1.75rem);
+    right: clamp(1rem, 4vw, 1.75rem);
     z-index: 2;
     display: grid;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     place-items: center;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
