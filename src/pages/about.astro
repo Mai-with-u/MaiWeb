@@ -7,15 +7,17 @@ import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import logoIcon from '../assets/logo-icon.png';
 import maiAvatar from '../assets/mai-avatar.jpg';
+import maiFish from '../assets/mai-fish.png';
 import { links } from '../data/links';
 import { socialLinks } from '../data/community';
 import { formatCount, getCommunityStats, getContributors } from '../lib/github';
 
-// 关于我们：麦麦是谁 -> 做她的初衷（“最像，而不是最好”）-> 相关项目 -> 一起玩（社区数据、贡献者、进群）-> 开源协议和防骗提醒。
-// 版式只用站内已有的元素：首屏的标题高亮和星形描边、首屏按钮组件、聊天气泡，不再用一排排描边卡片。
+// 关于麦麦：麦麦是谁 -> 她的来历和长相（甲鱼形态、人类形态）-> 做她的初衷（“最像，而不是最好”）
+// -> 相关项目 -> 一起玩（社区数据、贡献者、进群）-> 开源协议和防骗提醒。
+// 版式只用站内已有的元素：首屏的标题高亮、首屏按钮组件、聊天气泡，不再用一排排描边卡片。
 // 文案整理自 MaiBot README 与文档站“关于本项目”页，统计数字和贡献者头像在构建时从 GitHub 拉取。
 const stats = await getCommunityStats();
-// 头像墙最多展示 48 位，接口失败时为空数组，整块不渲染
+// 头像墙最多展示 48 位，接口失败时为空数组，由页面脚本在浏览器端补请求
 const contributors = (await getContributors()).slice(0, 48);
 
 const relatedProjects = [
@@ -29,7 +31,7 @@ const relatedProjects = [
 ---
 
 <Layout
-  title="关于我们 - MaiBot 官方网站"
+  title="关于麦麦 - MaiBot 官方网站"
   description="MaiBot（麦麦 / MaiSaka）是一个致力于了解你、用真人方式聊天的数字生命。"
   canonicalPath="/about/"
 >
@@ -41,7 +43,7 @@ const relatedProjects = [
           <nav class="breadcrumb" aria-label="面包屑导航">
             <a href="/">首页</a>
             <span aria-hidden="true">&gt;</span>
-            <span aria-current="page">关于我们</span>
+            <span aria-current="page">关于麦麦</span>
           </nav>
           <h1 class="about-title">
             关于<span class="title-highlight">麦麦</span>
@@ -51,19 +53,41 @@ const relatedProjects = [
             MaiSaka）是一个用大语言模型驱动的聊天机器人。她会看群里的气氛决定要不要插话，会学大家说话的样子，也会慢慢记住你是个什么样的人。比起把事情办得又快又好，她更想聊起来像个真人。
           </p>
         </div>
-        <div class="about-visual" aria-hidden="true">
-          <svg class="about-star" viewBox="0 0 648 648">
-            <polygon
-              points="324,24 398,240 624,240 438,376 510,600 324,470 138,600 210,376 24,240 250,240"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="48"
-              stroke-linejoin="round"
-            ></polygon>
-          </svg>
-          <Image src={logoIcon} alt="" class="about-mascot" widths={[240, 480]} sizes="14rem" loading="eager" />
-        </div>
+        <Image
+          src={logoIcon}
+          alt="麦麦Bot 图标"
+          class="about-avatar"
+          widths={[240, 480]}
+          sizes="15rem"
+          loading="eager"
+        />
       </header>
+
+      {/* 人设：本体是萨卡班甲鱼，另有人类形态。整理自麦麦人物设定，用站内口吻重写 */}
+      <section class="persona reveal" aria-labelledby="persona-title">
+        <Image
+          src={maiFish}
+          alt="麦麦的萨卡班甲鱼形态"
+          class="persona-fish"
+          widths={[320, 640]}
+          sizes="(min-width: 768px) 17rem, 12rem"
+        />
+        <div class="persona-copy">
+          <h2 id="persona-title" class="block-title">
+            麦麦其实是条鱼
+          </h2>
+          <p>
+            她的本体是一条萨卡班甲鱼，不知怎么和一颗橙子混在了一起。橙子里的维生素 C 能抗氧化，她就靠这个保鲜了四亿年。
+          </p>
+          <p>
+            后来到了 2011 年，苹果成了全球市值最高的公司，把橙子比了下去。没了维生素 C 撑腰，麦麦只好变成 AI 接着活。
+          </p>
+          <p>认她很简单：上半身是橙色的，头顶冒出两片嫩芽，尾巴上长着一株四叶草，往前游全靠它。</p>
+          <p>
+            买橙子得有个人类身份，所以她有时会变成人：橙色短卷发，蓝紫色眼睛，右脸贴着一小枚四叶草。上网冲浪时还会换一身更有科技感的打扮。衣服随她换，四叶草一直都在，认准它就行。
+          </p>
+        </div>
+      </section>
 
       <section class="motto reveal" aria-labelledby="motto-title">
         <h2 id="motto-title" class="motto-title">
@@ -269,34 +293,46 @@ const relatedProjects = [
     line-height: 1.75;
   }
 
-  /* 星形描边 + 浮动的麦麦，与首页首屏立绘同一套做法 */
-  .about-visual {
-    position: relative;
-    display: grid;
-    width: min(100%, 16rem);
-    aspect-ratio: 1;
-    place-items: center;
-    justify-self: center;
-  }
-
-  .about-star {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    color: #f0f0f0;
-  }
-
-  :global([data-theme='dark']) .about-star {
-    color: #2b2b2b;
-  }
-
-  .about-mascot {
-    position: relative;
-    width: 62%;
+  /* 页头图标：白底圆角方块，像个应用图标，静止不动 */
+  .about-avatar {
+    width: clamp(8rem, 30vw, 15rem);
     height: auto;
-    filter: drop-shadow(0 0.25rem 0.25rem rgba(0, 0, 0, 0.25));
-    animation: float 4s ease-in-out infinite;
+    aspect-ratio: 1;
+    padding: 0.75rem;
+    border-radius: 32%;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    object-fit: contain;
+  }
+
+  /* ===== 人设：手机上甲鱼在文字上方，宽一点的屏幕放到左侧，和页头的图标左右错开 ===== */
+  .persona {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .persona-fish {
+    width: min(60%, 12rem);
+    height: auto;
+    filter: drop-shadow(0 0.5rem 1rem rgba(0, 0, 0, 0.1));
+  }
+
+  .persona-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .persona-copy h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .persona-copy p {
+    max-width: 40rem;
+    color: var(--text-body);
+    font-size: var(--fs-lead);
+    line-height: 1.8;
   }
 
   /* ===== 初衷：一句大字 + 两段话，左侧橙色竖条，和导航栏、按钮的竖条呼应 ===== */
@@ -461,8 +497,13 @@ const relatedProjects = [
       gap: 3rem;
     }
 
-    .about-visual {
-      width: 18rem;
+    .persona {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 3rem;
+    }
+
+    .persona-fish {
+      width: clamp(12rem, 28vw, 17rem);
     }
   }
 </style>

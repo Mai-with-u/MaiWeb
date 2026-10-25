@@ -30,7 +30,7 @@ src/
 ├─ lib/github.ts  # 构建时拉取 GitHub 社区统计与贡献者，失败时退回快照
 ├─ components/    # 按钮、原生 dialog 弹窗、布局辅助组件
 ├─ sections/      # 页面区块：导航、首屏、特性区、页脚等
-├─ pages/         # 路由：首页、衍生项目、关于我们、404
+├─ pages/         # 路由：首页、衍生项目、关于麦麦、404
 └─ styles/        # 全局设计 token 与基础样式
 ```
 
