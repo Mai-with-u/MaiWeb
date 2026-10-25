@@ -4,26 +4,22 @@ import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import VersionsDialog from '../components/dialog/VersionsDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
-
 import { links } from '../data/links';
 
-const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
+// 首屏布局：手机竖屏单栏（文案 -> 按钮 -> 立绘），宽屏或横屏手机左右两栏（文案在左、立绘在右）。
+// 断点全部写在 CSS 里，首帧就是最终布局，不再等脚本测量视口后再切换。
 ---
 
 <section class="hero">
   <div class="container hero-inner">
     <div class="hero-content">
-      <div class="hero-title-wrapper animate-fade-in">
-        <h1 class="hero-title">
-          <span class="title-line">我在<span class="title-underline-text">试着学习</span></span>
-          <span class="title-line title-line-second">像人类一样<span class="title-highlight">陪伴你</span></span>
-        </h1>
-      </div>
+      <h1 class="hero-title animate-fade-in">
+        <span class="title-line">我在<span class="title-underline">试着学习</span></span>
+        <span class="title-line">像人类一样<span class="title-highlight">陪伴你</span></span>
+      </h1>
 
       <p class="hero-subtitle animate-fade-in animate-delay-2">
-        泥壕! 我是
-        <span class="subtitle-highlight">麦麦</span>
-        ，一个正在努力成为人类的BOT。
+        泥壕! 我是<span class="subtitle-highlight">麦麦</span>，一个正在努力成为人类的BOT。
       </p>
 
       <div class="hero-buttons">
@@ -31,10 +27,10 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
           variant="primary"
           size="large"
           id="hero-download"
-          href={fallbackDownloadUrl}
+          href={links.oneKeyLatest}
           icon="download"
           label="立即下载"
-          sublabel="Windows一键包"
+          sublabel="Windows 一键包"
           delay={0.3}
         />
         <div class="hero-buttons-row">
@@ -43,81 +39,64 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
             size="small"
             href={links.manual}
             icon="download"
-            delay={0.4}
             label="其他版本"
             dialog="versions"
+            delay={0.4}
           />
+          <CtaButton variant="green" size="small" href={links.docs} icon="docs" label="使用文档" delay={0.5} />
           <CtaButton
             variant="green"
             size="small"
-            href="https://docs.mai-mai.org/"
-            delay={0.5}
-            icon="docs"
-            label="使用文档"
-          />
-          <CtaButton
-            variant="green"
-            size="small"
-            delay={0.6}
             href={links.community}
             icon="qq"
             label="QQ群"
             dialog="qq"
+            delay={0.6}
           />
-          <CtaButton
-            variant="green"
-            delay={0.7}
-            size="small"
-            href="https://github.com/Mai-with-u/MaiBot"
-            icon="github"
-            label="Github"
-          />
+          <CtaButton variant="green" size="small" href={links.repo} icon="github" label="GitHub" delay={0.7} />
         </div>
       </div>
 
       <p class="hero-license animate-fade-in animate-delay-4">
-        MaiSaka 以 <a
-          href="https://github.com/Mai-with-u/MaiBot/blob/main/LICENSE"
+        MaiSaka 以 <a href={links.license} target="_blank" rel="noopener noreferrer">GPL-3.0</a> 协议开源；使用即表示您同意并知悉<a
+          href={links.eula}
           target="_blank"
-          rel="noopener noreferrer"
-          class="license-link">GPL-3.0</a
-        > 协议开源；使用即表示您同意并知悉<a
-          href="https://github.com/Mai-with-u/MaiBot/blob/main/EULA.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="license-link">「用户协议」</a
-        >和<a
-          href="https://github.com/Mai-with-u/MaiBot/blob/main/PRIVACY.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="license-link">「隐私协议」</a
-        >的相关内容。AI 生成内容请仔细甄别。
+          rel="noopener noreferrer">「用户协议」</a
+        >和<a href={links.privacy} target="_blank" rel="noopener noreferrer">「隐私协议」</a>的相关内容。AI
+        生成内容请仔细甄别。
       </p>
     </div>
 
     <div class="hero-visual animate-fade-in animate-delay-4">
-      <div class="character-wrapper">
-        <svg class="star-bg" viewBox="0 0 648 648" xmlns="http://www.w3.org/2000/svg">
-          <polygon
-            points="324,24 398,240 624,240 438,376 510,600 324,470 138,600 210,376 24,240 250,240"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="48"
-            stroke-linejoin="round"></polygon>
-        </svg>
-        <Image src={heroImage} alt="麦麦" class="character-img" loading="eager" fetchpriority="high" decoding="async" />
-        <div class="chat-card">
-          <p class="chat-card-text">当前版本：<span id="hero-version">获取中……</span></p>
-          <div class="chat-card-pill">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-              <path
-                d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-              ></path>
-            </svg>
-            <span>看看更新了什么</span>
-          </div>
-        </div>
-      </div>
+      <svg class="star-bg" viewBox="0 0 648 648" aria-hidden="true">
+        <polygon
+          points="324,24 398,240 624,240 438,376 510,600 324,470 138,600 210,376 24,240 250,240"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="48"
+          stroke-linejoin="round"></polygon>
+      </svg>
+      <Image
+        src={heroImage}
+        alt="麦麦"
+        class="character-img"
+        widths={[320, 480, 640, 820]}
+        sizes="(min-width: 1024px) 26rem, 60vw"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <a class="version-card" id="hero-release" href={links.latestRelease} target="_blank" rel="noopener noreferrer">
+        <span class="version-text">当前版本：获取中……</span>
+        <span class="version-pill">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path
+              d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
+            ></path>
+          </svg>
+          看看更新了什么
+        </span>
+      </a>
     </div>
   </div>
 </section>
@@ -126,272 +105,232 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
 <VersionsDialog />
 
 <script>
-  (async function () {
-    type Platform = 'android' | 'windows';
-    type ReleaseAsset = {
-      name?: string;
-      browser_download_url?: string;
-      content_type?: string;
-      state?: string;
-    };
-    type GitHubRelease = {
-      name?: string;
-      tag_name?: string;
-      draft?: boolean;
-      published_at?: string;
-      created_at?: string;
-      assets?: ReleaseAsset[];
-    };
-    type DownloadInfo = { url: string; version?: string };
-    type DownloadCache = Partial<Record<Platform, DownloadInfo>>;
+  import { links, releaseApis } from '../data/links';
 
-    const apiHeaders = { Accept: 'application/vnd.github+json' };
-    const cacheKey = 'maisaka-download-links-v1';
-    const fallbackDownloads: Record<Platform, DownloadInfo> = {
-      windows: { url: 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest' },
-      android: { url: 'https://github.com/Mai-with-u/MaiDroid/releases' },
-    };
-    const userAgent = navigator.userAgent || '';
-    const currentPlatform: Platform =
-      /Android/i.test(userAgent) && !/Windows Phone/i.test(userAgent) ? 'android' : 'windows';
-    const mainDownload = document.getElementById('hero-download') as HTMLAnchorElement | null;
-    const mainDownloadSublabel = mainDownload?.querySelector<HTMLElement>('.cta-sublabel');
+  // 首屏下载按钮与版本号：页面加载后在浏览器端查询 GitHub Releases。
+  // 顺序：按 UA 判断平台 -> 先用会话缓存或发布页兜底填好链接 -> 并行查询核心版本、Windows 一键包、Android 安装包
+  //      -> 查到后回填按钮、“其他版本”弹窗和版本卡片，并写入会话缓存。
+  // 放在浏览器端而不是构建时，是为了让 CDN 上的静态页面始终显示最新版本，不受构建时间影响。
+  type Platform = 'windows' | 'android';
+  type ReleaseAsset = { name?: string; browser_download_url?: string; state?: string };
+  type GitHubRelease = {
+    tag_name?: string;
+    name?: string;
+    html_url?: string;
+    draft?: boolean;
+    published_at?: string;
+    created_at?: string;
+    assets?: ReleaseAsset[];
+  };
+  type DownloadInfo = { url: string; version?: string };
+  type DownloadCache = Partial<Record<Platform, DownloadInfo>>;
 
-    document.documentElement.dataset.downloadPlatform = currentPlatform;
+  const CACHE_KEY = 'maisaka-download-links-v2';
+  const fallback: Record<Platform, DownloadInfo> = {
+    windows: { url: links.oneKeyLatest },
+    android: { url: links.droidReleases },
+  };
+  const platform: Platform = /Android/i.test(navigator.userAgent) ? 'android' : 'windows';
+  // “其他版本”弹窗据此给当前平台的卡片标上“当前设备”
+  document.documentElement.dataset.downloadPlatform = platform;
 
-    function readCache(): DownloadCache {
-      try {
-        const cached = sessionStorage.getItem(cacheKey);
-        return cached ? (JSON.parse(cached) as DownloadCache) : {};
-      } catch {
-        return {};
-      }
+  function isGitHubUrl(value: string | undefined): value is string {
+    if (!value) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && (url.hostname === 'github.com' || url.hostname.endsWith('.github.com'));
+    } catch {
+      return false;
     }
+  }
 
-    function writeCache(cache: DownloadCache) {
-      try {
-        sessionStorage.setItem(cacheKey, JSON.stringify(cache));
-      } catch {
-        // Storage may be unavailable in private browsing; the links still work without it.
-      }
+  function readCache(): DownloadCache {
+    try {
+      return JSON.parse(sessionStorage.getItem(CACHE_KEY) || '{}') as DownloadCache;
+    } catch {
+      return {};
     }
+  }
 
-    function isGitHubUrl(value: string): boolean {
-      try {
-        const url = new URL(value);
-        return url.protocol === 'https:' && (url.hostname === 'github.com' || url.hostname.endsWith('.github.com'));
-      } catch {
-        return false;
-      }
+  function writeCache(cache: DownloadCache) {
+    try {
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+    } catch {
+      // 隐私模式下可能无法写入，链接照样可用，只是下次进入要重新查询
     }
+  }
 
-    function releaseVersion(release: GitHubRelease): string | undefined {
-      return release.tag_name || release.name || undefined;
-    }
-
-    function uploadedAssets(release: GitHubRelease): ReleaseAsset[] {
-      return (release.assets || []).filter((asset) => !asset.state || asset.state === 'uploaded');
-    }
-
-    function findWindowsAsset(release: GitHubRelease): ReleaseAsset | undefined {
-      return uploadedAssets(release).find(
-        (asset) => /\.exe$/i.test(asset.name || '') && !/\.blockmap$/i.test(asset.name || '')
-      );
-    }
-
-    function findAndroidAsset(release: GitHubRelease): ReleaseAsset | undefined {
-      const candidates = uploadedAssets(release).filter(
-        (asset) => /\.apk$/i.test(asset.name || '') || asset.content_type === 'application/vnd.android.package-archive'
-      );
-      if (candidates.length === 1) return candidates[0];
-
-      const safeCandidates = candidates.filter((asset) => !/(debug|unsigned)/i.test(asset.name || ''));
-      const canonicalName = release.tag_name ? `maidroid_${release.tag_name}.apk`.toLowerCase() : '';
-      const canonical = canonicalName
-        ? safeCandidates.find((asset) => (asset.name || '').toLowerCase() === canonicalName)
-        : undefined;
-      if (canonical) return canonical;
-
-      const universal = safeCandidates.find((asset) => /universal/i.test(asset.name || ''));
-      if (universal) return universal;
-
-      const namedCandidates = safeCandidates.filter((asset) => /^MaiDroid(?:[_-].*)?\.apk$/i.test(asset.name || ''));
-      if (namedCandidates.length === 1) return namedCandidates[0];
-      return safeCandidates.length === 1 ? safeCandidates[0] : undefined;
-    }
-
-    async function fetchJson<T>(url: string): Promise<T | undefined> {
-      try {
-        const response = await fetch(url, { headers: apiHeaders });
-        return response.ok ? ((await response.json()) as T) : undefined;
-      } catch {
-        return undefined;
-      }
-    }
-
-    function toDownloadInfo(
-      release: GitHubRelease | undefined,
-      findAsset: (_release: GitHubRelease) => ReleaseAsset | undefined
-    ): DownloadInfo | undefined {
-      if (!release) return undefined;
-      const asset = findAsset(release);
-      return asset?.browser_download_url
-        ? { url: asset.browser_download_url, version: releaseVersion(release) }
-        : undefined;
-    }
-
-    async function resolveWindowsDownload(): Promise<DownloadInfo | undefined> {
-      const latest = await fetchJson<GitHubRelease>(
-        'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest'
-      );
-      return toDownloadInfo(latest, findWindowsAsset);
-    }
-
-    async function resolveAndroidDownload(): Promise<DownloadInfo | undefined> {
-      const releases = await fetchJson<GitHubRelease[]>(
-        'https://api.github.com/repos/Mai-with-u/MaiDroid/releases?per_page=10'
-      );
-      const sortedReleases = (releases || [])
-        .filter((release) => !release.draft)
-        .sort((a, b) => {
-          const bDate = Date.parse(b.published_at || b.created_at || '') || 0;
-          const aDate = Date.parse(a.published_at || a.created_at || '') || 0;
-          return bDate - aDate;
-        });
-      for (const release of sortedReleases) {
-        const info = toDownloadInfo(release, findAndroidAsset);
-        if (info) return info;
-      }
+  async function fetchJson<T>(url: string): Promise<T | undefined> {
+    try {
+      const response = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+      return response.ok ? ((await response.json()) as T) : undefined;
+    } catch {
       return undefined;
     }
+  }
 
-    const downloads: DownloadCache = readCache();
+  const uploaded = (release: GitHubRelease) =>
+    (release.assets || []).filter((asset) => !asset.state || asset.state === 'uploaded');
 
-    function applyDownloadLinks() {
-      const selectedDownload = downloads[currentPlatform] || fallbackDownloads[currentPlatform];
-      if (mainDownload) {
-        mainDownload.href = selectedDownload.url;
-        mainDownload.setAttribute(
-          'aria-label',
-          currentPlatform === 'android' ? '立即下载 Android 安装包' : '立即下载 Windows 一键包'
-        );
-      }
-      if (mainDownloadSublabel) {
-        mainDownloadSublabel.textContent = currentPlatform === 'android' ? 'Android 安装包' : 'Windows 一键包';
-      }
-      // 回填“其他版本”弹窗里两个平台的下载地址和版本号；
-      // 缓存来自 sessionStorage，只接受 https 的 GitHub 地址，避免被篡改成其他协议
-      document.querySelectorAll<HTMLAnchorElement>('a[data-download]').forEach((link) => {
-        const platform = link.dataset.download === 'android' ? 'android' : 'windows';
-        const url = downloads[platform]?.url;
-        link.href = url && isGitHubUrl(url) ? url : fallbackDownloads[platform].url;
-      });
-      document.querySelectorAll<HTMLElement>('[data-download-version]').forEach((label) => {
-        const platform = label.dataset.downloadVersion === 'android' ? 'android' : 'windows';
-        const version = downloads[platform]?.version;
-        if (version) label.textContent = `版本 ${version}`;
-      });
+  // Windows 一键包：取发布里的 .exe 安装程序
+  function findWindowsAsset(release: GitHubRelease) {
+    return uploaded(release).find((asset) => /\.exe$/i.test(asset.name || ''));
+  }
+
+  // Android：排除 debug / unsigned 包，优先“maidroid_版本号.apk”，其次 universal 包，都没有时只在唯一候选时采用
+  function findAndroidAsset(release: GitHubRelease) {
+    const candidates = uploaded(release).filter(
+      (asset) => /\.apk$/i.test(asset.name || '') && !/(debug|unsigned)/i.test(asset.name || '')
+    );
+    const canonical = release.tag_name ? `maidroid_${release.tag_name}.apk`.toLowerCase() : '';
+    return (
+      candidates.find((asset) => (asset.name || '').toLowerCase() === canonical) ||
+      candidates.find((asset) => /universal/i.test(asset.name || '')) ||
+      (candidates.length === 1 ? candidates[0] : undefined)
+    );
+  }
+
+  function toDownload(
+    release: GitHubRelease | undefined,
+    find: (_release: GitHubRelease) => ReleaseAsset | undefined
+  ): DownloadInfo | undefined {
+    const url = release && find(release)?.browser_download_url;
+    if (!release || !isGitHubUrl(url)) return undefined;
+    return { url, version: release.tag_name || release.name };
+  }
+
+  async function resolveAndroid(): Promise<DownloadInfo | undefined> {
+    // MaiDroid 目前只有预发布版本，/releases/latest 查不到，所以取最近 10 个发布按时间倒序找第一个可用安装包
+    const releases = (await fetchJson<GitHubRelease[]>(releaseApis.droid)) || [];
+    const sorted = releases
+      .filter((release) => !release.draft)
+      .sort(
+        (a, b) =>
+          (Date.parse(b.published_at || b.created_at || '') || 0) -
+          (Date.parse(a.published_at || a.created_at || '') || 0)
+      );
+    for (const release of sorted) {
+      const download = toDownload(release, findAndroidAsset);
+      if (download) return download;
+    }
+    return undefined;
+  }
+
+  const downloads = readCache();
+
+  function applyDownloads() {
+    const resolve = (target: Platform) => {
+      const cached = downloads[target];
+      return cached && isGitHubUrl(cached.url) ? cached : fallback[target];
+    };
+
+    // 主按钮：按当前平台切换下载地址和副标题
+    const main = document.getElementById('hero-download') as HTMLAnchorElement | null;
+    if (main) {
+      const label = platform === 'android' ? 'Android 安装包' : 'Windows 一键包';
+      main.href = resolve(platform).url;
+      main.setAttribute('aria-label', `立即下载 ${label}`);
+      const sublabel = main.querySelector('.cta-sublabel');
+      if (sublabel) sublabel.textContent = label;
     }
 
-    applyDownloadLinks();
-
-    const coreVersionPromise = fetchJson<GitHubRelease>(
-      'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest'
-    ).then((release) => {
-      const version = releaseVersion(release || {})?.replace(/^v/, '');
-      const versionElement = document.getElementById('hero-version');
-      if (version && versionElement) versionElement.textContent = version;
+    // “其他版本”弹窗：两个平台的下载地址和版本号
+    document.querySelectorAll<HTMLAnchorElement>('a[data-download]').forEach((link) => {
+      link.href = resolve(link.dataset.download === 'android' ? 'android' : 'windows').url;
     });
+    document.querySelectorAll<HTMLElement>('[data-download-version]').forEach((label) => {
+      const version = downloads[label.dataset.downloadVersion === 'android' ? 'android' : 'windows']?.version;
+      if (version) label.textContent = `版本 ${version}`;
+    });
+  }
 
-    const windowsPromise = downloads.windows
-      ? Promise.resolve()
-      : resolveWindowsDownload().then((download) => {
-          if (download) downloads.windows = download;
-        });
-    const androidPromise = downloads.android
-      ? Promise.resolve()
-      : resolveAndroidDownload().then((download) => {
-          if (download) downloads.android = download;
-        });
+  applyDownloads();
 
-    await Promise.allSettled([coreVersionPromise, windowsPromise, androidPromise]);
+  // 版本卡片：显示核心最新版本号，并把“看看更新了什么”指向该版本的发布说明
+  const coreVersion = fetchJson<GitHubRelease>(releaseApis.core).then((release) => {
+    const version = (release?.tag_name || release?.name)?.replace(/^v/, '');
+    const versionText = document.querySelector('.version-text');
+    // 查不到版本（例如 GitHub 接口限流）时不显示“当前版本：”前缀，直接引导去发布页
+    if (versionText) versionText.textContent = version ? `当前版本：${version}` : '查看最新版本';
+    const releaseLink = document.getElementById('hero-release') as HTMLAnchorElement | null;
+    if (releaseLink && isGitHubUrl(release?.html_url)) releaseLink.href = release.html_url;
+  });
+
+  const windows = downloads.windows
+    ? Promise.resolve()
+    : fetchJson<GitHubRelease>(releaseApis.oneKey).then((release) => {
+        const download = toDownload(release, findWindowsAsset);
+        if (download) downloads.windows = download;
+      });
+  const android = downloads.android
+    ? Promise.resolve()
+    : resolveAndroid().then((download) => {
+        if (download) downloads.android = download;
+      });
+
+  Promise.allSettled([coreVersion, windows, android]).then(() => {
     writeCache(downloads);
-    applyDownloadLinks();
-  })();
+    applyDownloads();
+  });
 </script>
 
 <style>
   .hero {
     position: relative;
-    min-height: 100vh;
-    min-height: 100svh;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: max(92px, calc(72px + var(--safe-top))) 0 max(48px, var(--safe-bottom));
+    align-items: center;
+    padding: calc(var(--nav-offset) + 1.5rem) 0 clamp(2.5rem, 6vw, 4rem);
   }
 
   .hero-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(28px, 8vw, 48px);
-    overflow: visible;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
 
   .hero-content {
-    width: 100%;
-    max-width: 560px;
-    text-align: left;
     position: relative;
     z-index: 2;
-  }
-
-  .hero-title-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: clamp(16px, calc(24px * var(--ui-scale)), 28px);
+    width: 100%;
+    max-width: 35rem;
   }
 
   .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(34px, 10.5vw, 58px);
-    font-weight: 700;
-    line-height: normal;
-    color: #000;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    color: var(--text-strong);
+    font-size: clamp(2.25rem, 1.5rem + 3.4vw, 3.625rem);
+    line-height: 1.25;
   }
 
   .title-line {
     display: block;
   }
 
-  .title-line-second {
-    margin-top: 0;
-  }
-
   .title-highlight {
-    color: #e97f0f;
+    color: var(--c-primary);
   }
 
-  .title-underline-text {
+  .title-underline {
     text-decoration: underline;
-    text-decoration-color: #80de41;
-    text-decoration-thickness: clamp(4px, calc(8px * var(--ui-scale)), 10px);
-    text-underline-offset: clamp(3px, calc(6px * var(--ui-scale)), 8px);
+    text-decoration-color: var(--c-green);
+    text-decoration-thickness: 0.14em;
     text-decoration-skip-ink: none;
+    text-underline-offset: 0.1em;
   }
 
   .hero-subtitle {
+    margin-bottom: clamp(1.375rem, 3vw, 2rem);
+    color: var(--text-strong);
     font-family: 'Times New Roman', Times, serif;
-    font-size: clamp(15px, 4.2vw, 20px);
-    color: #000;
+    font-size: var(--fs-lead);
     line-height: 1.5;
-    margin-bottom: clamp(22px, calc(32px * var(--ui-scale)), 36px);
   }
 
   .subtitle-highlight {
+    margin-inline: 0.15em;
+    color: var(--c-primary);
     font-family: var(--font-display);
-    color: #e97f0f;
     font-weight: 700;
   }
 
@@ -399,62 +338,53 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: clamp(8px, calc(10px * var(--ui-scale)), 12px);
-    margin-bottom: clamp(12px, calc(16px * var(--ui-scale)), 18px);
+    gap: 0.625rem;
+    margin-bottom: 1rem;
   }
 
   .hero-buttons-row {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(8px, calc(12px * var(--ui-scale)), 14px);
+    gap: 0.625rem 0.75rem;
   }
 
   .hero-license {
+    max-width: 32rem;
+    color: var(--text-muted);
     font-family: var(--font-display);
-    font-size: clamp(9px, 2.6vw, 11px);
+    font-size: var(--fs-xs);
     font-weight: 700;
-    color: #a2abbc;
     letter-spacing: 0.03em;
-    line-height: 1.5;
-    max-width: min(100%, calc(500px * var(--ui-scale)));
+    line-height: 1.6;
   }
 
-  .hero-license .license-link {
+  .hero-license a {
     color: var(--c-primary);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  .hero-license .license-link:hover {
+  .hero-license a:hover {
     color: var(--c-primary-hover);
   }
 
+  /* 立绘区：按设计稿 648×724 的比例留出画布，星形背景铺满，人物宽度占 63% 正好撑满高度 */
   .hero-visual {
-    width: 100%;
-    max-width: min(88vw, 430px);
-    display: flex;
-    justify-content: center;
-  }
-
-  .character-wrapper {
     position: relative;
-    width: 100%;
-    min-height: min(48svh, 430px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    width: min(100%, 22rem);
+    aspect-ratio: 648 / 724;
+    place-items: center;
   }
 
   .star-bg {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: min(100%, 430px);
+    inset: 0;
+    width: 100%;
     height: auto;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    pointer-events: none;
+    margin: auto;
     color: #f0f0f0;
+    pointer-events: none;
   }
 
   :global([data-theme='dark']) .star-bg {
@@ -464,176 +394,117 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
   .character-img {
     position: relative;
     z-index: 1;
-    width: auto;
-    max-width: min(88%, 320px);
-    max-height: min(52svh, 520px);
-    height: 100%;
-    animation: float 4s ease-in-out infinite;
+    width: 63%;
+    height: auto;
     filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+    animation: float 4s ease-in-out infinite;
   }
 
-  .chat-card {
+  .version-card {
     position: absolute;
-    right: 4%;
-    bottom: 18%;
+    right: 6%;
+    bottom: 22%;
     z-index: 2;
-    background: linear-gradient(135deg, rgba(233, 127, 15, 0.1) 0%, rgba(233, 127, 15, 0.04) 100%);
-    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     padding: 12px 14px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(var(--c-primary-rgb), 0.12) 0%, rgba(var(--c-primary-rgb), 0.04) 100%);
     box-shadow:
-      0 8px 32px rgba(233, 127, 15, 0.1),
-      inset 0 0 0 1.5px rgba(233, 127, 15, 0.2),
+      0 8px 32px rgba(var(--c-primary-rgb), 0.1),
+      inset 0 0 0 1.5px rgba(var(--c-primary-rgb), 0.2),
       inset 0 1px 1px rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(12px) saturate(140%);
+    transition: transform var(--transition-fast);
   }
 
-  .chat-card-text {
-    font-size: 12px;
-    color: #1a1a1a;
-    margin-bottom: 6px;
-    white-space: nowrap;
-    text-align: center;
+  .version-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .version-text {
+    color: var(--text-strong);
+    font-size: var(--fs-xs);
     font-weight: 700;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
   }
 
-  .chat-card-pill {
+  .version-pill {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 4px;
-    width: 120px;
-    height: 20px;
-    background: rgba(233, 127, 15, 0.2);
-    backdrop-filter: blur(6px);
+    padding: 2px 8px;
     border-radius: 4px;
-    padding: 0 6px;
-    font-size: 10px;
-    color: #e97f0f;
+    background: rgba(var(--c-primary-rgb), 0.2);
+    color: var(--c-primary);
+    font-size: 0.625rem;
     font-weight: 700;
+    line-height: 1.6;
   }
 
-  :global(html[data-layout='wide']) .hero {
-    min-height: 100vh;
-    min-height: 100svh;
-    padding-top: max(calc(80px * var(--ui-scale)), calc(72px * var(--nav-scale) + var(--safe-top)));
-    padding-bottom: calc(80px * var(--ui-scale));
+  .version-card:hover .version-pill {
+    background: rgba(var(--c-primary-rgb), 0.3);
   }
 
-  :global(html[data-layout='wide']) .hero-inner {
-    max-width: calc(1400px * var(--ui-scale));
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: calc(48px * var(--ui-scale));
-    padding-right: calc(80px * var(--ui-scale));
-    padding-left: calc(80px * var(--ui-scale));
+  @media (min-width: 640px) {
+    .hero-visual {
+      width: min(100%, 26rem);
+    }
   }
 
-  :global(html[data-layout='wide']) .hero-content {
-    width: calc(554px * var(--ui-scale));
-    max-width: none;
-    flex: 0 0 auto;
-  }
-
-  :global(html[data-layout='wide']) .hero-title {
-    font-size: clamp(18px, calc(58px * var(--ui-scale)), 92.8px);
-  }
-
-  :global(html[data-layout='wide']) .title-line {
-    white-space: nowrap;
-  }
-
-  :global(html[data-layout='wide']) .hero-subtitle {
-    font-size: clamp(12px, calc(20px * var(--ui-scale)), 32px);
-  }
-
-  :global(html[data-layout='wide']) .hero-license {
-    max-width: min(100%, calc(500px * var(--ui-scale)));
-    font-size: clamp(7px, calc(12px * var(--ui-scale)), 19.2px);
-    letter-spacing: calc(0.36px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .hero-visual {
-    width: calc(648px * var(--ui-scale));
-    height: calc(724px * var(--ui-scale));
-    max-width: none;
-    flex: 0 0 auto;
-    align-items: center;
-  }
-
-  :global(html[data-layout='wide']) .character-wrapper {
-    width: calc(648px * var(--ui-scale));
-    height: calc(724px * var(--ui-scale));
-    min-height: 0;
-    overflow: visible;
-  }
-
-  :global(html[data-layout='wide']) .star-bg {
-    width: calc(648px * var(--ui-scale));
-    max-width: none;
-  }
-
-  :global(html[data-layout='wide']) .character-img {
-    width: calc(407px * var(--ui-scale));
-    max-width: none;
-    max-height: none;
-    height: auto;
-  }
-
-  :global(html[data-layout='wide']) .chat-card {
-    right: calc(160px * var(--ui-scale));
-    bottom: calc(192px * var(--ui-scale));
-    transform: scale(max(0.72, var(--ui-scale)));
-    transform-origin: bottom right;
-  }
-
-  :global(html[data-layout='compact']) .hero-buttons-row :global(.cta-link-small) {
-    min-width: 0;
-    padding-right: 12px;
-    padding-left: 10px;
-    gap: 8px;
-  }
-
-  :global(html[data-layout='compact']) .hero {
-    height: 100vh;
-    height: 100svh;
-  }
-
-  :global(html[data-layout='compact']) .hero-visual {
-    display: none;
-  }
-
-  @media (max-height: 520px) and (orientation: landscape) {
+  /* 两栏：桌面宽屏，或横屏手机（宽而矮）。立绘宽度同时受视口高度约束，矮屏不会被裁 */
+  @media (min-width: 1024px), (min-width: 700px) and (max-height: 600px) and (orientation: landscape) {
     .hero {
-      justify-content: flex-start;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding-bottom: 2rem;
     }
 
-    :global(html[data-layout='wide']) .hero {
-      min-height: calc(724px * var(--ui-scale) + 104px);
-      padding-top: max(80px, calc(80px * var(--ui-scale)));
-      padding-bottom: calc(24px * var(--ui-scale));
+    .hero-inner {
+      grid-template-columns: minmax(0, 34.625rem) minmax(0, 40.5rem);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-content {
+      max-width: none;
+    }
+
+    .title-line {
+      white-space: nowrap;
+    }
+
+    .version-card {
+      right: 22%;
+      bottom: 26%;
     }
   }
 
-  :global(html[data-layout='wide'][data-nav='compact']) .hero {
-    padding-top: max(calc(88px + var(--safe-top)), calc(80px * var(--ui-scale)));
+  /* 桌面窗口较矮时，立绘宽度按视口高度反推，保证整幅立绘留在首屏内 */
+  @media (min-width: 1024px) and (min-height: 601px) {
+    .hero-visual {
+      width: min(100%, calc((100svh - var(--nav-offset) - 2rem) * 648 / 724));
+    }
   }
 
-  /* === Dark mode === */
-  :global([data-theme='dark']) .hero-title {
-    color: var(--c-text);
-  }
+  /* 横屏手机高度很小：首屏本来就需要滚动，立绘用固定上限，标题和间距按视口高度收紧 */
+  @media (max-height: 600px) and (orientation: landscape) {
+    .hero {
+      padding-bottom: 1.5rem;
+    }
 
-  :global([data-theme='dark']) .hero-subtitle {
-    color: var(--c-text);
-  }
+    .hero-visual {
+      width: min(100%, 20rem);
+    }
 
-  :global([data-theme='dark']) .chat-card {
-    background: linear-gradient(135deg, rgba(245, 148, 25, 0.12) 0%, rgba(245, 148, 25, 0.04) 100%);
-  }
+    .hero-title {
+      font-size: clamp(1.75rem, 1rem + 4vh, 2.5rem);
+    }
 
-  :global([data-theme='dark']) .chat-card-text {
-    color: #f9fafc;
+    .hero-subtitle {
+      margin-bottom: 1rem;
+    }
   }
 </style>
