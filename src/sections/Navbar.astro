@@ -73,19 +73,6 @@ import { links } from '../data/links';
             <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
           </svg>
         </button>
-        <button
-          class="lang-switch"
-          aria-label="切换语言"
-          data-modal="lang"
-          aria-haspopup="dialog"
-          aria-controls="global-modal"
-        >
-          <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
-            <path
-              d="M3.33333 10V11.3333C3.33333 12.0363 3.87725 12.6121 4.56716 12.663L4.66667 12.6667H6.66667V14H4.66667C3.19391 14 2 12.8061 2 11.3333V10H3.33333ZM12 6.66667L14.9333 14H13.4967L12.696 12H9.96933L9.17 14H7.734L10.6667 6.66667H12ZM11.3333 8.59013L10.502 10.6667H12.1633L11.3333 8.59013ZM5.33333 1.33333V2.66667H8V7.33333H5.33333V9.33333H4V7.33333H1.33333V2.66667H4V1.33333H5.33333ZM11.3333 2C12.8061 2 14 3.19391 14 4.66667V6H12.6667V4.66667C12.6667 3.93029 12.0697 3.33333 11.3333 3.33333H9.33333V2H11.3333ZM4 4H2.66667V6H4V4ZM6.66667 4H5.33333V6H6.66667V4Z"
-            ></path>
-          </svg>
-        </button>
         <button class="nav-hamburger" aria-label="展开菜单" aria-expanded="false">
           <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -344,25 +331,6 @@ import { links } from '../data/links';
     margin-left: auto;
   }
 
-  .lang-switch {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: transparent;
-    color: #a2abbc;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-  }
-
-  .lang-switch:hover {
-    color: var(--color-primary);
-    background: rgba(233, 127, 15, 0.08);
-  }
-
   /* theme toggle */
   .theme-toggle {
     width: 32px;
@@ -406,7 +374,6 @@ import { links } from '../data/links';
 
   :global([data-theme='dark']) .logo-subtitle,
   :global([data-theme='dark']) .nav-item,
-  :global([data-theme='dark']) .lang-switch,
   :global([data-theme='dark']) .theme-toggle {
     color: #fafafa;
   }
@@ -430,7 +397,6 @@ import { links } from '../data/links';
   :global([data-theme='dark']) .nav-dropdown:focus-within .nav-dropdown-trigger,
   :global([data-theme='dark']) .nav-dropdown-link:hover,
   :global([data-theme='dark']) .nav-dropdown-link:focus-visible,
-  :global([data-theme='dark']) .lang-switch:hover,
   :global([data-theme='dark']) .theme-toggle:hover,
   :global([data-theme='dark']) .nav-item-mobile:hover {
     background: rgba(245, 148, 25, 0.12);
