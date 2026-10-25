@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logoIcon from '../assets/logo-icon.png';
+import LanguageDialog from '../components/dialog/LanguageDialog.astro';
 import { links } from '../data/links';
 
 // 当前页对应的导航项加 aria-current，屏幕阅读器能读出“当前页面”，样式上也高亮
@@ -25,7 +26,12 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
       <div class="nav-divider"></div>
 
       <div class="nav-menu">
-        <a href="/projects/" class="nav-item" aria-current={isCurrent('/projects/')}>衍生项目</a>
+        <a href="/projects/" class="nav-item" aria-current={isCurrent('/projects/')}>
+          衍生项目
+          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
+          </svg>
+        </a>
         <div class="nav-separator"></div>
         <div class="nav-dropdown">
           <button
@@ -47,7 +53,12 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
           </div>
         </div>
         <div class="nav-separator"></div>
-        <a href="/about/" class="nav-item" aria-current={isCurrent('/about/')}>关于我们</a>
+        <a href="/about/" class="nav-item" aria-current={isCurrent('/about/')}>
+          关于我们
+          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
+          </svg>
+        </a>
       </div>
 
       <div class="nav-actions">
@@ -73,6 +84,20 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
           </svg>
           <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+          </svg>
+        </button>
+        <button
+          class="lang-switch"
+          type="button"
+          aria-label="切换语言"
+          data-dialog="lang"
+          aria-haspopup="dialog"
+          aria-controls="dialog-lang"
+        >
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path
+              d="M3.33333 10V11.3333C3.33333 12.0363 3.87725 12.6121 4.56716 12.663L4.66667 12.6667H6.66667V14H4.66667C3.19391 14 2 12.8061 2 11.3333V10H3.33333ZM12 6.66667L14.9333 14H13.4967L12.696 12H9.96933L9.17 14H7.734L10.6667 6.66667H12ZM11.3333 8.59013L10.502 10.6667H12.1633L11.3333 8.59013ZM5.33333 1.33333V2.66667H8V7.33333H5.33333V9.33333H4V7.33333H1.33333V2.66667H4V1.33333H5.33333ZM11.3333 2C12.8061 2 14 3.19391 14 4.66667V6H12.6667V4.66667C12.6667 3.93029 12.0697 3.33333 11.3333 3.33333H9.33333V2H11.3333ZM4 4H2.66667V6H4V4ZM6.66667 4H5.33333V6H6.66667V4Z"
+            ></path>
           </svg>
         </button>
         <button
@@ -111,6 +136,8 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     </div>
   </nav>
 </div>
+
+<LanguageDialog />
 
 <style>
   /* === Layer 0: backdrop blur only ===
@@ -367,8 +394,9 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     margin-left: auto;
   }
 
-  /* theme toggle */
-  .theme-toggle {
+  /* 主题切换与语言切换：两个图标按钮共用一套样式 */
+  .theme-toggle,
+  .lang-switch {
     width: 2rem;
     height: 2rem;
     display: flex;
@@ -382,7 +410,8 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     transition: all var(--transition-fast);
   }
 
-  .theme-toggle:hover {
+  .theme-toggle:hover,
+  .lang-switch:hover {
     color: var(--c-primary);
     background: rgba(233, 127, 15, 0.08);
   }
@@ -410,7 +439,8 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   :global([data-theme='dark']) .logo-subtitle,
   :global([data-theme='dark']) .nav-item,
-  :global([data-theme='dark']) .theme-toggle {
+  :global([data-theme='dark']) .theme-toggle,
+  :global([data-theme='dark']) .lang-switch {
     color: #fafafa;
   }
 
@@ -434,6 +464,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   :global([data-theme='dark']) .nav-dropdown-link:hover,
   :global([data-theme='dark']) .nav-dropdown-link:focus-visible,
   :global([data-theme='dark']) .theme-toggle:hover,
+  :global([data-theme='dark']) .lang-switch:hover,
   :global([data-theme='dark']) .nav-item-mobile:hover {
     background: rgba(245, 148, 25, 0.12);
     color: var(--c-primary);
@@ -580,6 +611,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   /* 触屏设备把图标按钮放大，接近 44px 的推荐点击尺寸（触控尺寸保持 px，不随宽屏缩放变小） */
   @media (pointer: coarse) {
     .theme-toggle,
+    .lang-switch,
     .nav-hamburger {
       width: 40px;
       height: 40px;
