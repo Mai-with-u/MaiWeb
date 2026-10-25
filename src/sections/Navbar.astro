@@ -577,12 +577,12 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     }
   }
 
-  /* 触屏设备把图标按钮放大，接近 2.75rem 的推荐点击尺寸 */
+  /* 触屏设备把图标按钮放大，接近 44px 的推荐点击尺寸（触控尺寸保持 px，不随宽屏缩放变小） */
   @media (pointer: coarse) {
     .theme-toggle,
     .nav-hamburger {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 40px;
+      height: 40px;
     }
   }
 </style>

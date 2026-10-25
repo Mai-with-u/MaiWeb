@@ -57,10 +57,10 @@ const footerLinks = [
 
 <style>
   .footer {
-    --egg-size: 80px;
-    --egg-hidden: 60px;
+    --egg-size: 5rem;
+    --egg-hidden: 3.75rem;
     position: relative;
-    min-height: 160px;
+    min-height: 10rem;
     padding: 2.5rem 0 max(3.75rem, var(--safe-bottom));
     overflow: hidden;
     text-align: center;
@@ -126,7 +126,7 @@ const footerLinks = [
   }
 
   .easter-egg:hover {
-    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 0.5rem 1.5rem rgba(0, 0, 0, 0.2));
   }
 
   .easter-egg img {
@@ -157,16 +157,16 @@ const footerLinks = [
   .easter-bubble {
     position: absolute;
     bottom: calc(var(--egg-size) * 0.26);
-    left: calc(max(15%, var(--safe-left)) + var(--egg-size) / 2 + 12px);
+    left: calc(max(15%, var(--safe-left)) + var(--egg-size) / 2 + 0.75rem);
     z-index: 2;
     pointer-events: none;
   }
 
   .easter-bubble-text {
     display: inline-block;
-    max-width: 160px;
-    padding: 8px 12px;
-    border-radius: 12px 12px 12px 3px;
+    max-width: 10rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem 0.75rem 0.75rem 0.1875rem;
     background: #eeeef0;
     color: #2b2b2b;
     font-family: var(--font-reading);
@@ -175,7 +175,7 @@ const footerLinks = [
     line-height: 1.4;
     white-space: nowrap;
     opacity: 0;
-    transform: translateX(-30px) scale(0.92);
+    transform: translateX(-1.875rem) scale(0.92);
     transition:
       opacity 0.24s ease-out,
       transform 0.24s ease-out;
@@ -193,13 +193,13 @@ const footerLinks = [
 
   @media (min-width: 768px) {
     .footer {
-      --egg-size: 120px;
-      --egg-hidden: 95px;
+      --egg-size: 7.5rem;
+      --egg-hidden: 5.9375rem;
     }
 
     .easter-bubble-text {
-      padding: 12px 18px;
-      border-radius: 20px 20px 20px 4px;
+      padding: 0.75rem 1.125rem;
+      border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
       font-size: 1rem;
     }
   }
