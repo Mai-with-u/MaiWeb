@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import maiAvatar from '../assets/mai-avatar.jpg';
+import { links } from '../data/links';
 ---
 
 <section class="sticky-section">
@@ -8,7 +9,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     <!-- === Right: Scrolling Text Blocks === -->
     <div class="sticky-items">
       <div class="text-block" data-mockup="chat">
-        <h2 class="text-block-title" style="color:#e97f0f">
+        <h2 class="text-block-title tone-primary">
           <span>你是否厌倦了</span>
           <span>GPT人机式的回复？</span>
         </h2>
@@ -24,7 +25,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       </div>
 
       <div class="text-block" data-mockup="config">
-        <h2 class="text-block-title" style="color:#80de41">
+        <h2 class="text-block-title tone-green">
           <span>不想面对</span>
           <span>复杂的配置过程？</span>
         </h2>
@@ -39,7 +40,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       </div>
 
       <div class="text-block" data-mockup="plugins">
-        <h2 class="text-block-title" style="color:#30ccef">
+        <h2 class="text-block-title tone-blue">
           <span>功能太少</span>
           <span>止步于聊天机器人？</span>
         </h2>
@@ -48,11 +49,21 @@ import maiAvatar from '../assets/mai-avatar.jpg';
           <p>插件就像给 MaiBot 安装"App"，让它拥有更多功能！插件系统提供强大的 API 和事件系统，拥有无限扩展可能。</p>
           <p>无论是接入新平台、扩展记忆能力，还是添加趣味互动，都能在插件市场找到解决方案，让麦麦不断成长。</p>
         </div>
+        <a
+          class="text-block-link tone-blue"
+          href={links.pluginMarket}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-leave-confirm
+          data-leave-name="麦麦插件市场"
+        >
+          去插件市场逛逛 →
+        </a>
       </div>
     </div>
 
     <!-- === Left: Sticky Screen === -->
-    <div class="sticky-screen-wrap">
+    <div class="sticky-screen-wrap" aria-hidden="true" inert>
       <div class="sticky-screen">
         <!-- Chat mockup -->
         <div class="screen-scene screen-chat" data-scene="chat">
@@ -60,9 +71,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
             <div class="chat-bubble user">
               <div class="chat-avatar user-avatar">
                 <svg viewBox="0 0 40 40" width="48" height="48" fill="currentColor">
-                  <path
-                    d="M20 20c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm0 4c-5.34 0-16 2.68-16 8v2h32v-2c0-5.32-10.66-8-16-8z"
-                  ></path>
+                  <path d="M20 20c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm0 4c-5.34 0-16 2.68-16 8v2h32v-2c0-5.32-10.66-8-16-8z"></path>
                 </svg>
               </div>
               <div class="chat-bubble-text">麦麦去把可乐电脑关机了</div>
@@ -97,7 +106,8 @@ import maiAvatar from '../assets/mai-avatar.jpg';
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
-                    fill="#D6C398"></path>
+                    fill="#D6C398"
+                  ></path>
                 </svg>
               </div>
 
@@ -123,12 +133,16 @@ import maiAvatar from '../assets/mai-avatar.jpg';
               <div class="webui-field" style="left:220px; top:89px; width:131px; height:41px; border-radius:4px;"></div>
 
               <!-- Right col: form field 14px -->
-              <div class="webui-field" style="left:220px; top:139px; width:193px; height:14px; border-radius:4px;">
-              </div>
+              <div
+                class="webui-field"
+                style="left:220px; top:139px; width:193px; height:14px; border-radius:4px;"
+              ></div>
 
               <!-- Right col: indented form field -->
-              <div class="webui-field" style="left:241px; top:177px; width:193px; height:14px; border-radius:1px;">
-              </div>
+              <div
+                class="webui-field"
+                style="left:241px; top:177px; width:193px; height:14px; border-radius:1px;"
+              ></div>
 
               <!-- Right col: bordered input (31px tall) -->
               <div class="webui-input-border" style="left:221px; top:168px; width:240px; height:31px;">
@@ -144,8 +158,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
               <div
                 class="webui-field-orange"
                 style="left:227px; top:217px; width:35px; height:14px; border-radius:1px;"
-              >
-              </div>
+              ></div>
               <div class="webui-vline" style="left:262px; top:217px; height:14px;"></div>
               <div class="webui-field" style="left:273px; top:217px; width:35px; height:14px; border-radius:1px;"></div>
               <div class="webui-vline" style="left:309px; top:217px; height:14px;"></div>
@@ -163,8 +176,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
               <div
                 class="webui-field-orange-alpha"
                 style="left:235px; top:254px; width:28px; height:14px; border-radius:1px;"
-              >
-              </div>
+              ></div>
               <div class="webui-hline" style="top:277px; left:222px; width:212px;"></div>
               <div class="webui-field" style="left:235px; top:287px; width:57px; height:14px; border-radius:1px;"></div>
               <div class="webui-vline" style="left:244px; top:320px; height:77px;"></div>
@@ -204,8 +216,11 @@ import maiAvatar from '../assets/mai-avatar.jpg';
             <div class="plugin-panel" data-part="panel">
               <!-- Left sidebar (fixed, does not scroll) -->
               <div class="plugin-sidebar">
-                <div class="plugin-pill" data-part="pill" style="left:27px; top:245.5px; width:159px; height:38px;">
-                </div>
+                <div
+                  class="plugin-pill"
+                  data-part="pill"
+                  style="left:27px; top:245.5px; width:159px; height:38px;"
+                ></div>
               </div>
 
               <!-- Vertical divider between sidebar and card area (fixed, does not scroll) -->
@@ -220,21 +235,17 @@ import maiAvatar from '../assets/mai-avatar.jpg';
                   <div class="plugin-hline" style="left:21px; top:66px; width:260px;"></div>
 
                   <div class="plugin-stat-row" style="left:24px; top:40px;">
-                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"
-                      ><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg
-                    >
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+                    </svg>
                     <span class="plugin-stat-text">xx</span>
-                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"
-                      ><path
-                        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                      ></path></svg
-                    >
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                    </svg>
                     <span class="plugin-stat-text">x.x</span>
-                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"
-                      ><path
-                        d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z"
-                      ></path></svg
-                    >
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z"></path>
+                    </svg>
                     <span class="plugin-stat-text">xx</span>
                   </div>
 
@@ -244,9 +255,9 @@ import maiAvatar from '../assets/mai-avatar.jpg';
                   <div class="plugin-actions" style="left:103px; top:160px;">
                     <button class="plugin-btn-detail">查看详情</button>
                     <button class="plugin-btn-install" data-install="1">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"
-                        ><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg
-                      >
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+                      </svg>
                       安装
                     </button>
                   </div>
@@ -261,21 +272,17 @@ import maiAvatar from '../assets/mai-avatar.jpg';
                   <div class="plugin-hline" style="left:21px; top:66px; width:260px;"></div>
 
                   <div class="plugin-stat-row" style="left:24px; top:40px;">
-                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"
-                      ><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg
-                    >
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+                    </svg>
                     <span class="plugin-stat-text">xx</span>
-                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"
-                      ><path
-                        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                      ></path></svg
-                    >
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                    </svg>
                     <span class="plugin-stat-text">x.x</span>
-                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor"
-                      ><path
-                        d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z"
-                      ></path></svg
-                    >
+                    <svg class="plugin-stat-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91z"></path>
+                    </svg>
                     <span class="plugin-stat-text">xx</span>
                   </div>
 
@@ -286,9 +293,9 @@ import maiAvatar from '../assets/mai-avatar.jpg';
                   <div class="plugin-actions" style="left:103px; top:160px;">
                     <button class="plugin-btn-detail">查看详情</button>
                     <button class="plugin-btn-install">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"
-                        ><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg
-                      >
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+                      </svg>
                       安装
                     </button>
                   </div>
@@ -302,7 +309,8 @@ import maiAvatar from '../assets/mai-avatar.jpg';
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
                   <path
                     d="M25.1501 30.399L17.2741 22.523L14.8681 24.927C12.4081 27.391 11.1761 28.621 9.8521 28.331C8.5281 28.041 7.9261 26.405 6.7221 23.139L2.7081 12.239C0.306098 5.721 -0.897903 2.46301 0.782097 0.783006C2.4621 -0.896994 5.7221 0.303006 12.2421 2.70701L23.1421 6.719C26.4081 7.923 28.0421 8.525 28.3341 9.849C28.6261 11.173 27.3941 12.403 24.9301 14.865L22.5261 17.271L30.4021 25.147C31.2181 25.963 31.6261 26.371 31.8141 26.827C32.0641 27.433 32.0641 28.113 31.8141 28.721C31.6261 29.175 31.2181 29.583 30.4021 30.399C29.5861 31.215 29.1781 31.623 28.7221 31.811C28.1156 32.0616 27.4346 32.0616 26.8281 31.811C26.3741 31.623 25.9681 31.215 25.1501 30.399Z"
-                    fill="white"></path>
+                    fill="white"
+                  ></path>
                 </svg>
               </div>
             </div>
@@ -314,119 +322,152 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 </section>
 
 <style>
-  /* ===== Section Layout ===== */
+  /* ===== 区块布局 =====
+     单栏（手机、竖屏平板、横屏手机）：不显示演示屏，三段文案按正常文档流依次排列；
+     宽屏（>= 1024px 且宽高比 >= 5:4）：演示屏吸附在左侧垂直居中，文案在右侧滚动，
+     滚到哪段文案压住视口中线，演示屏就切换到对应场景，其余文案变淡。 */
   .sticky-section {
     position: relative;
-    padding: 160px 0 80px;
-  }
-
-  @media (max-width: 768px) {
-    .sticky-section {
-      padding: 80px 0 40px;
-    }
+    padding: clamp(3rem, 10vw, 7.5rem) 0 clamp(3rem, 8vw, 4.5rem);
   }
 
   .sticky-inner {
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    max-width: 1400px;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: calc(80rem + var(--page-gutter) * 2);
     margin: 0 auto;
-    padding: 0 16px;
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
   }
 
-  @media (min-width: 768px) {
-    .sticky-inner {
-      padding: 0 24px;
-    }
-  }
-
-  /* ===== Right: Scrolling Text Items ===== */
   .sticky-items {
-    width: 560px;
-    margin-right: 0px;
-    margin-left: 60px;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 35rem;
   }
 
   .text-block {
-    min-height: 720px;
-    width: 100%;
     display: flex;
     flex-direction: column;
     font-weight: 700;
     transition: opacity 0.36s ease-out;
-    padding-top: 140px;
   }
 
-  .text-block:last-child {
-    min-height: 680px;
+  .text-block + .text-block {
+    padding-top: clamp(3rem, 10vw, 4.5rem);
   }
 
   .text-block-title {
-    font-family: var(--font-display);
-    font-size: clamp(32px, 4vw, 40px);
-    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--tone-text);
+    font-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.5rem);
     line-height: 1.2;
-    color: #000;
-    margin-bottom: 16px;
-    z-index: 1;
   }
 
   .text-block-title span {
     display: block;
   }
 
+  /* 浅绿、浅蓝直接做白底文字对比度太低，亮色模式用深一档的同色系，暗色模式恢复品牌色 */
+  .tone-primary {
+    --tone-text: var(--c-primary);
+  }
+
+  .tone-green {
+    --tone-text: var(--c-green-strong);
+  }
+
+  .tone-blue {
+    --tone-text: #0f9fc2;
+  }
+
+  :global([data-theme='dark']) .tone-green {
+    --tone-text: var(--c-green);
+  }
+
+  :global([data-theme='dark']) .tone-blue {
+    --tone-text: var(--c-blue);
+  }
+
   .text-block-subtitle {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(22px, 3vw, 32px);
-    font-weight: 700;
-    color: #121938;
-    margin-bottom: 28px;
-    line-height: normal;
+    margin-bottom: 1.75rem;
+    color: var(--text-strong);
+    font-family: var(--font-reading);
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    line-height: 1.3;
   }
 
   .text-block-desc {
-    font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: clamp(16px, 2vw, 20px);
+    color: var(--text-muted);
+    font-family: var(--font-reading);
+    font-size: clamp(0.9375rem, 0.875rem + 0.35vw, 1.25rem);
     font-weight: 300;
+    letter-spacing: 0.06em;
     line-height: 1.6;
-    color: rgba(0, 0, 0, 0.5);
-    letter-spacing: 1.2px;
   }
 
-  .text-block-desc p {
-    margin-bottom: 16px;
+  .text-block-desc p + p {
+    margin-top: 1rem;
   }
 
-  .text-block-desc p:last-child {
-    margin-bottom: 0;
+  /* 段落末尾的跳转链接：跟随该段标题的强调色，下划线文字，和首屏协议链接同一种做法 */
+  .text-block-link {
+    align-self: flex-start;
+    margin-top: 1.5rem;
+    color: var(--tone-text);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+    transition: opacity var(--transition-fast);
   }
 
-  /* ===== Left: Sticky Screen ===== */
+  .text-block-link:hover {
+    opacity: 0.8;
+  }
+
+  /* ===== 演示屏 =====
+     内部是一张固定 720×480 的画布，由脚本按外框实际宽度算出缩放比例，整体等比缩放 */
   .sticky-screen-wrap {
-    position: relative;
-    margin-top: 140px;
-    width: 720px;
+    --mockup-scale: 1;
+    position: sticky;
+    z-index: 5;
+    display: none;
     flex-shrink: 0;
+    width: var(--screen-width);
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 2rem;
+    background: rgb(219, 131, 36);
   }
 
   .sticky-screen {
-    position: sticky;
+    position: absolute;
+    inset: 0 auto auto 0;
     width: 720px;
     height: 480px;
-    top: calc((100vh - 480px) / 2);
-    border-radius: 32px;
     overflow: hidden;
-    transition: background 0.32s ease-in;
+    border-radius: 32px;
     background: rgb(219, 131, 36);
+    transform: scale(var(--mockup-scale));
+    transform-origin: top left;
+    transition: background 0.32s ease-in;
   }
 
   .screen-scene {
     position: absolute;
     inset: 0;
     transition: opacity 0.32s ease-out;
+  }
+
+  /* 首帧只显示聊天场景，脚本加载前也不会三个场景叠在一起 */
+  .screen-scene:not(.screen-chat) {
+    opacity: 0;
   }
 
   /* ===== Chat Mockup ===== */
@@ -913,227 +954,194 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     }
   }
 
-  /* ===== Responsive ===== */
-  @media (max-width: 1279px) {
+  /* ===== 桌面两栏 ===== */
+  /* 宽屏两栏（与 global.css 的等比缩放条件一致），尺寸取 1600×900 设计稿的值：
+     演示屏 720px、文案 560px、间距 60px、每段文案高 720px（标题距段落顶 140px）、区块上下 160/80px。
+     vw 上限只在根字号触到 12px 下限的窄桌面上起作用，防止横向溢出 */
+  @media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
+    .sticky-section {
+      --screen-width: min(45rem, 50vw);
+      padding: 10rem 0 5rem;
+    }
+
+    /* 非当前段落变淡，脚本在场景切换时加减 is-active */
+    html.js .text-block:not(.is-active) {
+      opacity: 0.3;
+    }
+
+    /* 设计稿容器 1400px、左右内边距 24px，正好放下 720 + 60 + 560 的两栏 */
     .sticky-inner {
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      margin: 0;
-      padding: 0 24px;
-      gap: 0;
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 3.75rem;
+      max-width: 87.5rem;
+      padding-right: max(1.5rem, var(--safe-right));
+      padding-left: max(1.5rem, var(--safe-left));
     }
 
     .sticky-items {
-      width: 100%;
-      max-width: 560px;
-      margin-left: 0;
-      order: 1;
+      width: min(35rem, 38vw);
     }
 
-    .text-block {
-      min-height: auto;
-      padding-top: 48px;
+    /* 设计稿：每段高 720px（最后一段 680px），标题统一落在段落顶部往下 140px 处 */
+    .text-block,
+    .text-block + .text-block {
+      min-height: 45rem;
+      padding-top: 8.75rem;
     }
 
-    .text-block:last-child {
-      min-height: auto;
+    .text-block + .text-block:last-child {
+      min-height: 42.5rem;
     }
 
+    .text-block-title {
+      font-size: 2.5rem;
+    }
+
+    .text-block-subtitle {
+      margin-bottom: 1.75rem;
+      font-size: 2rem;
+    }
+
+    .text-block-desc {
+      font-size: 1.25rem;
+    }
+
+    /* 演示屏高度是宽度的 2/3，所以 top = 视口一半 - 宽度的 1/3 即可垂直居中，且不压到导航栏 */
     .sticky-screen-wrap {
-      display: none;
+      display: block;
+      top: max(var(--nav-offset), calc(50svh - var(--screen-width) / 3));
+      margin-top: 8.75rem;
     }
-  }
-
-  /* === Dark mode === */
-  :global([data-theme='dark']) .text-block-subtitle {
-    color: #fafafa;
-  }
-
-  :global([data-theme='dark']) .text-block-desc {
-    color: #f9fafc;
   }
 </style>
 
 <script>
-  const items = document.querySelectorAll<HTMLElement>('.text-block');
-  const scenes = document.querySelectorAll<HTMLElement>('.screen-scene');
-  const screen = document.querySelector<HTMLElement>('.sticky-screen');
+  // 特性区场景切换：
+  // 1. 区块第一次进入视口 -> 激活聊天场景并播放气泡入场动画；
+  // 2. 某段文案越过视口中线 -> 演示屏切到对应场景（换底色、淡入场景、播放该场景的入场动画），其余文案变淡；
+  //    单栏布局下演示屏和变淡效果都由 CSS 关掉，脚本照常运行但没有可见影响。
+  // 3. 演示屏外框尺寸变化 -> 重新计算 720×480 画布的缩放比例。
   const section = document.querySelector<HTMLElement>('.sticky-section');
+  const screen = section?.querySelector<HTMLElement>('.sticky-screen');
+  const wrap = section?.querySelector<HTMLElement>('.sticky-screen-wrap');
 
-  if (screen && section) {
+  if (section && screen && wrap) {
+    const blocks = section.querySelectorAll<HTMLElement>('.text-block');
+    const scenes = section.querySelectorAll<HTMLElement>('.screen-scene');
     const bgColors: Record<string, string> = {
       chat: 'rgb(219, 131, 36)',
       config: '#80de41',
       plugins: '#30ccef',
     };
+    const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
+    let active = '';
 
-    let ticking = false;
-    let activeMockup = 'chat';
-    let initialAnimationPlayed = false;
+    // 先瞬间把元素放回起始位置，强制回流后再设置过渡和终点，保证每次切回来都能重新播放动画
+    function replay(element: HTMLElement | null, from: string, transition: string) {
+      if (!element) return;
+      element.style.transition = 'none';
+      element.style.opacity = '0';
+      element.style.transform = from;
+      void element.offsetHeight;
+      element.style.transition = transition;
+      element.style.opacity = '1';
+      element.style.transform = 'none';
+    }
 
-    function playChatAnimation() {
-      const chatScene = document.querySelector<HTMLElement>('.screen-chat');
-      if (!chatScene) return;
-      const bubbles = chatScene.querySelectorAll<HTMLElement>('.chat-bubble');
-      bubbles.forEach((b, i) => {
-        b.style.opacity = '0';
-        b.style.transform = b.classList.contains('user')
+    // 聊天场景：三条气泡每隔 0.6s 依次从两侧滑入
+    function playChat() {
+      section!.querySelectorAll<HTMLElement>('.screen-chat .chat-bubble').forEach((bubble, index) => {
+        bubble.style.opacity = '0';
+        bubble.style.transform = bubble.classList.contains('user')
           ? 'translateX(30px) scale(0.92)'
           : 'translateX(-30px) scale(0.92)';
         setTimeout(
           () => {
-            b.style.opacity = '1';
-            b.style.transform = 'translateX(0) scale(1)';
+            bubble.style.opacity = '1';
+            bubble.style.transform = 'none';
           },
-          600 + i * 600
+          600 + index * 600
         );
       });
     }
 
-    // Detect when section enters viewport
-    const sectionObserver = new IntersectionObserver(
+    // 配置场景：左侧编辑器先从左下滑入，0.5s 后右侧 WebUI 从右下滑入
+    function playConfig() {
+      replay(
+        section!.querySelector<HTMLElement>('.config-editor'),
+        'translate(-120px, 480px)',
+        `opacity 0.55s ease-out, transform 0.65s ${ease}`
+      );
+      replay(
+        section!.querySelector<HTMLElement>('.config-webui'),
+        'translate(120px, 480px)',
+        `opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s ${ease}`
+      );
+    }
+
+    // 插件场景：插件面板从右上角滑入，0.9s 后鼠标指针出现
+    function playPlugins() {
+      const scroll = section!.querySelector<HTMLElement>('.plugin-scroll');
+      if (scroll) {
+        scroll.style.opacity = '1';
+        scroll.style.transform = 'none';
+      }
+      replay(
+        section!.querySelector<HTMLElement>('.plugin-panel'),
+        'translate(120px, -480px)',
+        `opacity 0.55s ease-out, transform 0.85s ${ease}`
+      );
+      replay(
+        section!.querySelector<HTMLElement>('.plugin-cursor'),
+        'translate(40px, -30px)',
+        `opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s ${ease}`
+      );
+    }
+
+    const players: Record<string, () => void> = { chat: playChat, config: playConfig, plugins: playPlugins };
+
+    function activate(target: string) {
+      if (target === active) return;
+      active = target;
+      screen!.style.background = bgColors[target] || bgColors.chat;
+      scenes.forEach((scene) => {
+        scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
+      });
+      blocks.forEach((block) => block.classList.toggle('is-active', block.dataset.mockup === target));
+      players[target]?.();
+    }
+
+    // 区块进入视口时先激活聊天场景（顺带播放气泡动画），之后交给中线观察器切换
+    const enterObserver = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !initialAnimationPlayed) {
-            initialAnimationPlayed = true;
-            playChatAnimation();
-          }
-        });
+        if (entries.some((entry) => entry.isIntersecting)) {
+          activate('chat');
+          enterObserver.disconnect();
+        }
       },
       { threshold: 0.1 }
     );
-    sectionObserver.observe(section);
+    enterObserver.observe(section);
 
-    function getCentroid(block: HTMLElement) {
-      const rect = block.getBoundingClientRect();
-      return rect.top + rect.height / 2;
-    }
-
-    function update() {
-      if (!screen) return;
-      const viewCenter = window.innerHeight / 2;
-
-      // Find item closest to viewport center
-      let bestBlock = items[0];
-      let bestDist = Infinity;
-
-      items.forEach((block) => {
-        const dist = Math.abs(getCentroid(block) - viewCenter);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestBlock = block;
-        }
-      });
-
-      const target = bestBlock.dataset.mockup || 'chat';
-
-      // Set item opacities
-      items.forEach((item) => {
-        item.style.opacity = item.dataset.mockup === target ? '1' : '0.3';
-      });
-
-      // Only trigger scene change when target changes
-      if (target !== activeMockup) {
-        activeMockup = target;
-
-        // Change screen background
-        screen.style.background = bgColors[target] || bgColors.chat;
-
-        // Fade scenes
-        scenes.forEach((scene) => {
-          scene.style.opacity = scene.dataset.scene === target ? '1' : '0';
+    // rootMargin 把观察区域压成视口正中间的一条线，哪段文案压在线上就切到哪个场景（只在桌面两栏下有可见效果）
+    const centerObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) activate((entry.target as HTMLElement).dataset.mockup || 'chat');
         });
-
-        // Animate chat bubbles when switching back to chat
-        if (target === 'chat' && initialAnimationPlayed) {
-          playChatAnimation();
-        }
-
-        // Staggered animation for config: editor first, webui second
-        if (target === 'config') {
-          const editor = document.querySelector<HTMLElement>('.config-editor');
-          const webui = document.querySelector<HTMLElement>('.config-webui');
-          if (editor && webui) {
-            editor.style.transition = 'none';
-            webui.style.transition = 'none';
-            editor.style.opacity = '0';
-            editor.style.transform = 'translate(-120px, 480px)';
-            webui.style.opacity = '0';
-            webui.style.transform = 'translate(120px, 480px)';
-            editor.offsetHeight; // force reflow
-            editor.style.transition = 'opacity 0.55s ease-out, transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            webui.style.transition =
-              'opacity 0.55s 0.5s ease-out, transform 0.65s 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            editor.style.opacity = '1';
-            editor.style.transform = 'translate(0, 0)';
-            webui.style.opacity = '1';
-            webui.style.transform = 'translate(0, 0)';
-          }
-        }
-
-        // Plugins panel slides in from top-right corner (like second screen entrance)
-        if (target === 'plugins') {
-          const panel = document.querySelector<HTMLElement>('.plugin-panel');
-          const scroll = document.querySelector<HTMLElement>('.plugin-scroll');
-          const cursor = document.querySelector<HTMLElement>('.plugin-cursor');
-          if (panel && scroll && cursor) {
-            panel.style.transition = 'none';
-            cursor.style.transition = 'none';
-            scroll.style.opacity = '1';
-            scroll.style.transform = 'translate(0, 0)';
-            panel.style.opacity = '0';
-            panel.style.transform = 'translate(120px, -480px)';
-            cursor.style.opacity = '0';
-            cursor.style.transform = 'translate(40px, -30px)';
-            panel.offsetHeight; // force reflow
-            panel.style.transition = 'opacity 0.55s ease-out, transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            cursor.style.transition =
-              'opacity 0.4s 0.9s ease-out, transform 0.5s 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
-            panel.style.opacity = '1';
-            panel.style.transform = 'translate(0, 0)';
-            cursor.style.opacity = '1';
-            cursor.style.transform = 'translate(0, 0)';
-          }
-        }
-      }
-
-      ticking = false;
-    }
-
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (!ticking) {
-          requestAnimationFrame(update);
-          ticking = true;
-        }
       },
-      { passive: true }
+      { rootMargin: '-50% 0px -50% 0px' }
     );
+    blocks.forEach((block) => centerObserver.observe(block));
+    blocks[0]?.classList.add('is-active');
 
-    // Initial scene setup
-    scenes.forEach((scene) => {
-      scene.style.opacity = scene.dataset.scene === 'chat' ? '1' : '0';
-    });
-
-    // Scale mockup to fit narrow screens
-    const stickyScreen = document.querySelector<HTMLElement>('.sticky-screen');
-    const stickyWrap = document.querySelector<HTMLElement>('.sticky-screen-wrap');
-    function updateMockupScale() {
-      if (!stickyScreen || !stickyWrap) return;
-      const isNarrow = window.innerWidth <= 1279;
-      if (isNarrow) {
-        const designW = 720;
-        const scale = Math.min(1, stickyWrap.clientWidth / designW);
-        stickyScreen.style.setProperty('--mockup-scale', String(scale));
-        stickyWrap.style.height = `${480 * scale}px`;
-      } else {
-        stickyScreen.style.setProperty('--mockup-scale', '1');
-        stickyWrap.style.height = '';
-      }
-    }
-    window.addEventListener('resize', updateMockupScale);
-    updateMockupScale();
+    // 单栏时演示屏隐藏、宽度为 0，跳过计算，等切回两栏时 ResizeObserver 会再次触发
+    const updateScale = () => {
+      if (wrap.clientWidth > 0) wrap.style.setProperty('--mockup-scale', String(wrap.clientWidth / 720));
+    };
+    new ResizeObserver(updateScale).observe(wrap);
+    updateScale();
   }
 </script>

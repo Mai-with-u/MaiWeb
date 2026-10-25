@@ -1,0 +1,220 @@
+---
+import { Image } from 'astro:assets';
+import Dialog from './Dialog.astro';
+import maiAvatar from '../../assets/mai-avatar.jpg';
+
+// 离站确认弹窗：页面上带 data-leave-confirm 的链接被点击时，由麦麦用聊天气泡问一句要不要去、去哪个地址，
+// 用户点回复气泡“去看看”才在新标签页打开；勾选“这次就别再问了”后，当前标签页内后续点击直接打开。
+// 气泡样式沿用首页特性区聊天演示：麦麦是带头像的灰色气泡，用户回复是右侧的绿色气泡。
+// 链接可用 data-leave-name 指定站点名称，不写时显示域名。
+---
+
+<Dialog id="leave" labelledby="leave-dialog-title" width="29rem">
+  <div class="leave">
+    <div class="leave-row">
+      <Image src={maiAvatar} alt="" class="leave-avatar" width={44} height={44} />
+      <div class="bubble bubble-mai">
+        <h2 id="leave-dialog-title" class="leave-title">
+          要去
+          <span class="leave-name" data-leave-name>
+            外部页面
+          </span>
+          看看吗？
+        </h2>
+        <p class="leave-desc">我帮你在新标签页打开：</p>
+        <p class="leave-url" data-leave-url></p>
+      </div>
+    </div>
+
+    <div class="leave-replies">
+      <button type="button" class="bubble bubble-reply reply-later" data-dialog-close>
+        先不去了
+      </button>
+      <a class="bubble bubble-reply reply-go" data-leave-go href="/" target="_blank" rel="noopener noreferrer">
+        去看看
+      </a>
+    </div>
+
+    <label class="leave-skip">
+      <input type="checkbox" data-leave-skip />
+      这次就别再问了
+    </label>
+  </div>
+</Dialog>
+
+<script>
+  const SKIP_KEY = 'maiweb-leave-confirm-skip';
+  const dialog = document.getElementById('dialog-leave');
+  const nameLabel = dialog?.querySelector<HTMLElement>('[data-leave-name]');
+  const urlLabel = dialog?.querySelector<HTMLElement>('[data-leave-url]');
+  const skipBox = dialog?.querySelector<HTMLInputElement>('[data-leave-skip]');
+  const goLink = dialog?.querySelector<HTMLAnchorElement>('[data-leave-go]');
+
+  const skipped = () => {
+    try {
+      return sessionStorage.getItem(SKIP_KEY) === '1';
+    } catch {
+      return false;
+    }
+  };
+
+  if (dialog instanceof HTMLDialogElement && nameLabel && urlLabel && skipBox && goLink) {
+    // 拦截顺序：用户按住 Ctrl/⌘/Shift/Alt 或用中键时是明确想自己开新窗口，不拦截；已勾选不再提醒时也不拦截
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest<HTMLAnchorElement>('a[data-leave-confirm]');
+      if (!link || event.defaultPrevented || event.button !== 0) return;
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || skipped()) return;
+
+      event.preventDefault();
+      const url = new URL(link.href);
+      nameLabel.textContent = link.dataset.leaveName || url.hostname;
+      urlLabel.textContent = `${url.host}${url.pathname.replace(/\/$/, '')}`;
+      goLink.href = link.href;
+      skipBox.checked = false;
+      dialog.showModal();
+    });
+
+    // “去看看”是真正的链接点击，由浏览器在新标签页打开，不会被拦截弹窗；同时记下“不再提醒”并关闭弹窗
+    goLink.addEventListener('click', () => {
+      if (skipBox.checked) {
+        try {
+          sessionStorage.setItem(SKIP_KEY, '1');
+        } catch {
+          // 隐私模式下可能无法写入，只影响“不再提醒”，跳转照常
+        }
+      }
+      dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .leave {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .leave-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    padding-right: 2rem;
+  }
+
+  .leave-avatar {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* 聊天气泡：大圆角，靠近说话人的那个角收成小圆角 */
+  .bubble {
+    border-radius: 1.25rem;
+    font-family: var(--font-reading);
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .bubble-mai {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 0.875rem 1.125rem;
+    border-bottom-left-radius: 0.25rem;
+    background: #eeeef0;
+    color: #2b2b2b;
+  }
+
+  :global([data-theme='dark']) .bubble-mai {
+    background: #3a3a3c;
+    color: #f9fafc;
+  }
+
+  .leave-title {
+    font-family: var(--font-reading);
+    font-size: 1.0625rem;
+    line-height: 1.4;
+  }
+
+  .leave-name {
+    margin-inline: 0.15em;
+    color: var(--c-primary);
+  }
+
+  .leave-desc {
+    font-size: var(--fs-small);
+  }
+
+  .leave-url {
+    overflow-wrap: anywhere;
+    color: inherit;
+    font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  /* 用户的回复：右侧一排气泡，主选项是首页聊天演示里的那种绿色 */
+  .leave-replies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .bubble-reply {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 1.125rem;
+    border: none;
+    border-bottom-right-radius: 0.25rem;
+    font-size: var(--fs-small);
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
+  .bubble-reply:hover,
+  .bubble-reply:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .reply-go {
+    background: #35d28d;
+    color: #000;
+  }
+
+  .reply-go:hover {
+    filter: brightness(0.95);
+  }
+
+  .reply-later {
+    background: rgba(53, 210, 141, 0.14);
+    color: var(--text-body);
+  }
+
+  .leave-skip {
+    display: inline-flex;
+    align-self: flex-end;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    cursor: pointer;
+  }
+
+  .leave-skip input {
+    width: 0.875rem;
+    height: 0.875rem;
+    accent-color: #35d28d;
+  }
+</style>

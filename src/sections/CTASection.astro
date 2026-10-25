@@ -1,32 +1,34 @@
 ---
 import CtaButton from '../components/CtaButton.astro';
+import { links } from '../data/links';
+
+// 首页收尾的行动号召：两行标语 + “现在开始”按钮，按钮落到文档站的快速上手
 ---
 
 <section class="cta-section" id="cta">
   <div class="container cta-inner reveal">
-    <h2 class="cta-title title-orange">你想要的,一切尽在 MaiSaka!</h2>
-    <h2 class="cta-title title-dark">一个致力于了解你的数字生命。</h2>
+    <h2 class="cta-title">
+      <span class="title-orange">你想要的，一切尽在 MaiSaka！</span>
+      <span class="title-dark">一个致力于了解你的数字生命。</span>
+    </h2>
 
     <div class="cta-action reveal-delay-1">
-      <CtaButton
-        variant="primary"
-        size="large"
-        href="https://docs.mai-mai.org/manual/deployment/"
-        icon="paperplane"
-        label="现在开始"
-      />
+      <CtaButton variant="primary" size="large" href={links.manual} icon="paperplane" label="现在开始" />
     </div>
   </div>
 </section>
 
 <style>
+  /* 末屏：CTA 加上至少 10rem（设计稿 160px）高的页脚正好不小于一屏，
+     滚到底时视口里只有 CTA 和页脚，不会从顶部露出上一屏的演示屏卡片 */
   .cta-section {
     position: relative;
-    min-height: calc(100vh - 160px);
-    padding: 165px 0 0px;
     display: flex;
+    min-height: calc(100vh - 10rem);
+    min-height: calc(100svh - 10rem);
     align-items: center;
     justify-content: center;
+    padding: clamp(4rem, 12vw, 10rem) 0 clamp(3rem, 6vw, 4rem);
     text-align: center;
   }
 
@@ -34,15 +36,16 @@ import CtaButton from '../components/CtaButton.astro';
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
   }
 
   .cta-title {
-    font-family: var(--font-display);
-    font-size: clamp(32px, 6vw, 72px);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: 3.6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: clamp(1.875rem, 1rem + 3.6vw, 4.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    text-wrap: balance;
   }
 
   .title-orange {
@@ -50,21 +53,25 @@ import CtaButton from '../components/CtaButton.astro';
   }
 
   .title-dark {
-    color: var(--color-dark);
+    color: var(--text-strong);
   }
 
   .cta-action {
-    margin-top: 32px;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
-  .cta-action :global(.cta-btn-primary) {
-    min-width: 194px;
-    min-height: 71px;
-  }
-
-  @media (max-width: 768px) {
+  /* 宽屏取设计稿尺寸：标语 72px、上边距 165px，随根字号等比缩放 */
+  @media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
     .cta-section {
-      padding: 165px 0 0px;
+      padding: 10.3125rem 0 var(--safe-bottom);
+    }
+
+    .cta-title {
+      font-size: 4.5rem;
+    }
+
+    .cta-action {
+      margin-top: 2.5rem;
     }
   }
 </style>

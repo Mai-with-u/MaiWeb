@@ -1,23 +1,19 @@
 <script>
-  const reveals = document.querySelectorAll('.reveal');
+  // 滚动显现：带 .reveal 的元素进入视口（露出 15%）时加上 .revealed，执行一次后停止观察。
+  // 过渡结束后把 transform 清成 none，否则子元素上的 backdrop-filter 会因为祖先有 transform 而失效。
+  // 隐藏初始状态只在 html.js 下生效（见 global.css），脚本没跑时内容照常显示。
+  const reveals = document.querySelectorAll<HTMLElement>('.reveal');
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          // Remove transform after transition so backdrop-filter on children works
-          entry.target.addEventListener(
-            'transitionend',
-            () => {
-              (entry.target as HTMLElement).style.transform = 'none';
-            },
-            { once: true }
-          );
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        const target = entry.target as HTMLElement;
+        target.classList.add('revealed');
+        target.addEventListener('transitionend', () => (target.style.transform = 'none'), { once: true });
+        observer.unobserve(target);
       });
     },
     { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
   );
-  reveals.forEach((el) => observer.observe(el));
+  reveals.forEach((element) => observer.observe(element));
 </script>

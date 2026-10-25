@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import eslintPluginAstro from 'eslint-plugin-astro';
-import astroParser from 'astro-eslint-parser';
+// astro-eslint-parser 3.x 起只提供具名导出（parseForESLint 等），作为解析器对象整体引入
+import * as astroParser from 'astro-eslint-parser';
 import tsParser from '@typescript-eslint/parser';
 import globals from 'globals';
 

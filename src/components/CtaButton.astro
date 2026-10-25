@@ -7,7 +7,10 @@ export interface Props {
   label: string;
   sublabel?: string;
   delay?: number;
-  modal?: string;
+  // 点击后打开的原生弹窗名，对应 <dialog id="dialog-xxx">
+  dialog?: string;
+  // 填站点名称时，点击先弹出离站确认，并在新标签页打开（见 LeaveSiteDialog）
+  leave?: string;
   id?: string;
 }
 
@@ -19,10 +22,12 @@ const {
   label,
   sublabel,
   delay,
-  modal,
+  dialog,
+  leave,
   id,
 } = Astro.props;
 
+// 右下角切角大小：大按钮 10px、小按钮 8px，与设计稿一致
 const corner = variant === 'green' ? 8 : 10;
 ---
 
@@ -31,63 +36,52 @@ const corner = variant === 'green' ? 8 : 10;
   <!-- Layer 1: drop-shadow only -->
   <span class:list={['cta-wrap', `cta-wrap-${variant}`, `cta-wrap-${size}`]}>
     <!-- Layer 2: cut corner clip -->
-    <span
-      class:list={['cta-clip', `cta-clip-${variant}`]}
-      style={`clip-path: polygon(0 0, 100% 0, 100% calc(100% - ${corner}px), calc(100% - ${corner}px) 100%, 0 100%)`}
-    >
+    <span class:list={['cta-clip', `cta-clip-${variant}`]} style={`--cta-corner: ${corner}px`}>
       <!-- Layer 3: glass background + border + content -->
       <a
         href={href}
         id={id}
-        data-modal={modal || undefined}
-        aria-haspopup={modal ? 'dialog' : undefined}
-        aria-controls={modal ? 'global-modal' : undefined}
+        data-dialog={dialog || undefined}
+        data-leave-confirm={leave ? '' : undefined}
+        data-leave-name={leave || undefined}
+        target={leave ? '_blank' : undefined}
+        rel={leave ? 'noopener noreferrer' : undefined}
+        aria-haspopup={dialog ? 'dialog' : undefined}
+        aria-controls={dialog ? `dialog-${dialog}` : undefined}
         class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]}
         style={delay !== undefined ? `animation-delay: ${delay}s` : ''}
       >
-        <span class="cta-icon">
-          {
-            icon === 'download' && (
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2v2h14v-2H5z" />
-              </svg>
-            )
-          }
-          {
-            icon === 'paperplane' && (
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z" />
-              </svg>
-            )
-          }
-          {
-            icon === 'docs' && (
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-              </svg>
-            )
-          }
-          {
-            icon === 'qq' && (
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                <path d="M12.003 2c-2.265 0-6.29 1.364-6.29 7.325v1.195S3.55 14.96 3.55 17.474c0 .665.17 1.025.28 1.025.114 0 .902-.484 1.748-2.072 0 0-.18 2.197 1.904 3.967 0 0-1.77.495-1.77 1.182 0 .686 4.078.43 6.29.43 2.21 0 6.29.256 6.29-.43 0-.687-1.77-1.182-1.77-1.182 2.085-1.77 1.904-3.967 1.904-3.967.846 1.588 1.634 2.072 1.748 2.072.11 0 .28-.36.28-1.025 0-2.514-2.164-6.954-2.164-6.954V9.325C18.29 3.364 14.268 2 12.003 2z" />
-              </svg>
-            )
-          }
-          {
-            icon === 'github' && (
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-              </svg>
-            )
-          }
-          {
-            icon === 'none' && (
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-              </svg>
-            )
-          }
+        <span class="cta-icon" aria-hidden="true">
+          {icon === 'download' && (
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+              <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2v2h14v-2H5z" />
+            </svg>
+          )}
+          {icon === 'paperplane' && (
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z" />
+            </svg>
+          )}
+          {icon === 'docs' && (
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+            </svg>
+          )}
+          {icon === 'qq' && (
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+              <path d="M12.003 2c-2.265 0-6.29 1.364-6.29 7.325v1.195S3.55 14.96 3.55 17.474c0 .665.17 1.025.28 1.025.114 0 .902-.484 1.748-2.072 0 0-.18 2.197 1.904 3.967 0 0-1.77.495-1.77 1.182 0 .686 4.078.43 6.29.43 2.21 0 6.29.256 6.29-.43 0-.687-1.77-1.182-1.77-1.182 2.085-1.77 1.904-3.967 1.904-3.967.846 1.588 1.634 2.072 1.748 2.072.11 0 .28-.36.28-1.025 0-2.514-2.164-6.954-2.164-6.954V9.325C18.29 3.364 14.268 2 12.003 2z" />
+            </svg>
+          )}
+          {icon === 'github' && (
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+            </svg>
+          )}
+          {icon === 'none' && (
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+            </svg>
+          )}
         </span>
         <span class="cta-text">
           <span class="cta-label">{label}</span>
@@ -99,114 +93,97 @@ const corner = variant === 'green' ? 8 : 10;
 </span>
 
 <style>
-  /* ===== Layer 0: backdrop blur only ===== */
-  .cta-blur {
-    display: inline-block;
-    vertical-align: top;
-    backdrop-filter: blur(20px) saturate(140%);
-  }
-
-  /* ===== Layer 1: drop-shadow only ===== */
-  .cta-wrap {
-    display: inline-block;
-    vertical-align: top;
-    transition: filter var(--transition-fast);
-  }
-
-  .cta-wrap-primary {
-    filter: drop-shadow(0 4px 16px rgba(233, 127, 15, 0.15));
-  }
-
-  .cta-wrap-primary:hover {
-    filter: drop-shadow(0 8px 28px rgba(233, 127, 15, 0.28));
-  }
-
-  .cta-wrap-green {
-    filter: drop-shadow(0 4px 16px rgba(128, 222, 65, 0.12));
-  }
-
-  .cta-wrap-green:hover {
-    filter: drop-shadow(0 8px 28px rgba(128, 222, 65, 0.22));
-  }
-
-  /* ===== Layer 2: clip-path only ===== */
+  /* 按钮分四层：模糊层 -> 投影层 -> 切角裁剪层 -> 玻璃底色与内容。
+     clip-path 会把同一元素上的 drop-shadow 一起裁掉，所以投影和切角必须拆在不同层。
+     尺寸用 rem + clamp：手机上略小、桌面恢复设计稿尺寸，超大屏随根字号放大。 */
+  .cta-blur,
+  .cta-wrap,
   .cta-clip {
     display: inline-block;
     vertical-align: top;
   }
 
-  /* ===== Layer 3: glass background + border + content ===== */
-  .cta-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-decoration: none;
-    transition: all var(--transition-fast);
-    position: relative;
+  .cta-blur {
+    backdrop-filter: blur(1.25rem) saturate(140%);
   }
 
-  /* Left accent line */
-  .cta-link::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    border-radius: 2px;
-    z-index: 2;
+  .cta-wrap {
+    --cta-rgb: var(--c-primary-rgb);
+    filter: drop-shadow(0 0.25rem 1rem rgba(var(--cta-rgb), 0.15));
+    transition: filter var(--transition-fast);
+  }
+
+  .cta-wrap-green {
+    --cta-rgb: var(--c-green-rgb);
+  }
+
+  .cta-wrap:hover {
+    filter: drop-shadow(0 0.5rem 1.75rem rgba(var(--cta-rgb), 0.28));
+  }
+
+  .cta-clip {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cta-corner)), calc(100% - var(--cta-corner)) 100%, 0 100%);
+  }
+
+  .cta-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    background: linear-gradient(135deg, rgba(var(--cta-rgb), 0.08) 0%, rgba(var(--cta-rgb), 0.03) 100%);
+    box-shadow:
+      0 0.5rem 2rem rgba(var(--cta-rgb), 0.12),
+      inset 0 0 0 2px rgba(var(--cta-rgb), 0.18),
+      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    transition:
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .cta-link-primary {
-    color: #e97f0f;
-    background: linear-gradient(135deg, rgba(233, 127, 15, 0.08) 0%, rgba(233, 127, 15, 0.03) 100%);
-    box-shadow:
-      0 8px 32px rgba(233, 127, 15, 0.12),
-      inset 0 0 0 2px rgba(233, 127, 15, 0.18),
-      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    --cta-rgb: var(--c-primary-rgb);
+    color: var(--c-primary);
   }
 
-  .cta-link-primary::before {
-    background: #e97f0f;
-  }
-
-  .cta-wrap-primary:hover .cta-link-primary {
-    background: linear-gradient(135deg, rgba(233, 127, 15, 0.16) 0%, rgba(233, 127, 15, 0.06) 100%);
-    box-shadow:
-      0 12px 40px rgba(233, 127, 15, 0.22),
-      inset 0 0 0 2px rgba(233, 127, 15, 0.18),
-      inset 0 1px 1px rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px);
-  }
-
+  /* 亮色背景上浅绿字对比度不足，文字改用深一档的绿色；暗色背景下恢复品牌绿 */
   .cta-link-green {
-    color: #67c52a;
-    background: linear-gradient(135deg, rgba(128, 222, 65, 0.08) 0%, rgba(128, 222, 65, 0.03) 100%);
-    box-shadow:
-      0 8px 32px rgba(128, 222, 65, 0.1),
-      inset 0 0 0 2px rgba(128, 222, 65, 0.18),
-      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    --cta-rgb: var(--c-green-rgb);
+    color: var(--c-green-strong);
   }
 
-  .cta-link-green::before {
-    background: #80de41;
+  :global([data-theme='dark']) .cta-link-green {
+    color: var(--c-green);
   }
 
-  .cta-wrap-green:hover .cta-link-green {
-    background: linear-gradient(135deg, rgba(128, 222, 65, 0.16) 0%, rgba(128, 222, 65, 0.06) 100%);
+  /* 左侧强调竖线 */
+  .cta-link::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    width: 0.25rem;
+    content: '';
+    border-radius: 2px;
+    background: rgb(var(--cta-rgb));
+  }
+
+  .cta-wrap:hover .cta-link {
+    background: linear-gradient(135deg, rgba(var(--cta-rgb), 0.16) 0%, rgba(var(--cta-rgb), 0.06) 100%);
     box-shadow:
-      0 12px 40px rgba(128, 222, 65, 0.18),
-      inset 0 0 0 2px rgba(128, 222, 65, 0.18),
+      0 0.75rem 2.5rem rgba(var(--cta-rgb), 0.22),
+      inset 0 0 0 2px rgba(var(--cta-rgb), 0.18),
       inset 0 1px 1px rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
   }
 
-  /* === Fade-in animation (on .cta-link, not on blur layer) === */
+  /* 入场动画放在最内层链接上，避免影响外层的模糊与投影 */
   .cta-fade-in {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(0.75rem);
     animation: ctaFadeIn 0.72s ease-out forwards;
   }
 
@@ -217,38 +194,36 @@ const corner = variant === 'green' ? 8 : 10;
     }
   }
 
-  /* === Sizing === */
   .cta-link-large {
-    padding: 14px 20px 14px 18px;
-    min-width: 194px;
-    min-height: 71px;
+    min-width: clamp(10.5rem, 9rem + 5vw, 12.125rem);
+    min-height: clamp(3.75rem, 3.2rem + 1.6vw, 4.4375rem);
+    padding: 0.75rem 1.25rem 0.75rem 1.125rem;
   }
 
   .cta-link-small {
-    padding: 10px 18px 10px 12px;
-    gap: 16px;
-    min-width: 123px;
-    min-height: 45px;
+    gap: clamp(0.5rem, 0.3rem + 1vw, 1rem);
+    min-height: 2.8125rem;
+    padding: 0.625rem 1rem 0.625rem 0.75rem;
   }
 
   .cta-icon {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
   }
 
   .cta-wrap-large .cta-icon {
-    width: 36px;
-    height: 36px;
-    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+    width: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
+    height: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
+    filter: drop-shadow(0 0.25rem 0.25rem rgba(0, 0, 0, 0.25));
   }
 
   .cta-wrap-small .cta-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 4px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: 0.25rem;
+    filter: drop-shadow(0 2px 0.25rem rgba(0, 0, 0, 0.15));
   }
 
   .cta-text {
@@ -258,27 +233,60 @@ const corner = variant === 'green' ? 8 : 10;
   }
 
   .cta-label {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    font-size: 16px;
-    letter-spacing: 0.48px;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    text-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.15);
   }
 
   .cta-wrap-large .cta-label {
-    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 24px;
-    letter-spacing: 0.72px;
+    font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.5rem);
+    text-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   }
 
   .cta-sublabel {
-    font-size: 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
     opacity: 0.85;
-    letter-spacing: 0.36px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    text-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.12);
   }
 
   .cta-wrap-large .cta-sublabel {
-    font-size: 16px;
-    letter-spacing: 0.48px;
-    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 1rem);
+    text-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+  }
+
+  /* 宽屏等比缩放时取设计稿尺寸，流式 clamp 里的 vw 项不再参与 */
+  @media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
+    .cta-link-large {
+      min-width: 12.125rem;
+      min-height: 4.4375rem;
+      padding: 0.875rem 1.25rem 0.875rem 1.125rem;
+    }
+
+    .cta-link-small {
+      min-width: 7.6875rem;
+      gap: 1rem;
+      padding: 0.625rem 1.125rem 0.625rem 0.75rem;
+    }
+
+    .cta-wrap-large .cta-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .cta-wrap-large .cta-label {
+      font-size: 1.5rem;
+    }
+
+    .cta-wrap-large .cta-sublabel {
+      font-size: 1rem;
+    }
+  }
+
+  /* 触屏设备保证至少 44px 的点击高度 */
+  @media (pointer: coarse) {
+    .cta-link {
+      min-height: 44px;
+    }
   }
 </style>

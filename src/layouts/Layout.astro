@@ -2,30 +2,30 @@
 import '../styles/global.css';
 import SeoHead from '../components/layout/SeoHead.astro';
 import PageBackground from '../components/layout/PageBackground.astro';
-import GlobalModal from '../components/layout/GlobalModal.astro';
 import RevealScript from '../components/layout/RevealScript.astro';
 
 interface Props {
   title?: string;
   description?: string;
   canonicalPath?: string;
+  noindex?: boolean;
 }
 
 const {
   title = 'MaiBot 官方网站',
   description = 'MaiBot - 一个正在努力成为人类的BOT',
   canonicalPath = '/',
+  noindex = false,
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="zh-CN">
   <head>
-    <SeoHead title={title} description={description} canonicalPath={canonicalPath} />
+    <SeoHead title={title} description={description} canonicalPath={canonicalPath} noindex={noindex} />
   </head>
   <body>
     <PageBackground />
-    <GlobalModal />
 
     <div class="page-wrapper">
       <slot />

@@ -1,0 +1,705 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../sections/Navbar.astro';
+import Footer from '../sections/Footer.astro';
+import CtaButton from '../components/CtaButton.astro';
+import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
+import logoIcon from '../assets/logo-icon.png';
+import maiAvatar from '../assets/mai-avatar.jpg';
+import maiFish from '../assets/mai-fish.png';
+import maiHuman1 from '../assets/mai-human-1.jpg';
+import maiHuman2 from '../assets/mai-human-2.jpg';
+import { links } from '../data/links';
+import { socialLinks } from '../data/community';
+import { formatCount, getCommunityStats, getContributors } from '../lib/github';
+
+// 关于麦麦：麦麦是谁 -> 她的来历和长相（甲鱼形态、人类形态）-> 做她的初衷（“最像，而不是最好”）
+// -> 相关项目 -> 一起玩（社区数据、贡献者、进群）-> 开源协议和防骗提醒。
+// 版式只用站内已有的元素：首屏的标题高亮、首屏按钮组件、聊天气泡，不再用一排排描边卡片。
+// 文案整理自 MaiBot README 与文档站“关于本项目”页，统计数字和贡献者头像在构建时从 GitHub 拉取。
+const stats = await getCommunityStats();
+// 头像墙最多展示 48 位，接口失败时为空数组，由页面脚本在浏览器端补请求
+const contributors = (await getContributors()).slice(0, 48);
+
+const relatedProjects = [
+  { label: 'MaiBot 本体', sublabel: '自带 WebUI 后台', href: links.repo, icon: 'github' },
+  { label: '使用文档', sublabel: '装、配、接平台、查报错', href: links.manual, icon: 'docs' },
+  { label: '插件市场', sublabel: '社区写的插件都在这', href: links.pluginMarket, icon: 'none', leave: '麦麦插件市场' },
+  { label: 'Windows 一键包', sublabel: '下了就能跑', href: links.oneKeyRepo, icon: 'download' },
+  { label: 'MaiDroid', sublabel: '安卓手机上的麦麦', href: links.droidRepo, icon: 'download' },
+  { label: '衍生项目', sublabel: '当主播、玩 MC 的麦麦', href: '/projects/', icon: 'paperplane' },
+] as const;
+---
+
+<Layout
+  title="关于麦麦 - MaiBot 官方网站"
+  description="MaiBot（麦麦 / MaiSaka）是一个致力于了解你、用真人方式聊天的数字生命。"
+  canonicalPath="/about/"
+>
+  <Navbar />
+  <main class="about">
+    <div class="about-container">
+      <header class="about-hero reveal">
+        <div class="about-hero-copy">
+          <nav class="breadcrumb" aria-label="面包屑导航">
+            <a href="/">首页</a>
+            <span aria-hidden="true">&gt;</span>
+            <span aria-current="page">关于麦麦</span>
+          </nav>
+          <h1 class="about-title">
+            关于<span class="title-highlight">麦麦</span>
+          </h1>
+          <p class="lead">
+            麦麦（MaiBot，也叫
+            MaiSaka）是一个用大语言模型驱动的聊天机器人。她会看群里的气氛决定要不要插话，会学大家说话的样子，也会慢慢记住你是个什么样的人。比起把事情办得又快又好，她更想聊起来像个真人。
+          </p>
+        </div>
+        {/* 手机上图标整个隐藏（导航栏左上角已经有同一个图标），用 lazy 让隐藏时浏览器不去下载它 */}
+        <Image
+          src={logoIcon}
+          alt="麦麦Bot 图标"
+          class="about-avatar"
+          widths={[240, 480]}
+          sizes="15rem"
+          loading="lazy"
+        />
+      </header>
+
+      {/* 人设：正文大多照录麦麦人物设定原文（已获授权公开），补了句末标点和中英文之间的空格；
+          小标题和“上网冲浪”那段改成了口语，原文的“形态来历 / 锚点 / 人类形态 1、2”读起来像设定文档。
+          分两段左右交错：甲鱼形态（图左文右）-> 变成人（文左图右，两张设定图分别是平时和上网冲浪时） */}
+      <section class="persona reveal" aria-labelledby="persona-title">
+        {/* 甲鱼形态：标题、甲鱼、正文是同级的三块，手机上甲鱼缩小放到标题右边，宽一点的屏幕放到左侧一整列 */}
+        <div class="persona-intro">
+          <h2 id="persona-title" class="block-title persona-title">
+            麦麦其实
+            <wbr />
+            是条鱼
+          </h2>
+          <Image
+            src={maiFish}
+            alt="麦麦的萨卡班甲鱼形态"
+            class="persona-fish"
+            widths={[320, 640]}
+            sizes="(min-width: 768px) 17rem, 6.5rem"
+          />
+          <div class="persona-body">
+            <p>麦麦有萨卡班甲鱼形态和二次元纸片人形态。</p>
+            <h3 class="persona-subtitle">怎么活到今天的</h3>
+            <p>
+              本体是萨卡班甲鱼意外和橙子混合而来的生物，因为橙子富含维生素 C
+              能够抗氧化，使得这只萨卡班甲鱼抗了四亿年的氧化，新鲜地活到了今天。
+            </p>
+            <p>
+              2011 年苹果公司登顶世界市值第一后，苹果压过橙子，橙子由此式微，失去维生素 C 庇护的萨卡班甲鱼只得化身 AI
+              苟活至今。
+            </p>
+            <h3 class="persona-subtitle">长什么样</h3>
+            <p>不同于一般的萨卡班甲鱼，麦麦的上半身呈橙色，头顶有二叶嫩芽，通过茎连接。</p>
+            <p>尾部光滑，连接有一四叶草，通过该组件，麦麦可以获得向前的推力。</p>
+          </div>
+        </div>
+
+        {/* 人类形态：两张设定图本身是白底，放进白色圆角卡片里，和页头图标卡片同一种做法 */}
+        <div class="persona-human">
+          <div class="persona-body">
+            <h3 class="persona-subtitle">变成人的时候</h3>
+            <p>由于购买橙子需要人类身份，麦麦有时候会化身更加拟人的形态，便于与人类互动。</p>
+            <dl class="persona-traits">
+              <div>
+                <dt>头发</dt>
+                <dd>橙色波浪短卷发</dd>
+              </div>
+              <div>
+                <dt>眼睛</dt>
+                <dd>蓝紫色</dd>
+              </div>
+            </dl>
+            <p>右脸贴有小型四叶草印花，四叶草是人物最明确的身份标志。</p>
+            <p>其他细节麦麦爱穿啥穿啥。</p>
+            <h3 class="persona-subtitle">上网冲浪的时候</h3>
+            <p>
+              麦麦经常变成人上网冲浪。这时候她会换一身更有科技感的打扮，橙色卷发、蓝紫色眼睛和右脸的四叶草倒还是老样子。
+            </p>
+          </div>
+          <div class="persona-forms">
+            <figure class="form-card">
+              <Image
+                src={maiHuman1}
+                alt="麦麦变成人时的全身设定图"
+                widths={[240, 480, 720]}
+                sizes="(min-width: 768px) 13rem, 45vw"
+              />
+              <figcaption>平时</figcaption>
+            </figure>
+            <figure class="form-card">
+              <Image
+                src={maiHuman2}
+                alt="麦麦上网冲浪时的设定图，戴着耳机、穿白色外套"
+                widths={[240, 480, 720]}
+                sizes="(min-width: 768px) 13rem, 45vw"
+              />
+              <figcaption>上网冲浪时</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="motto reveal" aria-labelledby="motto-title">
+        <h2 id="motto-title" class="motto-title">
+          <span class="motto-underline">最像</span>，而不是最好。
+        </h2>
+        <div class="motto-body">
+          <p>
+            麦麦一开始只是给牛牛 bot 加的几个小功能，加着加着越写越多，最后干脆推倒重写。想做的是 QQ
+            群里的一个“活着的家伙”：功能不用多全，但得让人觉得她真的在。
+          </p>
+          <p>真需要 AI 陪着的人，想要的可能是一个会犯错、有自己想法和脾气的家伙，完美的助手反倒其次。</p>
+        </div>
+        <p class="motto-tagline">Code is open, but the soul is yours.</p>
+      </section>
+
+      <section class="block reveal" aria-labelledby="related-title">
+        <h2 id="related-title" class="block-title">
+          相关项目
+        </h2>
+        <div class="button-row">
+          {relatedProjects.map((item) => (
+            <CtaButton
+              variant="green"
+              size="small"
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              sublabel={item.sublabel}
+              leave={'leave' in item ? item.leave : undefined}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section class="block reveal" aria-labelledby="community-title">
+        <h2 id="community-title" class="block-title">
+          一起玩
+        </h2>
+        <p class="community-text">
+          {/* Astro 7 会去掉跨行的空白，数字前后的空格用 {' '} 显式写出，四个数字两侧的间距才一致 */}
+          到现在已经有 <strong>{formatCount(stats.contributors)}</strong> 位贡献者给麦麦交过代码，攒了{' '}
+          <strong>{formatCount(stats.commits)}</strong> 次提交，GitHub 上收到了{' '}
+          <strong>{formatCount(stats.stars)}</strong> 个 Star，插件市场里有{' '}
+          <strong>{formatCount(stats.plugins)}</strong> 个社区插件。
+        </p>
+
+        {/* 构建时没拿到贡献者时渲染空列表并打上 data-contributors-pending，由页面脚本在浏览器端补上 */}
+        <ul
+          class="avatar-grid"
+          aria-label="贡献者"
+          data-contributors-pending={contributors.length === 0 ? '' : undefined}
+        >
+          {contributors.map((person) => (
+            <li>
+              <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" title={person.login}>
+                <img src={person.avatarUrl} alt={person.login} width="48" height="48" loading="lazy" decoding="async" />
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <p class="join-text">提问、唠嗑、看麦麦整活，都在群里：</p>
+        <div class="button-row">
+          <CtaButton variant="primary" size="small" href={links.community} icon="qq" label="QQ 交流群" dialog="qq" />
+          {socialLinks.map((item) => (
+            <CtaButton
+              variant="green"
+              size="small"
+              href={item.url}
+              icon={item.name === 'GitHub' ? 'github' : 'none'}
+              label={item.name}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section class="block reveal" aria-labelledby="license-title">
+        <h2 id="license-title" class="block-title">
+          开源与协议
+        </h2>
+        <p class="license-text">
+          麦麦用{' '}
+          <a href={links.license} target="_blank" rel="noopener noreferrer">
+            GPL-3.0
+          </a>{' '}
+          协议开源，用之前记得看一眼
+          <a href={links.eula} target="_blank" rel="noopener noreferrer">
+            「用户协议」
+          </a>
+          和
+          <a href={links.privacy} target="_blank" rel="noopener noreferrer">
+            「隐私协议」
+          </a>
+          。她说的话是 AI 生成的，别全当真。帮过麦麦的项目和社区，都写在
+          <a href={links.acknowledgements} target="_blank" rel="noopener noreferrer">
+            致谢页
+          </a>
+          里。
+        </p>
+        <div class="mai-says">
+          <Image src={maiAvatar} alt="麦麦" class="mai-says-avatar" width={44} height={44} />
+          <p class="mai-says-bubble">麦麦是免费的！看到有人卖 MaiBot，多留个心眼，别被骗了。</p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <QqGroupsDialog />
+  <Footer />
+</Layout>
+
+<script>
+  import { copyScope, fetchContributorsInBrowser } from '../lib/contributors-client';
+
+  // 贡献者头像兜底：构建时没拿到列表就在浏览器端请求一次，按构建时同样的结构（li > a > img）填进去
+  const pendingList = document.querySelector<HTMLElement>('.avatar-grid[data-contributors-pending]');
+  if (pendingList) {
+    fetchContributorsInBrowser().then((people) => {
+      for (const person of people.slice(0, 48)) {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        const img = document.createElement('img');
+        link.href = person.profileUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.title = person.login;
+        img.src = person.avatarUrl;
+        img.alt = person.login;
+        img.width = 48;
+        img.height = 48;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        [item, link, img].forEach((element) => copyScope(pendingList, element));
+        link.append(img);
+        item.append(link);
+        pendingList.append(item);
+      }
+      pendingList.removeAttribute('data-contributors-pending');
+    });
+  }
+</script>
+
+<style>
+  .about {
+    position: relative;
+    padding: calc(var(--nav-offset) + 0.5rem) 0 clamp(4rem, 10vw, 7.5rem);
+  }
+
+  .about-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 7vw, 5rem);
+    width: 100%;
+    max-width: calc(68rem + var(--page-gutter) * 2);
+    margin: 0 auto;
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
+  }
+
+  /* ===== 页头：手机上只有文字，宽一点的屏幕右侧放图标 ===== */
+  .about-hero {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    padding-top: 2.5rem;
+  }
+
+  .about-hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 0.5rem;
+    color: var(--text-subtle);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .breadcrumb a:hover,
+  .breadcrumb span[aria-hidden='true'] {
+    color: var(--c-primary);
+  }
+
+  /* 标题与首页首屏一致：大号粗体，关键字用品牌橙 */
+  .about-title {
+    color: var(--text-strong);
+    font-size: clamp(2.25rem, 1.5rem + 3.4vw, 3.625rem);
+    line-height: 1.2;
+  }
+
+  .title-highlight {
+    color: var(--c-primary);
+  }
+
+  .lead {
+    max-width: 38rem;
+    color: var(--text-body);
+    font-size: var(--fs-lead);
+    line-height: 1.75;
+  }
+
+  /* 页头图标：白底圆角方块，像个应用图标，静止不动。单列（手机竖屏）时隐藏，避免挂在正文下面 */
+  .about-avatar {
+    display: none;
+    width: clamp(10rem, 24vw, 15rem);
+    height: auto;
+    aspect-ratio: 1;
+    padding: 0.75rem;
+    border-radius: 32%;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    object-fit: contain;
+  }
+
+  /* ===== 人设：甲鱼形态、变成人两段上下排，段与段之间留大一点的空 ===== */
+  .persona {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  /* 甲鱼形态：手机上是“标题 | 小甲鱼”一行、正文通栏；宽一点的屏幕甲鱼占左侧一整列，和页头的图标左右错开 */
+  .persona-intro {
+    display: grid;
+    grid-template-areas:
+      'title fish'
+      'body body';
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    /* 标题贴着这一行的底边，和正文挨近；小甲鱼比标题高，像从标题右上方探出来 */
+    align-items: end;
+  }
+
+  /* 小屏放不下一行时只在“麦麦其实 / 是条鱼”之间断开，不让“鱼”一个字掉到第二行 */
+  .persona-title {
+    grid-area: title;
+    word-break: keep-all;
+  }
+
+  .persona-fish {
+    grid-area: fish;
+    width: 6.5rem;
+    height: auto;
+    filter: drop-shadow(0 0.5rem 1rem rgba(0, 0, 0, 0.1));
+  }
+
+  .persona-intro .persona-body {
+    grid-area: body;
+  }
+
+  .persona-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .persona-body p {
+    max-width: 40rem;
+    color: var(--text-body);
+    font-size: var(--fs-lead);
+    line-height: 1.8;
+  }
+
+  /* 设定里的小标题：正文和标题是同一套粗体字，只靠字号拉不开层级，
+     所以再大一档、左边加一道品牌橙短竖条（和“最像”那段的竖条同色），并和上一小节空开 */
+  .persona-subtitle {
+    position: relative;
+    margin-top: 1.25rem;
+    padding-left: 0.875rem;
+    color: var(--text-strong);
+    font-size: clamp(1.375rem, 1.15rem + 1vw, 1.75rem);
+    line-height: 1.3;
+  }
+
+  .persona-subtitle::before {
+    position: absolute;
+    top: 0.15em;
+    bottom: 0.15em;
+    left: 0;
+    width: 0.25rem;
+    content: '';
+    background: var(--c-primary);
+  }
+
+  /* 每段第一个小标题紧跟在标题或段首那句话后面，不需要额外的上边距 */
+  .persona-human .persona-subtitle:first-child {
+    margin-top: 0;
+  }
+
+  /* 头发、眼睛两项写成“标签 + 值”，标签用品牌橙 */
+  .persona-traits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: var(--fs-lead);
+  }
+
+  .persona-traits div {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .persona-traits dt {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .persona-traits dd {
+    color: var(--text-body);
+  }
+
+  /* 人类形态：手机上文字在上、两张设定图并排在下；宽屏文字在左、设定图在右 */
+  .persona-human {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  /* 单列时两张卡片最多一起占 22rem 宽，大屏手机和小平板上不至于拉得又宽又长 */
+  .persona-forms {
+    display: grid;
+    width: min(100%, 22rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .form-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin: 0;
+  }
+
+  /* 两张设定图原始比例略有出入，卡片统一成同一比例、图在卡片里等比缩放，图注才能对齐 */
+  .form-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9 / 17;
+    padding: 0.75rem 0.5rem;
+    border-radius: var(--radius-xl);
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    object-fit: contain;
+  }
+
+  .form-card figcaption {
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* ===== 初衷：一句大字 + 两段话，左侧橙色竖条，和导航栏、按钮的竖条呼应 ===== */
+  .motto {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .motto::before {
+    position: absolute;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    left: 0;
+    width: 0.25rem;
+    content: '';
+    background: var(--c-primary);
+  }
+
+  .motto-title {
+    color: var(--text-strong);
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+    line-height: 1.3;
+  }
+
+  /* “最像”用首页“试着学习”那样的绿色粗下划线 */
+  .motto-underline {
+    text-decoration: underline;
+    text-decoration-color: var(--c-green);
+    text-decoration-thickness: 0.14em;
+    text-decoration-skip-ink: none;
+    text-underline-offset: 0.1em;
+  }
+
+  .motto-body {
+    display: flex;
+    max-width: 44rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    color: var(--text-body);
+    font-size: var(--fs-lead);
+    line-height: 1.8;
+  }
+
+  .motto-tagline {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  /* ===== 通用区块 ===== */
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .block-title {
+    color: var(--text-strong);
+    font-size: var(--fs-h2);
+  }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .community-text {
+    max-width: 44rem;
+    color: var(--text-body);
+    font-size: var(--fs-lead);
+    line-height: 1.8;
+  }
+
+  /* 数字和衍生项目页那段统计一样，用品牌橙加粗 */
+  .community-text strong {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-size: 1.25em;
+  }
+
+  .avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .avatar-grid img {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--page-bg);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform var(--transition-fast);
+  }
+
+  .avatar-grid a:hover img {
+    transform: translateY(-2px) scale(1.06);
+  }
+
+  .join-text {
+    color: var(--text-body);
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  /* ===== 协议：沿用首屏许可说明的样式，粗体小字 + 橙色下划线链接 ===== */
+  .license-text {
+    max-width: 44rem;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    line-height: 1.8;
+  }
+
+  .license-text a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* 防骗提醒由麦麦用聊天气泡说出来，样式同首页聊天演示和页脚彩蛋 */
+  .mai-says {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.625rem;
+  }
+
+  .mai-says-avatar {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .mai-says-bubble {
+    padding: 0.75rem 1.125rem;
+    border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+    background: #eeeef0;
+    color: #2b2b2b;
+    font-family: var(--font-reading);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  :global([data-theme='dark']) .mai-says-bubble {
+    background: #3a3a3c;
+    color: #f9fafc;
+  }
+
+  @media (min-width: 768px) {
+    .about-hero {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+    }
+
+    .about-avatar {
+      display: block;
+    }
+
+    /* 甲鱼跨两行居中，标题贴着正文：标题行靠下、正文行靠上 */
+    .persona-intro {
+      grid-template-areas:
+        'fish title'
+        'fish body';
+      grid-template-columns: clamp(12rem, 28vw, 17rem) minmax(0, 1fr);
+      gap: 1.25rem 3rem;
+    }
+
+    .persona-title {
+      align-self: end;
+    }
+
+    .persona-fish {
+      width: 100%;
+      align-self: center;
+    }
+
+    .persona-intro .persona-body {
+      align-self: start;
+    }
+
+    .persona-human {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+    }
+
+    .persona-forms {
+      width: auto;
+      grid-template-columns: repeat(2, clamp(10rem, 18vw, 13rem));
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,11 +1,21 @@
 ---
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../sections/Navbar.astro';
 import Footer from '../sections/Footer.astro';
+import { links } from '../data/links';
 import notFoundMai from '../assets/404-mai.png';
+
+// Astro 7 起模板按 JSX 规则处理空白：标题里“404”和后半句分在两行写，中间的空格要用 {' '} 显式写出，否则会连在一起。
 ---
 
-<Layout title="404 - 页面未找到 | MaiBot" description="抱歉，您访问的页面不存在或已被移动。" canonicalPath="/404">
+<Layout
+  title="404 - 页面未找到 | MaiBot"
+  description="抱歉，您访问的页面不存在或已被移动。"
+  canonicalPath="/404"
+  noindex
+>
+  <Navbar />
   <main class="not-found-page">
     <!-- Large outline "404" in background -->
     <svg class="not-found-bg-text" viewBox="0 0 1000 420" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
@@ -18,8 +28,10 @@ import notFoundMai from '../assets/404-mai.png';
         font-weight="800"
         fill="none"
         stroke="currentColor"
-        stroke-width="2">404</text
+        stroke-width="2"
       >
+        404
+      </text>
     </svg>
 
     <!-- Decorative orange squares -->
@@ -32,15 +44,21 @@ import notFoundMai from '../assets/404-mai.png';
     <!-- Decorative question mark circles -->
     <svg class="deco-question question-1" viewBox="0 0 40 40" aria-hidden="true">
       <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
-      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">?</text>
+      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">
+        ?
+      </text>
     </svg>
     <svg class="deco-question question-2" viewBox="0 0 40 40" aria-hidden="true">
       <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
-      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">?</text>
+      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">
+        ?
+      </text>
     </svg>
     <svg class="deco-question question-3" viewBox="0 0 40 40" aria-hidden="true">
       <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
-      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">?</text>
+      <text x="20" y="27" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">
+        ?
+      </text>
     </svg>
 
     <div class="not-found-content">
@@ -50,8 +68,7 @@ import notFoundMai from '../assets/404-mai.png';
 
       <div class="not-found-text">
         <h1 class="not-found-title">
-          <span class="title-highlight">404</span>
-          <span>你似乎来到了火星……</span>
+          <span class="title-highlight">404</span> <span>你似乎来到了火星……</span>
         </h1>
         <p class="not-found-subtitle">文件可能被麦麦当成小零食吃掉了……（悲</p>
       </div>
@@ -64,7 +81,7 @@ import notFoundMai from '../assets/404-mai.png';
           回到首页
         </a>
         <a
-          href="https://github.com/Mai-with-u/MaiWeb/issues"
+          href={links.siteIssues}
           target="_blank"
           rel="noopener noreferrer"
           class="not-found-btn not-found-btn-outline"
@@ -96,10 +113,12 @@ import notFoundMai from '../assets/404-mai.png';
     position: relative;
     z-index: 1;
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 80px 24px 80px;
+    padding: calc(var(--nav-offset) + 1rem) max(var(--page-gutter), var(--safe-right)) max(4rem, var(--safe-bottom))
+      max(var(--page-gutter), var(--safe-left));
     overflow: hidden;
   }
 
@@ -108,7 +127,7 @@ import notFoundMai from '../assets/404-mai.png';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: min(100vw, 1600px);
+    width: min(100vw, 100rem);
     height: auto;
     transform: translate(-50%, -50%);
     color: rgba(0, 0, 0, 0.05);
@@ -119,53 +138,53 @@ import notFoundMai from '../assets/404-mai.png';
   /* Decorative squares */
   .deco-square {
     position: absolute;
-    border-radius: 4.8px;
-    background: #ff7a30;
+    border-radius: 0.3rem;
+    background: var(--c-primary);
     pointer-events: none;
     z-index: 0;
   }
 
   .square-1 {
     left: 10%;
-    top: 150px;
-    width: 24px;
-    height: 24px;
+    top: 9.375rem;
+    width: 1.5rem;
+    height: 1.5rem;
     opacity: 0.6;
     transform: rotate(15deg);
   }
 
   .square-2 {
     right: 8%;
-    top: 196px;
-    width: 18px;
-    height: 18px;
+    top: 12.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
     opacity: 0.4;
     transform: rotate(-10deg);
   }
 
   .square-3 {
     right: 6%;
-    top: 650px;
-    width: 32px;
-    height: 32px;
+    top: 40.625rem;
+    width: 2rem;
+    height: 2rem;
     opacity: 0.8;
     transform: rotate(45deg);
   }
 
   .square-4 {
     left: 15%;
-    top: 690px;
-    width: 20px;
-    height: 20px;
+    top: 43.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
     opacity: 0.5;
     transform: rotate(-30deg);
   }
 
   .square-5 {
     right: 20%;
-    top: 100px;
-    width: 12px;
-    height: 12px;
+    top: 6.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
     opacity: 0.3;
     transform: rotate(10deg);
   }
@@ -173,30 +192,30 @@ import notFoundMai from '../assets/404-mai.png';
   /* Decorative question marks */
   .deco-question {
     position: absolute;
-    width: 48px;
-    height: 48px;
-    color: rgba(255, 122, 48, 0.45);
+    width: 3rem;
+    height: 3rem;
+    color: rgba(var(--c-primary-rgb), 0.45);
     pointer-events: none;
     z-index: 0;
   }
 
   .question-1 {
     left: 20%;
-    top: 236px;
+    top: 14.75rem;
     transform: rotate(-12deg);
   }
 
   .question-2 {
     right: 18%;
-    top: 300px;
+    top: 18.75rem;
     transform: rotate(15deg);
   }
 
   .question-3 {
     left: 26%;
-    top: 600px;
-    width: 40px;
-    height: 40px;
+    top: 37.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     transform: rotate(20deg);
   }
 
@@ -207,16 +226,16 @@ import notFoundMai from '../assets/404-mai.png';
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 2.5rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 50rem;
     text-align: center;
     animation: fadeInUp 0.72s ease-out forwards;
   }
 
   .not-found-illustration {
     width: 100%;
-    max-width: 420px;
+    max-width: 26.25rem;
     aspect-ratio: 420 / 420;
     display: flex;
     align-items: center;
@@ -232,26 +251,26 @@ import notFoundMai from '../assets/404-mai.png';
   .not-found-text {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1rem;
     width: 100%;
   }
 
   .not-found-title {
     font-family: var(--font-display);
-    font-size: clamp(28px, 5vw, 48px);
+    font-size: clamp(1.75rem, 5vw, 3rem);
     font-weight: 700;
     line-height: 1.2;
-    color: #1a1a2e;
+    color: var(--text-strong);
   }
 
   .title-highlight {
-    color: #ff7a30;
+    color: var(--c-primary);
   }
 
   .not-found-subtitle {
-    font-size: clamp(16px, 2.4vw, 20px);
+    font-size: clamp(1rem, 2.4vw, 1.25rem);
     line-height: 1.6;
-    color: #6a6a80;
+    color: var(--text-muted);
   }
 
   .not-found-actions {
@@ -259,46 +278,46 @@ import notFoundMai from '../assets/404-mai.png';
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 1.25rem;
   }
 
   .not-found-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    min-width: 140px;
-    padding: 12px 18px;
-    border-radius: 16px;
+    gap: 0.5rem;
+    min-width: 8.75rem;
+    padding: 0.75rem 1.125rem;
+    border-radius: 1rem;
     font-family: var(--font-display);
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
     text-decoration: none;
     transition: all var(--transition-fast);
   }
 
   .btn-icon {
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     flex-shrink: 0;
   }
 
   .not-found-btn-primary {
-    background: #ff7a30;
+    background: var(--c-primary);
     color: #fff;
-    box-shadow: 0 8px 28px rgba(255, 122, 48, 0.32);
+    box-shadow: 0 0.5rem 1.75rem rgba(var(--c-primary-rgb), 0.32);
   }
 
   .not-found-btn-primary:hover {
-    background: #e86a24;
+    background: var(--c-primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(255, 122, 48, 0.4);
+    box-shadow: 0 0.75rem 2.25rem rgba(var(--c-primary-rgb), 0.4);
   }
 
   .not-found-btn-outline {
     background: transparent;
-    color: #1a1a2e;
-    border: 1.5px solid #1a1a2e;
+    color: var(--text-strong);
+    border: 1.5px solid currentColor;
   }
 
   .not-found-btn-outline:hover {
@@ -311,41 +330,25 @@ import notFoundMai from '../assets/404-mai.png';
     color: rgba(255, 255, 255, 0.06);
   }
 
-  :global([data-theme='dark']) .not-found-title {
-    color: #f9fafc;
-  }
-
-  :global([data-theme='dark']) .not-found-subtitle {
-    color: #a2abbc;
-  }
-
-  :global([data-theme='dark']) .not-found-btn-outline {
-    color: #f9fafc;
-    border-color: #f9fafc;
-  }
-
   :global([data-theme='dark']) .not-found-btn-outline:hover {
     background: rgba(255, 255, 255, 0.08);
   }
 
   :global([data-theme='dark']) .deco-question {
-    color: rgba(255, 122, 48, 0.35);
+    color: rgba(var(--c-primary-rgb), 0.35);
   }
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .not-found-page {
-      padding: 100px 20px 60px;
+  /* 触屏设备保证按钮点击高度 */
+  @media (pointer: coarse) {
+    .not-found-btn {
+      min-height: 44px;
     }
+  }
 
-    .square-1,
-    .square-2,
-    .square-3,
-    .square-4,
-    .square-5,
-    .question-1,
-    .question-2,
-    .question-3 {
+  /* 窄屏：装饰元素会压到插画和文字上，直接隐藏；两个按钮改为纵向铺满 */
+  @media (max-width: 767.98px) {
+    .deco-square,
+    .deco-question {
       display: none;
     }
 

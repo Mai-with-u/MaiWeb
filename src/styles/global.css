@@ -1,65 +1,118 @@
-/* === Design Tokens (from Figma) === */
+/* ==========================================================================
+   设计 token
+   颜色分两套：亮色写在 :root，暗色写在 [data-theme='dark']，组件只引用语义变量，
+   切换主题时不需要在每个组件里再写一遍暗色覆盖。
+   ========================================================================== */
 :root {
-  --color-primary: 233, 127, 15;
-  --color-green: 128, 222, 65;
-  --color-dark: 38, 45, 73;
-  --color-text: 0, 0, 0;
-  --color-text-muted: 162, 171, 188;
-  --color-bg: 255, 255, 255;
-  --color-border: 240, 242, 244;
-  --color-shadow: 24, 65, 134;
+  color-scheme: light;
 
-  --font-display: 'Douyin Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-body: 'Douyin Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 999px;
-
-  --shadow-sm: 0 4px 16px -4px rgba(var(--color-shadow), 0.12);
-  --shadow-md: 0 8px 32px -8px rgba(var(--color-shadow), 0.16);
-  --shadow-lg: 0 16px 48px -12px rgba(var(--color-shadow), 0.24);
-
-  --transition-fast: 0.2s ease;
-  --transition-base: 0.3s ease;
-  --transition-slow: 0.5s ease;
-}
-
-/* Hard color values for compatibility */
-:root {
+  /* 品牌色 */
   --c-primary: #e97f0f;
   --c-primary-hover: #d06d0a;
+  --c-primary-rgb: 233, 127, 15;
   --c-green: #80de41;
-  --c-green-hover: #6fd132;
-  --c-dark: #262d49;
-  --c-text: #000000;
-  --c-text-muted: #a2abbc;
-  --c-bg: #ffffff;
+  --c-green-strong: #3f9b18;
+  --c-green-rgb: 128, 222, 65;
+  --c-blue: #30ccef;
+  --c-blue-rgb: 48, 204, 239;
+  --c-purple: #8b6cf0;
+  --c-purple-rgb: 139, 108, 240;
+
+  /* 文字：strong 用于标题，body 用于正文，muted 用于说明，subtle 只用于装饰性的弱提示 */
+  --text-strong: #121831;
+  --text-body: #3b4256;
+  --text-muted: #6b7385;
+  --text-subtle: #a2abbc;
+
+  /* 背景与描边 */
+  --page-bg: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f6f7f9;
+  --border-subtle: rgba(18, 24, 49, 0.08);
+  --border-strong: rgba(18, 24, 49, 0.16);
+  --shadow-card: 0 18px 48px rgba(24, 65, 134, 0.08);
+
+  /* 字体 */
+  --font-display: 'Douyin Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body: 'Douyin Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-reading: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* 流式字号：在 360px 到 1440px 视口之间线性过渡，超出范围就停在上下限 */
+  --fs-h1: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+  --fs-h2: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --fs-lead: clamp(1rem, 0.93rem + 0.3vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-xs: 0.75rem;
+
+  /* 布局：页面左右留白随视口变化，内容最大宽度用 rem，宽屏等比缩放时一起缩放 */
+  --page-gutter: clamp(1rem, 4vw, 3rem);
+  --container-max: 80rem;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  /* 固定导航栏占用的高度，首屏和子页面顶部按这个值让出空间 */
+  --nav-offset: calc(5.5rem + var(--safe-top));
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --transition-fast: 0.2s ease;
 }
 
-/* === Dark Mode === */
 [data-theme='dark'] {
-  --color-primary: 245, 148, 25;
-  --color-green: 112, 191, 34;
-  --color-dark: 180, 185, 210;
-  --color-text: 249, 250, 252;
-  --color-text-muted: 65, 70, 77;
-  --color-bg: 18, 18, 18;
-  --color-border: 35, 38, 42;
-  --color-shadow: 0, 0, 0;
+  color-scheme: dark;
 
   --c-primary: #f59419;
   --c-primary-hover: #e08410;
+  --c-primary-rgb: 245, 148, 25;
   --c-green: #70bf22;
-  --c-green-hover: #60a81a;
-  --c-dark: #b4b9d2;
-  --c-text: #f9fafc;
-  --c-text-muted: #41464d;
-  --c-bg: #121212;
+  --c-green-strong: #4a9a17;
+  --c-green-rgb: 112, 191, 34;
+
+  --text-strong: #f9fafc;
+  --text-body: #d5dae2;
+  --text-muted: #a3acbb;
+  --text-subtle: #6f7787;
+
+  --page-bg: #121212;
+  --surface: #1e2026;
+  --surface-muted: #262930;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --shadow-card: 0 18px 48px rgba(0, 0, 0, 0.28);
 }
 
-/* === Reset & Base === */
+/* ==========================================================================
+   宽屏等比缩放
+   设计稿按 1600×900 绘制。宽屏（宽度 >= 1024px 且宽高比 >= 5:4）下把根字号设为
+   16px × min(视口宽 / 1600, 视口高 / 900)，即 min(1vw, 1.7778vh)：
+   1600×900 时 1rem = 16px 与设计稿一致，窗口拉大拉小时所有 rem 尺寸（字号、间距、留白、容器宽度）
+   按同一比例缩放，整屏构图保持不变；这是重新排版而不是位图缩放，文字始终清晰。
+   下限 10px 只防止极矮窗口缩得过小（1024 宽时正好是 0.64 倍，与旧实现一致），上限 25.6px（1.6 倍）与旧实现一致。
+   手机、竖屏平板、横屏手机不进入此模式，保持 16px 根字号的流式布局。
+   注意：组件里需要“宽屏两栏”的规则统一使用同一个媒体查询条件。
+   ========================================================================== */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
+  html {
+    font-size: clamp(10px, min(1vw, 1.7778vh), 25.6px);
+  }
+
+  :root {
+    /* 设计稿里的固定值：流式 clamp 中的 vw 项在宽屏下不再参与，保证严格等比 */
+    --fs-h1: 3rem;
+    --fs-h2: 2.5rem;
+    --fs-lead: 1.25rem;
+    --page-gutter: 3rem;
+  }
+}
+
+/* ==========================================================================
+   基础样式
+   ========================================================================== */
 *,
 *::before,
 *::after {
@@ -72,41 +125,38 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
-body,
-a,
-button,
-h1,
-h2,
-h3,
-h4,
-p,
-span,
-div,
-nav,
-section,
-footer,
-header {
+/* 打开弹窗时锁住页面滚动，关闭后自动恢复 */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* 切换主题时，导航栏脚本给 html 临时加上这个类，让颜色平滑过渡；
+   平时不挂全局过渡，避免所有元素的 hover 动效都被拖慢 */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
   transition:
     background-color 0.35s ease,
-    color 0.35s ease,
     border-color 0.35s ease,
-    box-shadow 0.35s ease,
+    color 0.35s ease,
     fill 0.35s ease,
-    stroke 0.35s ease;
+    stroke 0.35s ease !important;
 }
 
 body {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  color: rgb(var(--color-text));
-  background: rgb(var(--color-bg));
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--text-strong);
+  background: var(--page-bg);
 }
 
 a {
@@ -114,13 +164,21 @@ a {
   text-decoration: none;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
+img,
+svg {
   display: block;
+  max-width: 100%;
 }
 
-/* === Typography === */
+img {
+  height: auto;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
 h1,
 h2,
 h3,
@@ -130,7 +188,9 @@ h4 {
   line-height: 1.15;
 }
 
-/* === Animations === */
+/* ==========================================================================
+   动画
+   ========================================================================== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -152,63 +212,29 @@ h4 {
   }
 }
 
-@keyframes scrollBounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-/* === Utility Classes === */
+/* ==========================================================================
+   工具类
+   ========================================================================== */
 .container {
   width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 16px;
-  min-width: 0;
+  max-width: calc(var(--container-max) + var(--page-gutter) * 2);
+  margin-inline: auto;
+  padding-right: max(var(--page-gutter), var(--safe-right));
+  padding-left: max(var(--page-gutter), var(--safe-left));
 }
 
-@media (min-width: 480px) {
-  .container {
-    padding: 0 24px;
-  }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-@media (min-width: 768px) {
-  .container {
-    padding: 0 48px;
-  }
-}
-
-.container-wide {
-  width: 100%;
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 0 16px;
-  min-width: 0;
-}
-
-@media (min-width: 480px) {
-  .container-wide {
-    padding: 0 24px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container-wide {
-    padding: 0 48px;
-  }
-}
-
-@media (max-width: 767px) {
-  .hide-mobile {
-    display: none !important;
-  }
-}
-
+/* 首屏入场：纯 CSS 动画，不依赖脚本 */
 .animate-fade-in {
   opacity: 0;
   animation: fadeInUp 0.72s ease-out forwards;
@@ -230,7 +256,8 @@ h4 {
   animation-delay: 0.5s;
 }
 
-.reveal {
+/* 滚动显现：只有脚本可用（html 带 js 类）时才先隐藏，脚本失效时内容照常可见 */
+html.js .reveal {
   opacity: 0;
   transform: translateY(24px);
   transition:
@@ -238,9 +265,9 @@ h4 {
     transform 0.72s ease-out;
 }
 
-.reveal.revealed {
+html.js .reveal.revealed {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .reveal-delay-1 {
@@ -253,100 +280,9 @@ h4 {
   transition-delay: 0.3s;
 }
 
-/* === Shared Feature Section Styles === */
-.feature-section {
-  position: relative;
-  min-height: 872px;
-  display: flex;
-  align-items: center;
-  padding: 100px 0;
-  overflow: hidden;
-}
-
-.feature-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 56px;
-}
-
-.feature-visual {
-  flex-shrink: 0;
-  width: 100%;
-  max-width: 720px;
-}
-
-.feature-mockup-base {
-  width: 100%;
-  aspect-ratio: 720 / 480;
-  border-radius: 32px;
-  overflow: hidden;
-  position: relative;
-}
-
-.feature-content {
-  flex: 1;
-  max-width: 520px;
-  min-width: 0;
-}
-
-.feature-title {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 700;
-  line-height: normal;
-  margin-bottom: 16px;
-}
-
-.feature-title span {
-  display: block;
-}
-
-.feature-subtitle {
-  font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 700;
-  color: #121938;
-  margin-bottom: 28px;
-  line-height: normal;
-}
-
-.feature-desc {
-  font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: clamp(16px, 2vw, 24px);
-  line-height: 1.6;
-  color: rgba(0, 0, 0, 0.5);
-  letter-spacing: 1.2px;
-}
-
-.feature-desc p {
-  margin-bottom: 16px;
-}
-
-.feature-desc p:last-child {
-  margin-bottom: 0;
-}
-
-@media (min-width: 1100px) {
-  .feature-inner {
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 80px;
-  }
-
-  .feature-visual {
-    flex: 0 0 720px;
-  }
-
-  .feature-content {
-    flex: 1;
-    max-width: 520px;
-    padding-top: 20px;
-  }
-}
-
-/* === Focus Visible (keyboard navigation) === */
+/* ==========================================================================
+   键盘焦点
+   ========================================================================== */
 :focus-visible {
   outline: 2px solid var(--c-primary);
   outline-offset: 2px;
@@ -359,18 +295,12 @@ h4 {
 button:focus-visible,
 a:focus-visible,
 [role='button']:focus-visible {
-  box-shadow: 0 0 0 4px rgba(var(--color-primary), 0.35);
+  box-shadow: 0 0 0 4px rgba(var(--c-primary-rgb), 0.35);
 }
 
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--c-primary);
-  outline-offset: 0;
-  border-color: var(--c-primary);
-}
-
-/* === Reduced Motion === */
+/* ==========================================================================
+   减少动态效果
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -379,6 +309,7 @@ select:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
   html {
     scroll-behavior: auto;
   }

@@ -1,30 +1,41 @@
 ---
-import { getImage } from 'astro:assets';
-import heroImage from '../../assets/maimai-v2.png';
 import ThemeBootScript from './ThemeBootScript.astro';
 
 interface Props {
   title: string;
   description: string;
   canonicalPath: string;
+  // 404 等不希望被搜索引擎收录的页面传 true
+  noindex?: boolean;
 }
 
-const { title, description, canonicalPath } = Astro.props;
-const siteUrl = 'https://mai-mai.org';
+const { title, description, canonicalPath, noindex = false } = Astro.props;
+// 正式域名统一来自 astro.config 的 site 字段，换域名不用再改这里
+const siteUrl = Astro.site ?? new URL('https://mai-mai.org');
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
-const optimizedHero = await getImage({ src: heroImage, format: 'webp' });
-const ogImage = new URL(optimizedHero.src, siteUrl).toString();
+// 分享卡片图：麦麦立绘等比缩放到 1200×630 并补暖白底，符合各平台大图卡片的推荐尺寸
+const ogImage = new URL('/og-image.jpg', siteUrl).toString();
+const fontStylesheet = 'https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css';
 ---
 
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonicalUrl} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
+<meta name="theme-color" content="#e97f0f" />
+<meta name="generator" content={Astro.generator} />
+
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
 <!-- OpenGraph -->
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="麦麦" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="MaiBot" />
@@ -36,20 +47,11 @@ const ogImage = new URL(optimizedHero.src, siteUrl).toString();
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
 
-<meta name="generator" content={Astro.generator} />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>{title}</title>
+<!-- 字体异步加载：先 preload，加载完再切成样式表，避免外链 CSS 阻塞首屏渲染；不支持脚本时直接引用 -->
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-<link
-  rel="preload"
-  href="https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
-<noscript
-  ><link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@chinese-fonts/dymh/dist/DouyinSansBold/result.css"
-  /></noscript
->
+<link rel="preload" href={fontStylesheet} as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript>
+  <link rel="stylesheet" href={fontStylesheet} />
+</noscript>
+
 <ThemeBootScript />
