@@ -1,18 +1,26 @@
 <script is:inline>
+  // 在 <head> 里同步执行，抢在首帧渲染之前决定主题，避免先闪一下亮色再变暗。
+  // 顺序：标记脚本可用 -> 读用户手动选过的主题 -> 没选过就跟随系统 -> 系统切换时继续跟随。
   (function () {
-    var apply = function (t) {
-      document.documentElement.setAttribute('data-theme', t || 'light');
-    };
-    var saved = localStorage.getItem('theme');
-    if (saved) {
-      apply(saved);
-    } else {
-      apply(window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
-    }
-    window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', function (e) {
-      if (!localStorage.getItem('theme')) {
-        apply(e.matches ? 'dark' : 'light');
+    var root = document.documentElement;
+    // 滚动显现等效果只在脚本可用时才先隐藏内容，见 global.css 中的 html.js 规则
+    root.classList.add('js');
+
+    var media = window.matchMedia('(prefers-color-scheme: dark)');
+    var readSaved = function () {
+      try {
+        return localStorage.getItem('theme');
+      } catch {
+        return null;
       }
+    };
+    var apply = function (theme) {
+      root.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+    };
+
+    apply(readSaved() || (media.matches ? 'dark' : 'light'));
+    media.addEventListener('change', function (event) {
+      if (!readSaved()) apply(event.matches ? 'dark' : 'light');
     });
   })();
 </script>

@@ -657,12 +657,21 @@ import { links } from '../data/links';
 
   const themeToggle = document.querySelector('.theme-toggle');
   if (themeToggle) {
+    // 点击切换主题：先临时挂上过渡类让颜色平滑变化，切换完成后再移除，平时不影响其他动效
+    let switchTimer: ReturnType<typeof setTimeout> | undefined;
     themeToggle.addEventListener('click', () => {
       const html = document.documentElement;
       const isDark = html.getAttribute('data-theme') === 'dark';
       const next = isDark ? 'light' : 'dark';
+      html.classList.add('theme-switching');
       html.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch {
+        // 隐私模式下可能无法写入，本次切换照样生效，只是刷新后不记忆
+      }
+      clearTimeout(switchTimer);
+      switchTimer = setTimeout(() => html.classList.remove('theme-switching'), 400);
     });
   }
 </script>
