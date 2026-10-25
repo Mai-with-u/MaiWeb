@@ -1,120 +1,50 @@
 ---
 import { Image } from 'astro:assets';
-import amaidesuBg from '../assets/amaidesu.png';
-import mofoxBg from '../assets/mofox.jpg';
-import maicraftBg from '../assets/maicraft.png';
 import pluginBg from '../assets/plugin.png';
+import { links } from '../data/links';
+import { compactProjects, featuredProjects } from '../data/projects';
+import { formatCount, getCommunityStats, getContributors } from '../lib/github';
 
-const featuredProjects = [
-  {
-    name: 'Amaidesu',
-    description: '让麦麦在 B 站开播。',
-    tone: 'market',
-    href: 'https://github.com/Mai-with-u/Amaidesu',
-    bg: amaidesuBg,
-    large: true,
-  },
-  {
-    name: 'MoFox_Bot',
-    description: '基于 MaiCore 0.10.0 的增强型 Fork，更稳定更有趣。',
-    tone: 'web',
-    href: 'https://github.com/MoFox-Studio/MoFox_Bot',
-    bg: mofoxBg,
-  },
-  {
-    name: 'MaiCraft',
-    description: '让麦麦陪你玩 Minecraft（暂时停止维护中）。',
-    tone: 'mobile',
-    href: 'https://github.com/Mai-with-u/MaiCraft',
-    bg: maicraftBg,
-  },
-];
+const [largeProject, ...sideProjects] = featuredProjects;
 
-const compactProjects = [
-  {
-    name: 'MaiBot 文档站',
-    description: '开发者文档与使用指南。',
-    color: 'var(--c-primary)',
-    href: 'https://docs.mai-mai.org/',
-  },
-  {
-    name: 'MaiBot Android',
-    description: '让麦麦运行在你的安卓设备上，无需服务器',
-    color: 'var(--c-green)',
-    href: 'https://github.com/LittleSadSheep/MaiDroid',
-  },
-  {
-    name: 'MaiWeb',
-    description: '麦麦官网（？',
-    color: '#007aff',
-    href: 'https://github.com/Mai-with-u/MaiWeb',
-  },
-];
-
+// 底部两张行动卡：想贡献代码的去开发文档，想找人聊的去交流群页面
 const actionCards = [
   {
     name: '开发文档',
     description: '想对 MaiBot 做出贡献？不妨先看看开发文档',
-    href: 'https://docs.mai-mai.org/develop/',
+    href: links.develop,
     variant: 'primary',
     action: '立即查看',
   },
   {
     name: '交流社区',
     description: '找到志同道合的伙伴',
-    href: 'https://docs.mai-mai.org/community/#qq-%E4%BA%A4%E6%B5%81%E7%BE%A4',
+    href: links.community,
     variant: 'outline',
     action: '加入我们',
   },
 ];
 
-const fallbackContributors = [
-  { login: 'LittleSkinChina', avatar_url: 'https://github.com/LittleSkinChina.png' },
-  { login: 'Mai-with-u', avatar_url: 'https://github.com/Mai-with-u.png' },
-  { login: 'github', avatar_url: 'https://github.com/github.png' },
-  { login: 'dependabot', avatar_url: 'https://github.com/dependabot.png' },
-  { login: 'actions-user', avatar_url: 'https://github.com/actions-user.png' },
-  { login: 'octocat', avatar_url: 'https://github.com/octocat.png' },
-];
+// 构建时拉取统计数字和贡献者头像，接口失败时数字退回快照、头像墙直接不渲染
+const stats = await getCommunityStats();
+const contributors = await getContributors();
 
-interface Contributor {
-  login: string;
-  avatar_url: string;
-}
-
-async function getMaiBotContributors(): Promise<Contributor[]> {
-  try {
-    const response = await fetch('https://api.github.com/repos/Mai-with-u/MaiBot/contributors?per_page=60', {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        'User-Agent': 'MaiWeb',
-      },
-    });
-
-    if (!response.ok) return fallbackContributors;
-
-    const data = (await response.json()) as Contributor[];
-    const contributors = data
-      .filter((contributor) => contributor.login && contributor.avatar_url)
-      .map(({ login, avatar_url }) => ({ login, avatar_url }));
-
-    return contributors.length >= 12 ? contributors : fallbackContributors;
-  } catch {
-    return fallbackContributors;
-  }
-}
-
-const contributors = await getMaiBotContributors();
-const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
-  const offset = rowIndex * 7;
-  const row = Array.from({ length: 14 }, (_, itemIndex) => contributors[(offset + itemIndex) % contributors.length]);
-
-  return {
-    direction: rowIndex % 2 === 0 ? 'left' : 'right',
-    duration: 34 + rowIndex * 5,
-    avatars: [...row, ...row],
-  };
-});
+// 头像墙：6 行跑马灯，每行 14 个头像并复制一份实现无缝滚动，奇偶行反向
+const avatarRows =
+  contributors.length === 0
+    ? []
+    : Array.from({ length: 6 }, (_, rowIndex) => {
+        const offset = rowIndex * 7;
+        const row = Array.from(
+          { length: 14 },
+          (_, itemIndex) => contributors[(offset + itemIndex) % contributors.length]
+        );
+        return {
+          direction: rowIndex % 2 === 0 ? 'left' : 'right',
+          duration: 34 + rowIndex * 5,
+          avatars: [...row, ...row],
+        };
+      });
 ---
 
 <main class="projects-page">
@@ -136,18 +66,18 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
       <h2 id="projects-heading" class="visually-hidden">衍生项目列表</h2>
       <div class="featured-grid">
         <a
-          class="project-card project-card-large tone-market"
-          href={featuredProjects[0].href}
+          class={`project-card project-card-large tone-${largeProject.tone}`}
+          href={largeProject.href}
           target="_blank"
           rel="noopener noreferrer"
         >
           <div class="texture-bg texture-bg-amaidesu">
-            <Image src={featuredProjects[0].bg} alt="" loading="lazy" decoding="async" class="card-bg-image" />
+            <Image src={largeProject.image} alt="" loading="lazy" decoding="async" class="card-bg-image" />
           </div>
           <div class="texture-blur texture-blur-amaidesu" aria-hidden="true"></div>
           <div class="card-content">
-            <h3>{featuredProjects[0].name}</h3>
-            <p>{featuredProjects[0].description}</p>
+            <h3>{largeProject.name}</h3>
+            <p>{largeProject.description}</p>
           </div>
           <div class="card-orbit" aria-hidden="true"></div>
           <span class="card-link" aria-hidden="true">了解项目 <span>→</span></span>
@@ -155,7 +85,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
 
         <div class="right-stack">
           {
-            featuredProjects.slice(1).map((project) => (
+            sideProjects.map((project) => (
               <a
                 class={`project-card project-card-small tone-${project.tone}`}
                 href={project.href}
@@ -163,7 +93,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
                 rel="noopener noreferrer"
               >
                 <div class="texture-bg">
-                  <Image src={project.bg} alt="" loading="lazy" decoding="async" class="card-bg-image" />
+                  <Image src={project.image} alt="" loading="lazy" decoding="async" class="card-bg-image" />
                 </div>
                 <div class="texture-blur texture-blur-small" aria-hidden="true" />
                 <div class="card-content">
@@ -209,11 +139,11 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
         <span class="spotlight-label">插件市场</span>
         <h2 id="market-heading">让 MaiBot 无限延伸</h2>
         <p>
-          来自社区开发者的 500+ 个插件，覆盖天气、音乐、AI绘图、群管理等几乎所有场景。每一个插件，都是某位开发者对
+          来自社区开发者的 {formatCount(stats.plugins)} 个插件，覆盖天气、音乐、AI 绘图、群管理等几乎所有场景。每一个插件，都是某位开发者对
           MaiBot 的一次扩充。
         </p>
       </div>
-      <a class="spotlight-link" href="https://docs.mai-mai.org/" target="_blank" rel="noopener noreferrer">
+      <a class="spotlight-link" href={links.pluginMarket} target="_blank" rel="noopener noreferrer">
         探索插件市场
         <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
           <path
@@ -248,7 +178,7 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
                   <div class="contributors-track">
                     {row.avatars.map((contributor) => (
                       <img
-                        src={contributor.avatar_url}
+                        src={contributor.avatarUrl}
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -275,9 +205,9 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
             </svg>
           </div>
           <p class="quote-text">
-            截至今日，MaiBot 社区产出了 <strong>6K+ 次提交</strong>，关闭了 <strong>760+ 个 issue</strong>，来自 <strong
-              >110+ 位贡献者</strong
-            > 的共同努力。
+            截至今日，MaiBot 社区产出了 <strong>{formatCount(stats.commits)} 次提交</strong>，关闭了 <strong
+              >{formatCount(stats.closedIssues)} 个 issue</strong
+            >，来自 <strong>{formatCount(stats.contributors)} 位贡献者</strong> 的共同努力。
           </p>
           <p class="quote-subtext">MaiBot 的每一次迭代，背后都是无数个深夜的 PR 和清晨的 code review。</p>
         </article>
@@ -470,11 +400,11 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     min-height: 454px;
   }
 
-  .tone-market {
+  .tone-forest {
     background: linear-gradient(135deg, #1b3a2a 0%, #10271e 100%);
   }
 
-  .tone-market::after {
+  .tone-forest::after {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -483,11 +413,11 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     pointer-events: none;
   }
 
-  .tone-web {
+  .tone-navy {
     background: linear-gradient(135deg, #0f1b35 0%, #070f22 100%);
   }
 
-  .tone-web::after {
+  .tone-navy::after {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -496,11 +426,11 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     pointer-events: none;
   }
 
-  .tone-mobile {
+  .tone-earth {
     background: linear-gradient(135deg, #3d2800 0%, #241700 100%);
   }
 
-  .tone-mobile::after {
+  .tone-earth::after {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -561,12 +491,12 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 66%);
   }
 
-  .tone-market .card-content,
-  .tone-market .card-link,
-  .tone-web .card-content,
-  .tone-web .card-link,
-  .tone-mobile .card-content,
-  .tone-mobile .card-link {
+  .tone-forest .card-content,
+  .tone-forest .card-link,
+  .tone-navy .card-content,
+  .tone-navy .card-link,
+  .tone-earth .card-content,
+  .tone-earth .card-link {
     position: relative;
     z-index: 1;
   }
@@ -625,15 +555,15 @@ const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
     transition: opacity 0.6s ease;
   }
 
-  .tone-market.is-loaded .card-orbit,
-  .tone-market.is-loaded.project-card::before,
-  .tone-market.is-loaded.project-card::after,
-  .tone-web.is-loaded .card-orbit,
-  .tone-web.is-loaded.project-card::before,
-  .tone-web.is-loaded.project-card::after,
-  .tone-mobile.is-loaded .card-orbit,
-  .tone-mobile.is-loaded.project-card::before,
-  .tone-mobile.is-loaded.project-card::after {
+  .tone-forest.is-loaded .card-orbit,
+  .tone-forest.is-loaded.project-card::before,
+  .tone-forest.is-loaded.project-card::after,
+  .tone-navy.is-loaded .card-orbit,
+  .tone-navy.is-loaded.project-card::before,
+  .tone-navy.is-loaded.project-card::after,
+  .tone-earth.is-loaded .card-orbit,
+  .tone-earth.is-loaded.project-card::before,
+  .tone-earth.is-loaded.project-card::after {
     opacity: 0;
   }
 

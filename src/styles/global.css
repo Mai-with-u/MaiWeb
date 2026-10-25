@@ -74,6 +74,7 @@ html[data-layout='wide'][data-device='mobile'] {
   --c-primary-hover: #d06d0a;
   --c-green: #80de41;
   --c-green-hover: #6fd132;
+  --c-green-strong: #4caf1f;
   --c-dark: #262d49;
   --c-text: #000000;
   --c-text-muted: #a2abbc;
@@ -95,6 +96,7 @@ html[data-layout='wide'][data-device='mobile'] {
   --c-primary-hover: #e08410;
   --c-green: #70bf22;
   --c-green-hover: #60a81a;
+  --c-green-strong: #4a9a17;
   --c-dark: #b4b9d2;
   --c-text: #f9fafc;
   --c-text-muted: #41464d;

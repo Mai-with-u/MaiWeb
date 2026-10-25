@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logoIcon from '../assets/logo-icon.png';
+import { links } from '../data/links';
 ---
 
 <div class="navbar-blur">
@@ -35,8 +36,8 @@ import logoIcon from '../assets/logo-icon.png';
             </svg>
           </button>
           <div class="nav-dropdown-menu" role="menu">
-            <a href="https://docs.mai-mai.org/" class="nav-dropdown-link" role="menuitem">用户手册</a>
-            <a href="https://docs.mai-mai.org/develop/" class="nav-dropdown-link" role="menuitem">开发文档</a>
+            <a href={links.manual} class="nav-dropdown-link" role="menuitem">用户手册</a>
+            <a href={links.develop} class="nav-dropdown-link" role="menuitem">开发文档</a>
           </div>
         </div>
         <div class="nav-separator"></div>
@@ -93,15 +94,15 @@ import logoIcon from '../assets/logo-icon.png';
           </svg>
         </button>
         <span class="nav-cta-wrap">
-          <a href="https://docs.mai-mai.org/manual/deployment/" class="nav-cta">部署</a>
+          <a href={links.manual} class="nav-cta">部署</a>
         </span>
       </div>
     </div>
 
     <div class="nav-menu-mobile">
       <a href="/projects/" class="nav-item-mobile">衍生项目</a>
-      <a href="https://docs.mai-mai.org/manual/" class="nav-item-mobile">用户手册</a>
-      <a href="https://docs.mai-mai.org/develop/" class="nav-item-mobile">开发文档</a>
+      <a href={links.manual} class="nav-item-mobile">用户手册</a>
+      <a href={links.develop} class="nav-item-mobile">开发文档</a>
       <a href="/aboutus/" class="nav-item-mobile">关于我们</a>
     </div>
   </div>

@@ -1,5 +1,6 @@
 ---
 import CtaButton from '../components/CtaButton.astro';
+import { links } from '../data/links';
 ---
 
 <section class="cta-section" id="cta">
@@ -8,13 +9,7 @@ import CtaButton from '../components/CtaButton.astro';
     <h2 class="cta-title title-dark">一个致力于了解你的数字生命。</h2>
 
     <div class="cta-action reveal-delay-1">
-      <CtaButton
-        variant="primary"
-        size="large"
-        href="https://docs.mai-mai.org/manual/deployment/"
-        icon="paperplane"
-        label="现在开始"
-      />
+      <CtaButton variant="primary" size="large" href={links.manual} icon="paperplane" label="现在开始" />
     </div>
   </div>
 </section>
