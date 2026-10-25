@@ -11,7 +11,6 @@
   --c-primary-hover: #d06d0a;
   --c-primary-rgb: 233, 127, 15;
   --c-green: #80de41;
-  --c-green-hover: #6fd132;
   --c-green-strong: #3f9b18;
   --c-green-rgb: 128, 222, 65;
   --c-blue: #30ccef;
@@ -29,22 +28,9 @@
   --page-bg: #ffffff;
   --surface: #ffffff;
   --surface-muted: #f6f7f9;
-  --surface-glass: rgba(255, 255, 255, 0.72);
   --border-subtle: rgba(18, 24, 49, 0.08);
   --border-strong: rgba(18, 24, 49, 0.16);
   --shadow-card: 0 18px 48px rgba(24, 65, 134, 0.08);
-  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.12);
-
-  /* 兼容旧组件的 RGB 三元组，只能写成 rgb(var(--xxx)) / rgba(var(--xxx), a) 使用，
-     组件迁移到上面的语义变量后删除 */
-  --color-primary: 233, 127, 15;
-  --color-text: 0, 0, 0;
-  --color-text-muted: 162, 171, 188;
-  --color-bg: 255, 255, 255;
-
-  /* 兼容旧组件的颜色别名 */
-  --c-text: #000000;
-  --c-bg: #ffffff;
 
   /* 字体 */
   --font-display: 'Douyin Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -52,10 +38,8 @@
   --font-reading: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   /* 流式字号：在 360px 到 1440px 视口之间线性过渡，超出范围就停在上下限 */
-  --fs-display: clamp(2.25rem, 1.65rem + 2.6vw, 3.75rem);
   --fs-h1: clamp(2rem, 1.6rem + 1.8vw, 3rem);
   --fs-h2: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
-  --fs-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
   --fs-lead: clamp(1rem, 0.93rem + 0.3vw, 1.25rem);
   --fs-body: 1rem;
   --fs-small: 0.875rem;
@@ -64,7 +48,6 @@
   /* 布局：页面左右留白随视口变化，内容最大宽度用 rem，超大屏放大根字号时一起变宽 */
   --page-gutter: clamp(16px, 4vw, 48px);
   --container-max: 80rem;
-  --container-wide: 90rem;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -78,24 +61,6 @@
   --radius-xl: 24px;
 
   --transition-fast: 0.2s ease;
-  --transition-base: 0.3s ease;
-
-  /* 迁移期保留：导航栏和按钮仍在用运行时缩放变量，删除缩放脚本时一起移除 */
-  --ui-scale: 1;
-  --nav-scale: 1;
-  --control-scale: 1;
-}
-
-html[data-nav='full'] {
-  --nav-scale: max(0.75, var(--ui-scale));
-}
-
-html[data-layout='wide'][data-device='desktop'] {
-  --control-scale: var(--ui-scale);
-}
-
-html[data-layout='wide'][data-device='mobile'] {
-  --control-scale: max(0.78, var(--ui-scale));
 }
 
 [data-theme='dark'] {
@@ -105,7 +70,6 @@ html[data-layout='wide'][data-device='mobile'] {
   --c-primary-hover: #e08410;
   --c-primary-rgb: 245, 148, 25;
   --c-green: #70bf22;
-  --c-green-hover: #60a81a;
   --c-green-strong: #4a9a17;
   --c-green-rgb: 112, 191, 34;
 
@@ -117,20 +81,9 @@ html[data-layout='wide'][data-device='mobile'] {
   --page-bg: #121212;
   --surface: #1e2026;
   --surface-muted: #262930;
-  --surface-glass: rgba(28, 28, 30, 0.82);
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
   --shadow-card: 0 18px 48px rgba(0, 0, 0, 0.28);
-  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.4);
-
-  --color-primary: 245, 148, 25;
-  --color-text: 249, 250, 252;
-  /* 旧值 65,70,77 在 #121212 背景上几乎看不见，页脚文字因此“消失”，这里提亮 */
-  --color-text-muted: 120, 128, 140;
-  --color-bg: 18, 18, 18;
-
-  --c-text: #f9fafc;
-  --c-bg: #121212;
 }
 
 /* 超大屏把根字号整体放大，所有用 rem 写的字号、间距、容器宽度同步放大，文字依旧清晰 */
