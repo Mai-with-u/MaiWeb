@@ -12,6 +12,12 @@ export default defineConfig({
     // 构建走 tsconfig（相对项目根目录），astro dev 启动时的依赖预扫描走 optimizeDeps.rolldownOptions
     // （相对命令的工作目录，即在仓库根目录执行 npm run dev），两处都要指定。
     tsconfig: './tsconfig.json',
+    build: {
+      // CSS 的目标浏览器，取值与 Vite 8 默认的 baseline-widely-available 一致。Astro 把构建目标设成 esnext，
+      // Lightning CSS 压缩时就不补前缀，还会把同一属性的标准写法和 -webkit- 写法合并成一条，
+      // 导致毛玻璃在 Chrome/Firefox 或旧版 Safari 上失效；指定目标后由它按需输出 -webkit-backdrop-filter 等前缀。
+      cssTarget: ['chrome111', 'edge111', 'firefox114', 'safari16.4', 'ios16.4'],
+    },
     optimizeDeps: {
       rolldownOptions: { tsconfig: './tsconfig.json' },
     },
