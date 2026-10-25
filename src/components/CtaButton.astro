@@ -24,6 +24,7 @@ const {
   id,
 } = Astro.props;
 
+// 右下角切角大小：大按钮 10px、小按钮 8px，与设计稿一致
 const corner = variant === 'green' ? 8 : 10;
 ---
 
@@ -43,7 +44,7 @@ const corner = variant === 'green' ? 8 : 10;
         class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]}
         style={delay !== undefined ? `animation-delay: ${delay}s` : ''}
       >
-        <span class="cta-icon">
+        <span class="cta-icon" aria-hidden="true">
           {
             icon === 'download' && (
               <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
@@ -97,118 +98,94 @@ const corner = variant === 'green' ? 8 : 10;
 </span>
 
 <style>
-  /* ===== Layer 0: backdrop blur only ===== */
-  .cta-blur {
-    display: inline-block;
-    vertical-align: top;
-    backdrop-filter: blur(20px) saturate(140%);
-  }
-
-  /* ===== Layer 1: drop-shadow only ===== */
-  .cta-wrap {
-    display: inline-block;
-    vertical-align: top;
-    transition: filter var(--transition-fast);
-  }
-
-  .cta-wrap-primary {
-    filter: drop-shadow(0 4px 16px rgba(233, 127, 15, 0.15));
-  }
-
-  .cta-wrap-primary:hover {
-    filter: drop-shadow(0 8px 28px rgba(233, 127, 15, 0.28));
-  }
-
-  .cta-wrap-green {
-    filter: drop-shadow(0 4px 16px rgba(128, 222, 65, 0.12));
-  }
-
-  .cta-wrap-green:hover {
-    filter: drop-shadow(0 8px 28px rgba(128, 222, 65, 0.22));
-  }
-
-  /* ===== Layer 2: clip-path only ===== */
+  /* 按钮分四层：模糊层 -> 投影层 -> 切角裁剪层 -> 玻璃底色与内容。
+     clip-path 会把同一元素上的 drop-shadow 一起裁掉，所以投影和切角必须拆在不同层。
+     尺寸用 rem + clamp：手机上略小、桌面恢复设计稿尺寸，超大屏随根字号放大。 */
+  .cta-blur,
+  .cta-wrap,
   .cta-clip {
     display: inline-block;
     vertical-align: top;
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - var(--cta-corner) * var(--control-scale)),
-      calc(100% - var(--cta-corner) * var(--control-scale)) 100%,
-      0 100%
-    );
   }
 
-  /* ===== Layer 3: glass background + border + content ===== */
+  .cta-blur {
+    backdrop-filter: blur(20px) saturate(140%);
+  }
+
+  .cta-wrap {
+    --cta-rgb: var(--c-primary-rgb);
+    filter: drop-shadow(0 4px 16px rgba(var(--cta-rgb), 0.15));
+    transition: filter var(--transition-fast);
+  }
+
+  .cta-wrap-green {
+    --cta-rgb: var(--c-green-rgb);
+  }
+
+  .cta-wrap:hover {
+    filter: drop-shadow(0 8px 28px rgba(var(--cta-rgb), 0.28));
+  }
+
+  .cta-clip {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cta-corner)), calc(100% - var(--cta-corner)) 100%, 0 100%);
+  }
+
   .cta-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: calc(10px * var(--control-scale));
+    gap: 0.625rem;
     font-family: var(--font-display);
     font-weight: 700;
-    text-decoration: none;
-    transition: all var(--transition-fast);
-    position: relative;
-  }
-
-  /* Left accent line */
-  .cta-link::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: max(2px, calc(4px * var(--control-scale)));
-    border-radius: calc(2px * var(--control-scale));
-    z-index: 2;
+    background: linear-gradient(135deg, rgba(var(--cta-rgb), 0.08) 0%, rgba(var(--cta-rgb), 0.03) 100%);
+    box-shadow:
+      0 8px 32px rgba(var(--cta-rgb), 0.12),
+      inset 0 0 0 2px rgba(var(--cta-rgb), 0.18),
+      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    transition:
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .cta-link-primary {
-    color: #e97f0f;
-    background: linear-gradient(135deg, rgba(233, 127, 15, 0.08) 0%, rgba(233, 127, 15, 0.03) 100%);
-    box-shadow:
-      0 8px 32px rgba(233, 127, 15, 0.12),
-      inset 0 0 0 2px rgba(233, 127, 15, 0.18),
-      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    --cta-rgb: var(--c-primary-rgb);
+    color: var(--c-primary);
   }
 
-  .cta-link-primary::before {
-    background: #e97f0f;
-  }
-
-  .cta-wrap-primary:hover .cta-link-primary {
-    background: linear-gradient(135deg, rgba(233, 127, 15, 0.16) 0%, rgba(233, 127, 15, 0.06) 100%);
-    box-shadow:
-      0 12px 40px rgba(233, 127, 15, 0.22),
-      inset 0 0 0 2px rgba(233, 127, 15, 0.18),
-      inset 0 1px 1px rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px);
-  }
-
+  /* 亮色背景上浅绿字对比度不足，文字改用深一档的绿色；暗色背景下恢复品牌绿 */
   .cta-link-green {
-    color: #67c52a;
-    background: linear-gradient(135deg, rgba(128, 222, 65, 0.08) 0%, rgba(128, 222, 65, 0.03) 100%);
-    box-shadow:
-      0 8px 32px rgba(128, 222, 65, 0.1),
-      inset 0 0 0 2px rgba(128, 222, 65, 0.18),
-      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    --cta-rgb: var(--c-green-rgb);
+    color: var(--c-green-strong);
   }
 
-  .cta-link-green::before {
-    background: #80de41;
+  :global([data-theme='dark']) .cta-link-green {
+    color: var(--c-green);
   }
 
-  .cta-wrap-green:hover .cta-link-green {
-    background: linear-gradient(135deg, rgba(128, 222, 65, 0.16) 0%, rgba(128, 222, 65, 0.06) 100%);
+  /* 左侧强调竖线 */
+  .cta-link::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    width: 4px;
+    content: '';
+    border-radius: 2px;
+    background: rgb(var(--cta-rgb));
+  }
+
+  .cta-wrap:hover .cta-link {
+    background: linear-gradient(135deg, rgba(var(--cta-rgb), 0.16) 0%, rgba(var(--cta-rgb), 0.06) 100%);
     box-shadow:
-      0 12px 40px rgba(128, 222, 65, 0.18),
-      inset 0 0 0 2px rgba(128, 222, 65, 0.18),
+      0 12px 40px rgba(var(--cta-rgb), 0.22),
+      inset 0 0 0 2px rgba(var(--cta-rgb), 0.18),
       inset 0 1px 1px rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
   }
 
-  /* === Fade-in animation (on .cta-link, not on blur layer) === */
+  /* 入场动画放在最内层链接上，避免影响外层的模糊与投影 */
   .cta-fade-in {
     opacity: 0;
     transform: translateY(12px);
@@ -222,39 +199,35 @@ const corner = variant === 'green' ? 8 : 10;
     }
   }
 
-  /* === Sizing === */
   .cta-link-large {
-    padding: calc(14px * var(--control-scale)) calc(20px * var(--control-scale)) calc(14px * var(--control-scale))
-      calc(18px * var(--control-scale));
-    min-width: calc(194px * var(--control-scale));
-    min-height: calc(71px * var(--control-scale));
+    min-width: clamp(10.5rem, 9rem + 5vw, 12.125rem);
+    min-height: clamp(3.75rem, 3.2rem + 1.6vw, 4.4375rem);
+    padding: 0.75rem 1.25rem 0.75rem 1.125rem;
   }
 
   .cta-link-small {
-    padding: calc(10px * var(--control-scale)) calc(18px * var(--control-scale)) calc(10px * var(--control-scale))
-      calc(12px * var(--control-scale));
-    gap: calc(16px * var(--control-scale));
-    min-width: calc(123px * var(--control-scale));
-    min-height: calc(45px * var(--control-scale));
+    gap: clamp(0.5rem, 0.3rem + 1vw, 1rem);
+    min-height: 2.8125rem;
+    padding: 0.625rem 1rem 0.625rem 0.75rem;
   }
 
   .cta-icon {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
   }
 
   .cta-wrap-large .cta-icon {
-    width: calc(36px * var(--control-scale));
-    height: calc(36px * var(--control-scale));
+    width: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
+    height: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
     filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
   }
 
   .cta-wrap-small .cta-icon {
-    width: calc(20px * var(--control-scale));
-    height: calc(20px * var(--control-scale));
-    margin-left: calc(4px * var(--control-scale));
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: 0.25rem;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   }
 
@@ -265,32 +238,32 @@ const corner = variant === 'green' ? 8 : 10;
   }
 
   .cta-label {
+    font-size: 1rem;
+    letter-spacing: 0.03em;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    font-size: clamp(10px, calc(16px * var(--control-scale)), 25.6px);
-    letter-spacing: calc(0.48px * var(--control-scale));
   }
 
   .cta-wrap-large .cta-label {
+    font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.5rem);
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: clamp(14px, calc(24px * var(--control-scale)), 38.4px);
-    letter-spacing: calc(0.72px * var(--control-scale));
   }
 
   .cta-sublabel {
-    font-size: clamp(8px, calc(12px * var(--control-scale)), 19.2px);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
     opacity: 0.85;
-    letter-spacing: calc(0.36px * var(--control-scale));
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   }
 
   .cta-wrap-large .cta-sublabel {
-    font-size: clamp(10px, calc(16px * var(--control-scale)), 25.6px);
-    letter-spacing: calc(0.48px * var(--control-scale));
+    font-size: clamp(0.8125rem, 0.75rem + 0.3vw, 1rem);
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   }
 
-  :global(html[data-device='mobile']) .cta-link-small,
-  :global(html[data-device='mobile']) .cta-link-large {
-    min-height: 44px;
+  /* 触屏设备保证至少 44px 的点击高度 */
+  @media (pointer: coarse) {
+    .cta-link {
+      min-height: 44px;
+    }
   }
 </style>
