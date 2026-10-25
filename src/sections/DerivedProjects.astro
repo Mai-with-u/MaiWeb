@@ -248,17 +248,19 @@ const avatarRows =
 </main>
 
 <style>
+  /* 子页面统一结构：顶部为固定导航栏让出空间，内容最大宽度 84rem，左右留白随视口变化 */
   .projects-page {
     position: relative;
-    padding: 95px 0 120px;
+    padding: calc(var(--nav-offset) + 0.5rem) 0 clamp(4rem, 10vw, 7.5rem);
     overflow: hidden;
   }
 
   .projects-container {
     width: 100%;
-    max-width: 1448px;
+    max-width: calc(84rem + var(--page-gutter) * 2);
     margin: 0 auto;
-    padding: 0 clamp(20px, 6vw, 52px);
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
   }
 
   .sub-page-header {
@@ -308,14 +310,14 @@ const avatarRows =
   .title-block h1 {
     font-size: clamp(40px, 5vw, 48px);
     line-height: 1.1;
-    color: #121938;
+    color: var(--text-strong);
   }
 
   .header-desc {
     max-width: 620px;
     font-size: 16px;
     line-height: 1.6;
-    color: rgba(38, 49, 65, 0.5);
+    color: var(--text-muted);
   }
 
   .chapter {
@@ -714,14 +716,14 @@ const avatarRows =
     flex-direction: column;
     font-size: clamp(32px, 4vw, 36px);
     line-height: 1.1;
-    color: #121938;
+    color: var(--text-strong);
   }
 
   .manifesto-intro p {
     max-width: 560px;
     font-size: 16px;
     line-height: 1.6;
-    color: #6b7280;
+    color: var(--text-muted);
   }
 
   .manifesto-grid {
@@ -741,7 +743,7 @@ const avatarRows =
     align-items: center;
     justify-content: center;
     padding: clamp(32px, 5vw, 68px);
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-subtle);
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.92);
     text-align: center;
@@ -833,7 +835,7 @@ const avatarRows =
     margin-top: 24px;
     font-size: 18px;
     line-height: 1.6;
-    color: #6b7280;
+    color: var(--text-muted);
   }
 
   .quote-text strong {
@@ -846,7 +848,7 @@ const avatarRows =
     margin-top: 22px;
     font-size: 14px;
     line-height: 1.6;
-    color: #6b7280;
+    color: var(--text-muted);
   }
 
   .action-stack {
@@ -875,7 +877,7 @@ const avatarRows =
   .action-outline {
     border: 1px solid #f5841f;
     background: rgba(255, 255, 255, 0.92);
-    color: #121938;
+    color: var(--text-strong);
   }
 
   .action-copy {
@@ -922,30 +924,6 @@ const avatarRows =
   .action-outline .action-button {
     background: #f5841f;
     color: #fff;
-  }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  :global([data-theme='dark']) .title-block h1,
-  :global([data-theme='dark']) .manifesto-intro h2,
-  :global([data-theme='dark']) .action-outline {
-    color: var(--c-text);
-  }
-
-  :global([data-theme='dark']) .header-desc,
-  :global([data-theme='dark']) .manifesto-intro p,
-  :global([data-theme='dark']) .quote-text,
-  :global([data-theme='dark']) .quote-subtext {
-    color: rgba(249, 250, 252, 0.68);
   }
 
   :global([data-theme='dark']) .quote-card,
@@ -1000,252 +978,16 @@ const avatarRows =
     }
   }
 
-  :global(html[data-layout='wide']) .projects-page {
-    padding-top: max(calc(95px * var(--ui-scale)), calc(80px * var(--nav-scale) + var(--safe-top)));
-    padding-bottom: max(calc(120px * var(--ui-scale)), var(--safe-bottom));
-  }
-
-  :global(html[data-layout='wide'][data-nav='compact']) .projects-page {
-    padding-top: max(calc(88px + var(--safe-top)), calc(95px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .projects-container {
-    max-width: calc(1448px * var(--ui-scale));
-    padding-right: max(calc(52px * var(--ui-scale)), var(--safe-right));
-    padding-left: max(calc(52px * var(--ui-scale)), var(--safe-left));
-  }
-
-  :global(html[data-layout='wide']) .sub-page-header {
-    min-height: calc(220px * var(--ui-scale));
-    gap: calc(12px * var(--ui-scale));
-    padding-top: calc(40px * var(--ui-scale));
-    padding-bottom: calc(36px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .breadcrumb {
-    gap: calc(8px * var(--ui-scale));
-    font-size: clamp(10px, calc(13px * var(--ui-scale)), 20.8px);
-  }
-
-  :global(html[data-layout='wide']) .title-block {
-    gap: calc(8px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .eyebrow {
-    font-size: clamp(10px, calc(14px * var(--ui-scale)), 22.4px);
-  }
-
-  :global(html[data-layout='wide']) .title-block h1 {
-    font-size: clamp(22px, calc(48px * var(--ui-scale)), 76.8px);
-  }
-
-  :global(html[data-layout='wide']) .header-desc {
-    max-width: calc(620px * var(--ui-scale));
-    font-size: clamp(12px, calc(16px * var(--ui-scale)), 25.6px);
-  }
-
-  :global(html[data-layout='wide']) .project-chapter {
-    gap: calc(40px * var(--ui-scale));
-    padding-bottom: calc(72px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .featured-grid {
-    grid-template-columns: minmax(0, calc(720px * var(--ui-scale))) minmax(0, 1fr);
-    gap: calc(24px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .right-stack {
-    display: flex;
-    grid-template-columns: none;
-    gap: calc(24px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .compact-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: calc(24px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .project-card {
-    min-height: max(130px, calc(215px * var(--ui-scale)));
-    padding: max(12px, calc(24px * var(--ui-scale)));
-    border-radius: max(12px, calc(24px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .project-card-large {
-    min-height: max(210px, calc(454px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .card-content {
-    max-width: calc(460px * var(--ui-scale));
-    gap: max(5px, calc(10px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .card-content h3 {
-    font-size: clamp(16px, calc(28px * var(--ui-scale)), 44.8px);
-  }
-
-  :global(html[data-layout='wide']) .project-card-small .card-content h3 {
-    font-size: clamp(14px, calc(22px * var(--ui-scale)), 35.2px);
-  }
-
-  :global(html[data-layout='wide']) .card-content p,
-  :global(html[data-layout='wide']) .card-link {
-    font-size: clamp(11px, calc(14px * var(--ui-scale)), 22.4px);
-  }
-
-  :global(html[data-layout='wide']) .compact-card {
-    min-height: max(72px, calc(96px * var(--ui-scale)));
-    gap: max(8px, calc(16px * var(--ui-scale)));
-    padding: max(12px, calc(20px * var(--ui-scale)));
-    border-radius: max(10px, calc(16px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .compact-marker {
-    width: max(3px, calc(6px * var(--ui-scale)));
-    flex-basis: max(3px, calc(6px * var(--ui-scale)));
-    border-radius: max(2px, calc(3px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .compact-copy strong {
-    font-size: clamp(13px, calc(18px * var(--ui-scale)), 28.8px);
-  }
-
-  :global(html[data-layout='wide']) .compact-copy span {
-    font-size: clamp(10px, calc(13px * var(--ui-scale)), 20.8px);
-  }
-
-  :global(html[data-layout='wide']) .market-spotlight {
-    min-height: max(280px, calc(540px * var(--ui-scale)));
-    gap: calc(48px * var(--ui-scale));
-    padding: max(14px, calc(24px * var(--ui-scale)));
-    border-radius: max(14px, calc(24px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .market-copy {
-    max-width: calc(900px * var(--ui-scale));
-    gap: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .spotlight-label {
-    height: max(20px, calc(28px * var(--ui-scale)));
-    padding-right: max(8px, calc(12px * var(--ui-scale)));
-    padding-left: max(8px, calc(12px * var(--ui-scale)));
-    font-size: clamp(10px, calc(13px * var(--ui-scale)), 20.8px);
-  }
-
-  :global(html[data-layout='wide']) .market-copy h2 {
-    font-size: clamp(20px, calc(40px * var(--ui-scale)), 64px);
-  }
-
-  :global(html[data-layout='wide']) .market-copy p,
-  :global(html[data-layout='wide']) .spotlight-link {
-    font-size: clamp(12px, calc(16px * var(--ui-scale)), 25.6px);
-  }
-
-  :global(html[data-layout='wide']) .manifesto-section {
-    padding-top: calc(120px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .manifesto-intro {
-    max-width: calc(760px * var(--ui-scale));
-    gap: calc(16px * var(--ui-scale));
-    margin-bottom: calc(39px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .manifesto-intro h2 {
-    font-size: clamp(20px, calc(36px * var(--ui-scale)), 57.6px);
-  }
-
-  :global(html[data-layout='wide']) .manifesto-intro p {
-    max-width: calc(560px * var(--ui-scale));
-    font-size: clamp(12px, calc(16px * var(--ui-scale)), 25.6px);
-  }
-
-  :global(html[data-layout='wide']) .manifesto-grid {
-    grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
-    gap: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .quote-card {
-    min-height: max(240px, calc(381px * var(--ui-scale)));
-    padding: max(22px, calc(68px * var(--ui-scale)));
-    border-radius: max(14px, calc(24px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .contributors-bg,
-  :global(html[data-layout='wide']) .contributors-track {
-    gap: max(6px, calc(14px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .contributor-avatar {
-    width: max(24px, calc(42px * var(--ui-scale)));
-    height: max(24px, calc(42px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .quote-mark,
-  :global(html[data-layout='wide']) .quote-mark svg {
-    width: max(28px, calc(56px * var(--ui-scale)));
-    height: max(28px, calc(56px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .quote-text {
-    max-width: calc(560px * var(--ui-scale));
-    margin-top: calc(24px * var(--ui-scale));
-    font-size: clamp(12px, calc(18px * var(--ui-scale)), 28.8px);
-  }
-
-  :global(html[data-layout='wide']) .quote-text strong {
-    font-size: clamp(16px, calc(24px * var(--ui-scale)), 38.4px);
-  }
-
-  :global(html[data-layout='wide']) .quote-subtext {
-    margin-top: calc(22px * var(--ui-scale));
-    font-size: clamp(10px, calc(14px * var(--ui-scale)), 22.4px);
-  }
-
-  :global(html[data-layout='wide']) .action-stack {
-    gap: calc(16px * var(--ui-scale));
-  }
-
-  :global(html[data-layout='wide']) .action-card {
-    min-height: max(112px, calc(177px * var(--ui-scale)));
-    gap: calc(20px * var(--ui-scale));
-    padding: max(14px, calc(24px * var(--ui-scale)));
-    border-radius: max(12px, calc(20px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .action-copy {
-    max-width: calc(320px * var(--ui-scale));
-    gap: max(5px, calc(10px * var(--ui-scale)));
-  }
-
-  :global(html[data-layout='wide']) .action-copy strong {
-    font-size: clamp(14px, calc(22px * var(--ui-scale)), 35.2px);
-  }
-
-  :global(html[data-layout='wide']) .action-copy span {
-    font-size: clamp(10px, calc(14px * var(--ui-scale)), 22.4px);
-  }
-
-  :global(html[data-layout='wide']) .action-button {
-    min-width: max(56px, calc(129px * var(--ui-scale)));
-    height: max(28px, calc(48px * var(--ui-scale)));
-    padding-right: calc(16px * var(--ui-scale));
-    padding-left: calc(16px * var(--ui-scale));
-    border-radius: max(7px, calc(12px * var(--ui-scale)));
-    font-size: clamp(11px, calc(18px * var(--ui-scale)), 28.8px);
-  }
-
-  :global(html[data-device='mobile']) .action-button {
-    min-width: 96px;
-    min-height: 44px;
-  }
-
-  @media (max-width: 767px) and (orientation: portrait) {
-    .projects-page {
-      padding: 88px 0 80px;
+  /* 触屏设备保证行动卡按钮的点击尺寸 */
+  @media (pointer: coarse) {
+    .action-button {
+      min-width: 96px;
+      min-height: 44px;
     }
+  }
 
+  /* 手机（横竖屏都算）：卡片单列，悬停才出现的“了解项目”常驻显示 */
+  @media (max-width: 767.98px) {
     .sub-page-header {
       min-height: 0;
       padding: 32px 0 28px;
@@ -1347,11 +1089,7 @@ const avatarRows =
     }
   }
 
-  @media (max-width: 420px) and (orientation: portrait) {
-    .projects-container {
-      padding: 0 16px;
-    }
-
+  @media (max-width: 420px) {
     .compact-card,
     .action-card,
     .project-card {
