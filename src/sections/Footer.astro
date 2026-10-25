@@ -4,6 +4,7 @@ import easterEgg from '../assets/easter-egg.png';
 import { links } from '../data/links';
 
 // 页脚：常用入口 + 开源协议说明。左下角藏着一个只用鼠标或手指才能点到的彩蛋。
+// Astro 7 起模板按 JSX 规则处理空白：跨行的空白会被整段去掉，“GPL-3.0”和“协议开源”之间的空格要用 {' '} 显式写出。
 const footerLinks = [
   { label: '使用文档', href: links.docs },
   { label: '衍生项目', href: '/projects/' },
@@ -18,7 +19,7 @@ const footerLinks = [
       {footerLinks.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
     <p class="footer-copyright">
-      MaiSaka 以 <a href={links.license} target="_blank" rel="noopener noreferrer" class="footer-link">GPL-3.0</a>
+      MaiSaka 以 <a href={links.license} target="_blank" rel="noopener noreferrer" class="footer-link">GPL-3.0</a>{' '}
       协议开源；使用即表示您同意并知悉<a href={links.eula} target="_blank" rel="noopener noreferrer" class="footer-link"
         >「用户协议」</a
       >和<a href={links.privacy} target="_blank" rel="noopener noreferrer" class="footer-link">「隐私协议」</a

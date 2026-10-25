@@ -5,6 +5,8 @@ import Navbar from '../sections/Navbar.astro';
 import Footer from '../sections/Footer.astro';
 import { links } from '../data/links';
 import notFoundMai from '../assets/404-mai.png';
+
+// Astro 7 起模板按 JSX 规则处理空白：标题里“404”和后半句分在两行写，中间的空格要用 {' '} 显式写出，否则会连在一起。
 ---
 
 <Layout
@@ -58,7 +60,7 @@ import notFoundMai from '../assets/404-mai.png';
 
       <div class="not-found-text">
         <h1 class="not-found-title">
-          <span class="title-highlight">404</span>
+          <span class="title-highlight">404</span>{' '}
           <span>你似乎来到了火星……</span>
         </h1>
         <p class="not-found-subtitle">文件可能被麦麦当成小零食吃掉了……（悲</p>
