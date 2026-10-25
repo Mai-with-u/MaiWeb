@@ -117,26 +117,26 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
      左右 0 + margin auto + fit-content 实现水平居中，不再用 transform 缩放（缩放会让文字发糊） */
   .navbar-blur {
     position: fixed;
-    top: max(var(--safe-top), 16px);
+    top: max(var(--safe-top), 1rem);
     right: 0;
     left: 0;
     z-index: 100;
     width: fit-content;
     margin-inline: auto;
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(1.25rem);
+    -webkit-backdrop-filter: saturate(180%) blur(1.25rem);
   }
 
   /* === Layer 1: drop-shadow only === */
   .navbar-wrap {
-    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.12));
+    filter: drop-shadow(0 0.25rem 1.25rem rgba(0, 0, 0, 0.12));
     animation: fadeInDown 0.48s ease-out;
   }
 
   @keyframes fadeInDown {
     from {
       opacity: 0;
-      transform: translateY(-12px);
+      transform: translateY(-0.75rem);
     }
     to {
       opacity: 1;
@@ -149,10 +149,10 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
-    width: min(600px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
-    height: 56px;
-    padding: 0 12px;
+    gap: 0.5rem;
+    width: min(37.5rem, calc(100vw - 2rem - var(--safe-left) - var(--safe-right)));
+    height: 3.5rem;
+    padding: 0 0.75rem;
     background: transparent;
     isolation: isolate;
   }
@@ -163,7 +163,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     z-index: -1;
     content: '';
     background: rgba(255, 255, 255, 0.7);
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.875rem), calc(100% - 0.875rem) 100%, 0 100%);
   }
 
   .navbar-accent {
@@ -171,35 +171,35 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     left: 0;
     top: 0;
     bottom: 0;
-    width: 4px;
+    width: 0.25rem;
     background: rgba(233, 127, 15, 0.85);
   }
 
   .navbar-logo {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding-left: 4px;
+    gap: 0.5rem;
+    padding-left: 0.25rem;
     text-decoration: none;
     color: inherit;
   }
 
   .logo-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 16px;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 1rem;
     background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   }
 
   .logo-icon img {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
   .logo-text {
@@ -210,7 +210,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .logo-title {
     font-family: var(--font-display);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 700;
     color: #000;
     letter-spacing: 0.48px;
@@ -218,7 +218,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .logo-subtitle {
     font-family: var(--font-display);
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #808080;
     letter-spacing: 0.36px;
@@ -226,7 +226,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .nav-divider {
     width: 1px;
-    height: 24px;
+    height: 1.5rem;
     background: rgba(0, 0, 0, 0.12);
     transform: rotate(15deg);
     flex-shrink: 0;
@@ -241,7 +241,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .nav-separator {
     width: 1px;
-    height: 16px;
+    height: 1rem;
     background: rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
   }
@@ -250,13 +250,13 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     display: flex;
     align-items: center;
     gap: 2px;
-    padding: 6px 8px;
+    padding: 0.375rem 0.5rem;
     border: none;
     font-family: var(--font-display);
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #a2abbc;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     transition: all var(--transition-fast);
     white-space: nowrap;
     text-decoration: none;
@@ -282,20 +282,20 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .nav-dropdown-menu {
     position: absolute;
-    top: calc(100% + 14px);
+    top: calc(100% + 0.875rem);
     left: 50%;
     display: grid;
-    min-width: 136px;
-    padding: 8px;
+    min-width: 8.5rem;
+    padding: 0.5rem;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 14px;
+    border-radius: 0.875rem;
     background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.14);
+    backdrop-filter: blur(1.25rem) saturate(180%);
+    -webkit-backdrop-filter: blur(1.25rem) saturate(180%);
     opacity: 0;
     pointer-events: none;
-    transform: translate(-50%, -6px);
+    transform: translate(-50%, -0.375rem);
     transition:
       opacity var(--transition-fast),
       transform var(--transition-fast);
@@ -303,10 +303,10 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .nav-dropdown-menu::before {
     position: absolute;
-    top: -14px;
+    top: -0.875rem;
     left: 0;
     width: 100%;
-    height: 14px;
+    height: 0.875rem;
     content: '';
   }
 
@@ -344,10 +344,10 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   .nav-dropdown-link {
     display: flex;
     align-items: center;
-    padding: 9px 12px;
-    border-radius: 10px;
+    padding: 0.5625rem 0.75rem;
+    border-radius: 0.625rem;
     font-family: var(--font-display);
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 700;
     color: #1b1b1b;
     white-space: nowrap;
@@ -363,21 +363,21 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     margin-left: auto;
   }
 
   /* theme toggle */
   .theme-toggle {
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     background: transparent;
     color: #a2abbc;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     cursor: pointer;
     transition: all var(--transition-fast);
   }
@@ -447,26 +447,26 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   .nav-cta-wrap {
     display: inline-flex;
     flex-shrink: 0;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%);
+    filter: drop-shadow(0 0.25rem 1rem rgba(0, 0, 0, 0.2));
     transition: filter var(--transition-fast);
   }
 
   .nav-cta-wrap:hover {
-    filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 0.375rem 1.5rem rgba(0, 0, 0, 0.3));
   }
 
   .nav-cta {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 20px;
-    height: 40px;
-    min-width: 84px;
+    padding: 0.5rem 1.25rem;
+    height: 2.5rem;
+    min-width: 5.25rem;
     background: #e97f0f;
     color: #fff;
     font-family: var(--font-display);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.48px;
     text-decoration: none;
@@ -482,12 +482,12 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     display: none;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     border: none;
     background: transparent;
     color: #1b1b1b;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     cursor: pointer;
     transition: all var(--transition-fast);
   }
@@ -500,29 +500,29 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
   .nav-menu-mobile {
     display: none;
     position: absolute;
-    top: calc(100% + 12px);
+    top: calc(100% + 0.75rem);
     left: 0;
     right: 0;
     flex-direction: column;
-    gap: 4px;
-    padding: 8px;
+    gap: 0.25rem;
+    padding: 0.5rem;
     background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(1.25rem) saturate(180%);
+    -webkit-backdrop-filter: blur(1.25rem) saturate(180%);
+    border-radius: 1rem;
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.12);
     z-index: 99;
   }
 
   .nav-item-mobile {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
+    padding: 0.625rem 0.75rem;
     font-family: var(--font-display);
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 700;
     color: #1b1b1b;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     text-decoration: none;
     transition: all var(--transition-fast);
   }
@@ -532,14 +532,14 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     color: var(--c-primary);
   }
 
-  /* 窄屏（< 768px）：收起文字菜单，改用汉堡按钮展开下拉面板 */
+  /* 窄屏（< 48rem）：收起文字菜单，改用汉堡按钮展开下拉面板 */
   @media (max-width: 767.98px) {
     .navbar-glass {
       width: auto;
-      min-width: min(300px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
-      max-width: calc(100vw - 32px - var(--safe-left) - var(--safe-right));
-      gap: 6px;
-      padding: 0 8px;
+      min-width: min(18.75rem, calc(100vw - 2rem - var(--safe-left) - var(--safe-right)));
+      max-width: calc(100vw - 2rem - var(--safe-left) - var(--safe-right));
+      gap: 0.375rem;
+      padding: 0 0.5rem;
     }
 
     .nav-divider {
@@ -547,18 +547,18 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     }
 
     .logo-title {
-      font-size: 14px;
+      font-size: 0.875rem;
     }
 
     .logo-subtitle {
-      font-size: 10px;
+      font-size: 0.625rem;
     }
 
     .nav-cta {
-      height: 36px;
+      height: 2.25rem;
       min-width: 0;
-      padding: 6px 14px;
-      font-size: 14px;
+      padding: 0.375rem 0.875rem;
+      font-size: 0.875rem;
     }
 
     .nav-hamburger {
@@ -570,32 +570,19 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     }
   }
 
-  /* 宽屏（>= 768px）：展示完整文字菜单 */
+  /* 宽屏（>= 48rem）：展示完整文字菜单 */
   @media (min-width: 768px) {
     .nav-menu {
       display: flex;
     }
   }
 
-  /* 触屏设备把图标按钮放大，接近 44px 的推荐点击尺寸 */
+  /* 触屏设备把图标按钮放大，接近 2.75rem 的推荐点击尺寸 */
   @media (pointer: coarse) {
     .theme-toggle,
     .nav-hamburger {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  /* 超大屏整体放大导航栏；zoom 会重新排版而不是位图缩放，文字保持清晰 */
-  @media (min-width: 1920px) {
-    .navbar-blur {
-      zoom: 1.125;
-    }
-  }
-
-  @media (min-width: 2560px) {
-    .navbar-blur {
-      zoom: 1.25;
+      width: 2.5rem;
+      height: 2.5rem;
     }
   }
 </style>
