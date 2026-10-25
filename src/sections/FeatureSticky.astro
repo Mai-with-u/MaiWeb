@@ -315,11 +315,10 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
 <style>
   /* ===== 区块布局 =====
-     手机和平板：演示屏吸顶在上方，三段文案依次从下面滚过；
-     桌面（>= 1024px）：演示屏吸附在左侧垂直居中，文案在右侧滚动。
-     无论哪种布局，滚到哪段文案中线附近，演示屏就切换到对应场景。 */
+     单栏（< 1024px，手机和竖屏平板）：不显示演示屏，三段文案按正常文档流依次排列；
+     桌面（>= 1024px）：演示屏吸附在左侧垂直居中，文案在右侧滚动，
+     滚到哪段文案压住视口中线，演示屏就切换到对应场景，其余文案变淡。 */
   .sticky-section {
-    --screen-width: min(100%, 35rem);
     position: relative;
     padding: clamp(3rem, 10vw, 7.5rem) 0 clamp(3rem, 8vw, 4.5rem);
   }
@@ -336,7 +335,6 @@ import maiAvatar from '../assets/mai-avatar.jpg';
   }
 
   .sticky-items {
-    order: 1;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -345,22 +343,13 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
   .text-block {
     display: flex;
-    min-height: clamp(360px, 58vh, 560px);
-    min-height: clamp(360px, 58svh, 560px);
     flex-direction: column;
-    padding-top: clamp(3rem, 10vw, 4.5rem);
     font-weight: 700;
     transition: opacity 0.36s ease-out;
   }
 
-  .text-block:last-child {
-    min-height: clamp(320px, 52vh, 520px);
-    min-height: clamp(320px, 52svh, 520px);
-  }
-
-  /* 非当前段落变淡，脚本在场景切换时加减 is-active */
-  html.js .text-block:not(.is-active) {
-    opacity: 0.3;
+  .text-block + .text-block {
+    padding-top: clamp(3rem, 10vw, 4.5rem);
   }
 
   .text-block-title {
@@ -421,14 +410,13 @@ import maiAvatar from '../assets/mai-avatar.jpg';
   .sticky-screen-wrap {
     --mockup-scale: 1;
     position: sticky;
-    top: calc(var(--nav-offset) + 8px);
     z-index: 5;
-    order: 0;
+    display: none;
     flex-shrink: 0;
     width: var(--screen-width);
     aspect-ratio: 3 / 2;
     overflow: hidden;
-    border-radius: clamp(18px, 4vw, 32px);
+    border-radius: 32px;
     background: rgb(219, 131, 36);
   }
 
@@ -946,6 +934,11 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       --screen-width: min(45rem, 50vw);
     }
 
+    /* 非当前段落变淡，脚本在场景切换时加减 is-active */
+    html.js .text-block:not(.is-active) {
+      opacity: 0.3;
+    }
+
     .sticky-inner {
       flex-direction: row-reverse;
       align-items: flex-start;
@@ -954,12 +947,11 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     }
 
     .sticky-items {
-      order: initial;
       width: min(35rem, 38vw);
     }
 
     .text-block,
-    .text-block:last-child {
+    .text-block + .text-block {
       min-height: 80vh;
       min-height: 80svh;
       justify-content: center;
@@ -968,7 +960,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
     /* 演示屏高度是宽度的 2/3，所以 top = 视口一半 - 宽度的 1/3 即可垂直居中，且不压到导航栏 */
     .sticky-screen-wrap {
-      order: initial;
+      display: block;
       top: max(var(--nav-offset), calc(50svh - var(--screen-width) / 3));
       margin-top: 10svh;
     }
@@ -979,6 +971,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
   // 特性区场景切换：
   // 1. 区块第一次进入视口 -> 激活聊天场景并播放气泡入场动画；
   // 2. 某段文案越过视口中线 -> 演示屏切到对应场景（换底色、淡入场景、播放该场景的入场动画），其余文案变淡；
+  //    单栏布局下演示屏和变淡效果都由 CSS 关掉，脚本照常运行但没有可见影响。
   // 3. 演示屏外框尺寸变化 -> 重新计算 720×480 画布的缩放比例。
   const section = document.querySelector<HTMLElement>('.sticky-section');
   const screen = section?.querySelector<HTMLElement>('.sticky-screen');
@@ -1082,28 +1075,22 @@ import maiAvatar from '../assets/mai-avatar.jpg';
     );
     enterObserver.observe(section);
 
-    // rootMargin 把观察区域压成一条水平线，哪段文案压在线上就切到哪个场景。
-    // 桌面演示屏在左侧，线放在视口正中；手机演示屏吸顶占住上半屏，线下移到 70% 处，
-    // 让“当前段落”落在演示屏下方的可见区域里，标题不会被演示屏挡住。
-    const desktop = window.matchMedia('(min-width: 1024px)');
-    let centerObserver: IntersectionObserver | undefined;
-    const observeBlocks = () => {
-      centerObserver?.disconnect();
-      centerObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) activate((entry.target as HTMLElement).dataset.mockup || 'chat');
-          });
-        },
-        { rootMargin: desktop.matches ? '-50% 0px -50% 0px' : '-70% 0px -30% 0px' }
-      );
-      blocks.forEach((block) => centerObserver!.observe(block));
-    };
-    observeBlocks();
-    desktop.addEventListener('change', observeBlocks);
+    // rootMargin 把观察区域压成视口正中间的一条线，哪段文案压在线上就切到哪个场景（只在桌面两栏下有可见效果）
+    const centerObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) activate((entry.target as HTMLElement).dataset.mockup || 'chat');
+        });
+      },
+      { rootMargin: '-50% 0px -50% 0px' }
+    );
+    blocks.forEach((block) => centerObserver.observe(block));
     blocks[0]?.classList.add('is-active');
 
-    const updateScale = () => wrap.style.setProperty('--mockup-scale', String(wrap.clientWidth / 720));
+    // 单栏时演示屏隐藏、宽度为 0，跳过计算，等切回两栏时 ResizeObserver 会再次触发
+    const updateScale = () => {
+      if (wrap.clientWidth > 0) wrap.style.setProperty('--mockup-scale', String(wrap.clientWidth / 720));
+    };
     new ResizeObserver(updateScale).observe(wrap);
     updateScale();
   }

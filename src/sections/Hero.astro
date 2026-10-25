@@ -1,13 +1,18 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import VersionsDialog from '../components/dialog/VersionsDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
 import { links } from '../data/links';
 
-// 首屏布局：手机竖屏单栏（文案 -> 按钮 -> 立绘），宽屏或横屏手机左右两栏（文案在左、立绘在右）。
-// 断点全部写在 CSS 里，首帧就是最终布局，不再等脚本测量视口后再切换。
+// 首屏布局：单栏（手机、竖屏平板、横屏手机）只放文案和按钮，占满一屏并垂直居中；
+// 宽度 >= 1024px 时切成左右两栏，右侧才显示立绘。断点全部写在 CSS 里，首帧就是最终布局。
+
+// 立绘只在两栏布局出现：用 <picture> 的 media 条件只给宽屏提供图片地址，
+// 单栏时 <img> 落到 1×1 的占位图，手机不会白白下载被隐藏的立绘。
+const heroImageSet = await getImage({ src: heroImage, widths: [480, 640, 820], format: 'webp' });
+const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 ---
 
 <section class="hero">
@@ -76,16 +81,18 @@ import { links } from '../data/links';
           stroke-width="48"
           stroke-linejoin="round"></polygon>
       </svg>
-      <Image
-        src={heroImage}
-        alt="麦麦"
-        class="character-img"
-        widths={[320, 480, 640, 820]}
-        sizes="(min-width: 1024px) 26rem, 60vw"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
+      <picture>
+        <source media="(min-width: 1024px)" srcset={heroImageSet.srcSet.attribute} sizes="26rem" type="image/webp" />
+        <img
+          src={placeholder}
+          alt="麦麦"
+          class="character-img"
+          width={heroImage.width}
+          height={heroImage.height}
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <a class="version-card" id="hero-release" href={links.latestRelease} target="_blank" rel="noopener noreferrer">
         <span class="version-text">当前版本：获取中……</span>
         <span class="version-pill">
@@ -275,11 +282,14 @@ import { links } from '../data/links';
 </script>
 
 <style>
+  /* 首屏至少占满一屏，内容在导航栏下方的可视区域里垂直居中 */
   .hero {
     position: relative;
     display: flex;
+    min-height: 100vh;
+    min-height: 100svh;
     align-items: center;
-    padding: calc(var(--nav-offset) + 1.5rem) 0 clamp(2.5rem, 6vw, 4rem);
+    padding: calc(var(--nav-offset) + 0.5rem) 0 1.5rem;
   }
 
   .hero-inner {
@@ -371,8 +381,8 @@ import { links } from '../data/links';
   /* 立绘区：按设计稿 648×724 的比例留出画布，星形背景铺满，人物宽度占 63% 正好撑满高度 */
   .hero-visual {
     position: relative;
-    display: grid;
-    width: min(100%, 22rem);
+    display: none;
+    width: 100%;
     aspect-ratio: 648 / 724;
     place-items: center;
   }
@@ -448,18 +458,14 @@ import { links } from '../data/links';
     background: rgba(var(--c-primary-rgb), 0.3);
   }
 
-  @media (min-width: 640px) {
-    .hero-visual {
-      width: min(100%, 26rem);
-    }
-  }
-
-  /* 两栏：桌面宽屏，或横屏手机（宽而矮）。立绘宽度同时受视口高度约束，矮屏不会被裁 */
-  @media (min-width: 1024px), (min-width: 700px) and (max-height: 600px) and (orientation: landscape) {
+  /* 两栏：桌面宽屏才显示立绘 */
+  @media (min-width: 1024px) {
     .hero {
-      min-height: 100vh;
-      min-height: 100svh;
       padding-bottom: 2rem;
+    }
+
+    .hero-visual {
+      display: grid;
     }
 
     .hero-inner {
@@ -489,16 +495,8 @@ import { links } from '../data/links';
     }
   }
 
-  /* 横屏手机高度很小：首屏本来就需要滚动，立绘用固定上限，标题和间距按视口高度收紧 */
+  /* 横屏手机高度很小：标题和间距按视口高度收紧，尽量让按钮留在首屏内 */
   @media (max-height: 600px) and (orientation: landscape) {
-    .hero {
-      padding-bottom: 1.5rem;
-    }
-
-    .hero-visual {
-      width: min(100%, 20rem);
-    }
-
     .hero-title {
       font-size: clamp(1.75rem, 1rem + 4vh, 2.5rem);
     }

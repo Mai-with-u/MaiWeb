@@ -19,11 +19,13 @@ import { links } from '../data/links';
 </section>
 
 <style>
+  /* 末屏：CTA 加上至少 160px 高的页脚正好不小于一屏，
+     滚到底时视口里只有 CTA 和页脚，不会从顶部露出上一屏的演示屏卡片 */
   .cta-section {
     position: relative;
     display: flex;
-    min-height: 72vh;
-    min-height: 72svh;
+    min-height: calc(100vh - 160px);
+    min-height: calc(100svh - 160px);
     align-items: center;
     justify-content: center;
     padding: clamp(4rem, 12vw, 10rem) 0 clamp(3rem, 6vw, 4rem);
