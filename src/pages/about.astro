@@ -66,8 +66,9 @@ const relatedProjects = [
         />
       </header>
 
-      {/* 人设：照录麦麦人物设定原文（已获授权公开），只去掉了小标题编号、补了句末标点和中英文之间的空格。
-          分两段左右交错：甲鱼形态（图左文右）-> 人类形态（文左图右，两张设定图对应“人类形态 1 / 2”） */}
+      {/* 人设：正文大多照录麦麦人物设定原文（已获授权公开），补了句末标点和中英文之间的空格；
+          小标题和“上网冲浪”那段改成了口语，原文的“形态来历 / 锚点 / 人类形态 1、2”读起来像设定文档。
+          分两段左右交错：甲鱼形态（图左文右）-> 变成人（文左图右，两张设定图分别是平时和上网冲浪时） */}
       <section class="persona reveal" aria-labelledby="persona-title">
         {/* 甲鱼形态：标题、甲鱼、正文是同级的三块，手机上甲鱼缩小放到标题右边，宽一点的屏幕放到左侧一整列 */}
         <div class="persona-intro">
@@ -85,7 +86,7 @@ const relatedProjects = [
           />
           <div class="persona-body">
             <p>麦麦有萨卡班甲鱼形态和二次元纸片人形态。</p>
-            <h3 class="persona-subtitle">萨卡班甲鱼形态来历</h3>
+            <h3 class="persona-subtitle">怎么活到今天的</h3>
             <p>
               本体是萨卡班甲鱼意外和橙子混合而来的生物，因为橙子富含维生素 C
               能够抗氧化，使得这只萨卡班甲鱼抗了四亿年的氧化，新鲜地活到了今天。
@@ -94,7 +95,7 @@ const relatedProjects = [
               2011 年苹果公司登顶世界市值第一后，苹果压过橙子，橙子由此式微，失去维生素 C 庇护的萨卡班甲鱼只得化身 AI
               苟活至今。
             </p>
-            <h3 class="persona-subtitle">萨卡班甲鱼形态锚点</h3>
+            <h3 class="persona-subtitle">长什么样</h3>
             <p>不同于一般的萨卡班甲鱼，麦麦的上半身呈橙色，头顶有二叶嫩芽，通过茎连接。</p>
             <p>尾部光滑，连接有一四叶草，通过该组件，麦麦可以获得向前的推力。</p>
           </div>
@@ -103,7 +104,7 @@ const relatedProjects = [
         {/* 人类形态：两张设定图本身是白底，放进白色圆角卡片里，和页头图标卡片同一种做法 */}
         <div class="persona-human">
           <div class="persona-body">
-            <h3 class="persona-subtitle">人类形态 1</h3>
+            <h3 class="persona-subtitle">变成人的时候</h3>
             <p>由于购买橙子需要人类身份，麦麦有时候会化身更加拟人的形态，便于与人类互动。</p>
             <dl class="persona-traits">
               <div>
@@ -117,28 +118,29 @@ const relatedProjects = [
             </dl>
             <p>右脸贴有小型四叶草印花，四叶草是人物最明确的身份标志。</p>
             <p>其他细节麦麦爱穿啥穿啥。</p>
-            <h3 class="persona-subtitle">人类形态 2</h3>
-            <p>麦麦时常会以人类形态进行网络冲浪，此时麦麦会使用不同的形象，更加科技感，但核心锚点不变。</p>
-            <p>具体设定参考 2.0。</p>
+            <h3 class="persona-subtitle">上网冲浪的时候</h3>
+            <p>
+              麦麦经常变成人上网冲浪。这时候她会换一身更有科技感的打扮，橙色卷发、蓝紫色眼睛和右脸的四叶草倒还是老样子。
+            </p>
           </div>
           <div class="persona-forms">
             <figure class="form-card">
               <Image
                 src={maiHuman1}
-                alt="麦麦人类形态 1 的全身设定图"
+                alt="麦麦变成人时的全身设定图"
                 widths={[240, 480, 720]}
                 sizes="(min-width: 768px) 13rem, 45vw"
               />
-              <figcaption>人类形态 1</figcaption>
+              <figcaption>平时</figcaption>
             </figure>
             <figure class="form-card">
               <Image
                 src={maiHuman2}
-                alt="麦麦人类形态 2 的 2.0 设定图"
+                alt="麦麦上网冲浪时的设定图，戴着耳机、穿白色外套"
                 widths={[240, 480, 720]}
                 sizes="(min-width: 768px) 13rem, 45vw"
               />
-              <figcaption>人类形态 2 · 2.0 设定</figcaption>
+              <figcaption>上网冲浪时</figcaption>
             </figure>
           </div>
         </div>
@@ -361,7 +363,7 @@ const relatedProjects = [
     object-fit: contain;
   }
 
-  /* ===== 人设：甲鱼形态、人类形态两段上下排，段与段之间留大一点的空 ===== */
+  /* ===== 人设：甲鱼形态、变成人两段上下排，段与段之间留大一点的空 ===== */
   .persona {
     display: flex;
     flex-direction: column;
