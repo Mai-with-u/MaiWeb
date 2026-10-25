@@ -47,9 +47,15 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
             </svg>
           </button>
           <div class="nav-dropdown-menu" id="nav-docs-menu">
-            <a href={links.manual} class="nav-dropdown-link">用户手册</a>
-            <a href={links.develop} class="nav-dropdown-link">开发文档</a>
-            <a href={links.faq} class="nav-dropdown-link">常见问题</a>
+            <a href={links.manual} class="nav-dropdown-link">
+              用户手册
+            </a>
+            <a href={links.develop} class="nav-dropdown-link">
+              开发文档
+            </a>
+            <a href={links.faq} class="nav-dropdown-link">
+              常见问题
+            </a>
           </div>
         </div>
         <div class="nav-separator"></div>
@@ -75,12 +81,14 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
             aria-hidden="true"
           >
             <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"
-            ></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"
-            ></line>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
           <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
@@ -95,9 +103,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
           aria-controls="dialog-lang"
         >
           <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-            <path
-              d="M3.33333 10V11.3333C3.33333 12.0363 3.87725 12.6121 4.56716 12.663L4.66667 12.6667H6.66667V14H4.66667C3.19391 14 2 12.8061 2 11.3333V10H3.33333ZM12 6.66667L14.9333 14H13.4967L12.696 12H9.96933L9.17 14H7.734L10.6667 6.66667H12ZM11.3333 8.59013L10.502 10.6667H12.1633L11.3333 8.59013ZM5.33333 1.33333V2.66667H8V7.33333H5.33333V9.33333H4V7.33333H1.33333V2.66667H4V1.33333H5.33333ZM11.3333 2C12.8061 2 14 3.19391 14 4.66667V6H12.6667V4.66667C12.6667 3.93029 12.0697 3.33333 11.3333 3.33333H9.33333V2H11.3333ZM4 4H2.66667V6H4V4ZM6.66667 4H5.33333V6H6.66667V4Z"
-            ></path>
+            <path d="M3.33333 10V11.3333C3.33333 12.0363 3.87725 12.6121 4.56716 12.663L4.66667 12.6667H6.66667V14H4.66667C3.19391 14 2 12.8061 2 11.3333V10H3.33333ZM12 6.66667L14.9333 14H13.4967L12.696 12H9.96933L9.17 14H7.734L10.6667 6.66667H12ZM11.3333 8.59013L10.502 10.6667H12.1633L11.3333 8.59013ZM5.33333 1.33333V2.66667H8V7.33333H5.33333V9.33333H4V7.33333H1.33333V2.66667H4V1.33333H5.33333ZM11.3333 2C12.8061 2 14 3.19391 14 4.66667V6H12.6667V4.66667C12.6667 3.93029 12.0697 3.33333 11.3333 3.33333H9.33333V2H11.3333ZM4 4H2.66667V6H4V4ZM6.66667 4H5.33333V6H6.66667V4Z"></path>
           </svg>
         </button>
         <button
@@ -122,17 +128,29 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
           </svg>
         </button>
         <span class="nav-cta-wrap">
-          <a href={links.manual} class="nav-cta">部署</a>
+          <a href={links.manual} class="nav-cta">
+            部署
+          </a>
         </span>
       </div>
     </div>
 
     <div class="nav-menu-mobile" id="nav-mobile-menu">
-      <a href="/projects/" class="nav-item-mobile" aria-current={isCurrent('/projects/')}>衍生项目</a>
-      <a href={links.manual} class="nav-item-mobile">用户手册</a>
-      <a href={links.develop} class="nav-item-mobile">开发文档</a>
-      <a href={links.faq} class="nav-item-mobile">常见问题</a>
-      <a href="/about/" class="nav-item-mobile" aria-current={isCurrent('/about/')}>关于我们</a>
+      <a href="/projects/" class="nav-item-mobile" aria-current={isCurrent('/projects/')}>
+        衍生项目
+      </a>
+      <a href={links.manual} class="nav-item-mobile">
+        用户手册
+      </a>
+      <a href={links.develop} class="nav-item-mobile">
+        开发文档
+      </a>
+      <a href={links.faq} class="nav-item-mobile">
+        常见问题
+      </a>
+      <a href="/about/" class="nav-item-mobile" aria-current={isCurrent('/about/')}>
+        关于我们
+      </a>
     </div>
   </nav>
 </div>

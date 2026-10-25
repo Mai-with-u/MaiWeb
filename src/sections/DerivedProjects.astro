@@ -63,7 +63,9 @@ const avatarRows =
     </header>
 
     <section class="chapter project-chapter reveal reveal-delay-1" aria-labelledby="projects-heading">
-      <h2 id="projects-heading" class="visually-hidden">衍生项目列表</h2>
+      <h2 id="projects-heading" class="visually-hidden">
+        衍生项目列表
+      </h2>
       <div class="featured-grid">
         <a
           class={`project-card project-card-large tone-${largeProject.tone}`}
@@ -80,53 +82,51 @@ const avatarRows =
             <p>{largeProject.description}</p>
           </div>
           <div class="card-orbit" aria-hidden="true"></div>
-          <span class="card-link" aria-hidden="true">了解项目 <span>→</span></span>
+          <span class="card-link" aria-hidden="true">
+            了解项目 <span>→</span>
+          </span>
         </a>
 
         <div class="right-stack">
-          {
-            sideProjects.map((project) => (
-              <a
-                class={`project-card project-card-small tone-${project.tone}`}
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div class="texture-bg">
-                  <Image src={project.image} alt="" loading="lazy" decoding="async" class="card-bg-image" />
-                </div>
-                <div class="texture-blur texture-blur-small" aria-hidden="true" />
-                <div class="card-content">
-                  <h3>{project.name}</h3>
-                  <p>{project.description}</p>
-                </div>
-                <span class="card-link" aria-hidden="true">
-                  了解项目 <span>→</span>
-                </span>
-              </a>
-            ))
-          }
+          {sideProjects.map((project) => (
+            <a
+              class={`project-card project-card-small tone-${project.tone}`}
+              href={project.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="texture-bg">
+                <Image src={project.image} alt="" loading="lazy" decoding="async" class="card-bg-image" />
+              </div>
+              <div class="texture-blur texture-blur-small" aria-hidden="true" />
+              <div class="card-content">
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+              </div>
+              <span class="card-link" aria-hidden="true">
+                了解项目 <span>→</span>
+              </span>
+            </a>
+          ))}
         </div>
       </div>
 
       <div class="compact-row">
-        {
-          compactProjects.map((project) => (
-            <a
-              class="compact-card"
-              href={project.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={`--compact-bg: ${project.color}`}
-            >
-              <span class="compact-marker" aria-hidden="true" />
-              <span class="compact-copy">
-                <strong>{project.name}</strong>
-                <span>{project.description}</span>
-              </span>
-            </a>
-          ))
-        }
+        {compactProjects.map((project) => (
+          <a
+            class="compact-card"
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={`--compact-bg: ${project.color}`}
+          >
+            <span class="compact-marker" aria-hidden="true" />
+            <span class="compact-copy">
+              <strong>{project.name}</strong>
+              <span>{project.description}</span>
+            </span>
+          </a>
+        ))}
       </div>
     </section>
 
@@ -139,8 +139,8 @@ const avatarRows =
         <span class="spotlight-label">插件市场</span>
         <h2 id="market-heading">让 MaiBot 无限延伸</h2>
         <p>
-          来自社区开发者的 {formatCount(stats.plugins)} 个插件，覆盖天气、音乐、AI 绘图、群管理等几乎所有场景。每一个插件，都是某位开发者对
-          MaiBot 的一次扩充。
+          来自社区开发者的 {formatCount(stats.plugins)} 个插件，覆盖天气、音乐、AI
+          绘图、群管理等几乎所有场景。每一个插件，都是某位开发者对 MaiBot 的一次扩充。
         </p>
       </div>
       <a class="spotlight-link" href={links.pluginMarket} target="_blank" rel="noopener noreferrer">
@@ -152,7 +152,8 @@ const avatarRows =
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
-            stroke-linejoin="round"></path>
+            stroke-linejoin="round"
+          ></path>
         </svg>
       </a>
     </section>
@@ -169,26 +170,24 @@ const avatarRows =
       <div class="manifesto-grid">
         <article class="quote-card">
           <div class="contributors-bg" aria-hidden="true">
-            {
-              avatarRows.map((row) => (
-                <div
-                  class={`contributors-row ${row.direction === 'right' ? 'is-reverse' : ''}`}
-                  style={`--marquee-duration: ${row.duration}s`}
-                >
-                  <div class="contributors-track">
-                    {row.avatars.map((contributor) => (
-                      <img
-                        src={contributor.avatarUrl}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                        class="contributor-avatar"
-                      />
-                    ))}
-                  </div>
+            {avatarRows.map((row) => (
+              <div
+                class={`contributors-row ${row.direction === 'right' ? 'is-reverse' : ''}`}
+                style={`--marquee-duration: ${row.duration}s`}
+              >
+                <div class="contributors-track">
+                  {row.avatars.map((contributor) => (
+                    <img
+                      src={contributor.avatarUrl}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      class="contributor-avatar"
+                    />
+                  ))}
                 </div>
-              ))
-            }
+              </div>
+            ))}
           </div>
           <div class="quote-mark" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56" fill="none">
@@ -196,51 +195,46 @@ const avatarRows =
                 d="M34.0335 8.36683C34.9087 7.49167 36.0957 7 37.3333 7H44.3333C45.571 7 46.758 7.49167 47.6332 8.36683C48.5083 9.242 49 10.429 49 11.6667V35C49 38.713 47.525 42.274 44.8995 44.8995C42.274 47.525 38.713 49 35 49C34.3812 49 33.7877 48.7542 33.3501 48.3166C32.9125 47.879 32.6667 47.2855 32.6667 46.6667V42C32.6667 41.3812 32.9125 40.7877 33.3501 40.3501C33.7877 39.9125 34.3812 39.6667 35 39.6667C36.2377 39.6667 37.4247 39.175 38.2998 38.2998C39.175 37.4247 39.6667 36.2377 39.6667 35V32.6667C39.6667 32.0478 39.4208 31.4543 38.9832 31.0168C38.5457 30.5792 37.9522 30.3333 37.3333 30.3333C36.0957 30.3333 34.9087 29.8417 34.0335 28.9665C33.1583 28.0913 32.6667 26.9043 32.6667 25.6667V11.6667C32.6667 10.429 33.1583 9.242 34.0335 8.36683Z"
                 stroke="#F5841F"
                 stroke-width="2"
-                stroke-linecap="round"></path>
+                stroke-linecap="round"
+              ></path>
               <path
                 d="M8.36683 8.36683C9.242 7.49167 10.429 7 11.6667 7H18.6667C19.9043 7 21.0913 7.49167 21.9665 8.36683C22.8417 9.242 23.3333 10.429 23.3333 11.6667V35C23.3333 38.713 21.8583 42.274 19.2328 44.8995C16.6073 47.525 13.0464 49 9.33333 49C8.71449 49 8.121 48.7542 7.68342 48.3166C7.24583 47.879 7 47.2855 7 46.6667V42C7 41.3812 7.24583 40.7877 7.68342 40.3501C8.121 39.9125 8.71449 39.6667 9.33333 39.6667C10.571 39.6667 11.758 39.175 12.6332 38.2998C13.5083 37.4247 14 36.2377 14 35V32.6667C14 32.0478 13.7542 31.4543 13.3166 31.0168C12.879 30.5792 12.2855 30.3333 11.6667 30.3333C10.429 30.3333 9.242 29.8417 8.36683 28.9665C7.49167 28.0913 7 26.9043 7 25.6667V11.6667C7 10.429 7.49167 9.242 8.36683 8.36683Z"
                 stroke="#F5841F"
                 stroke-width="2"
-                stroke-linecap="round"></path>
+                stroke-linecap="round"
+              ></path>
             </svg>
           </div>
           <p class="quote-text">
-            截至今日，MaiBot 社区产出了 <strong>{formatCount(stats.commits)} 次提交</strong>，关闭了 <strong
-              >{formatCount(stats.closedIssues)} 个 issue</strong
-            >，来自 <strong>{formatCount(stats.contributors)} 位贡献者</strong> 的共同努力。
+            截至今日，MaiBot 社区产出了 <strong>{formatCount(stats.commits)} 次提交</strong>，关闭了{' '}
+            <strong>{formatCount(stats.closedIssues)} 个 issue</strong>，来自{' '}
+            <strong>{formatCount(stats.contributors)} 位贡献者</strong> 的共同努力。
           </p>
           <p class="quote-subtext">MaiBot 的每一次迭代，背后都是无数个深夜的 PR 和清晨的 code review。</p>
         </article>
 
         <div class="action-stack">
-          {
-            actionCards.map((card) => (
-              <a
-                class={`action-card action-${card.variant}`}
-                href={card.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span class="action-copy">
-                  <strong>{card.name}</strong>
-                  <span>{card.description}</span>
-                </span>
-                <span class="action-button">
-                  {card.action}
-                  <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
-                    <path
-                      d="M3.5 9h8.8M8.5 5.2 12.3 9l-3.8 3.8"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-              </a>
-            ))
-          }
+          {actionCards.map((card) => (
+            <a class={`action-card action-${card.variant}`} href={card.href} target="_blank" rel="noopener noreferrer">
+              <span class="action-copy">
+                <strong>{card.name}</strong>
+                <span>{card.description}</span>
+              </span>
+              <span class="action-button">
+                {card.action}
+                <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M3.5 9h8.8M8.5 5.2 12.3 9l-3.8 3.8"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     </section>
