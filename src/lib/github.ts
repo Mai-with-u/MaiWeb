@@ -1,6 +1,6 @@
 import { GITHUB_TOKEN } from 'astro:env/server';
 
-// 构建时向 GitHub 拉取社区统计（提交数、已关闭 issue、贡献者、插件数量）。
+// 构建时向 GitHub 拉取社区统计（提交数、已关闭 issue、贡献者、插件数量、Star 数）。
 // 触发时机：衍生项目页和关于页在构建阶段渲染时调用；同一次构建只请求一次，结果在模块内缓存。
 // 失败策略：每个数字单独兜底，接口超时、限流或返回异常时用下面的快照值，页面永远不会因此构建失败。
 // 构建环境配置了 GITHUB_TOKEN 时带上它，避免未登录请求每小时 60 次的限流。
@@ -15,6 +15,7 @@ const FALLBACK = {
   closedIssues: 990,
   contributors: 116,
   plugins: 433,
+  stars: 6523,
 };
 
 export interface CommunityStats {
@@ -22,6 +23,7 @@ export interface CommunityStats {
   closedIssues: number;
   contributors: number;
   plugins: number;
+  stars: number;
 }
 
 export interface Contributor {
@@ -62,6 +64,13 @@ async function countClosedIssues(): Promise<number> {
   return data.total_count;
 }
 
+async function countStars(): Promise<number> {
+  const response = await request(`https://api.github.com/repos/${REPO}`);
+  const data = (await response.json()) as { stargazers_count?: number };
+  if (typeof data.stargazers_count !== 'number') throw new Error('stargazers_count missing');
+  return data.stargazers_count;
+}
+
 async function countPlugins(): Promise<number> {
   const response = await fetch(PLUGIN_INDEX, { signal: AbortSignal.timeout(TIMEOUT_MS) });
   if (!response.ok) throw new Error(`plugins.json -> ${response.status}`);
@@ -81,17 +90,19 @@ let contributorsPromise: Promise<Contributor[]> | undefined;
 
 export function getCommunityStats(): Promise<CommunityStats> {
   statsPromise ??= (async () => {
-    const [commits, closedIssues, contributors, plugins] = await Promise.allSettled([
+    const [commits, closedIssues, contributors, plugins, stars] = await Promise.allSettled([
       countByLastPage(`https://api.github.com/repos/${REPO}/commits?per_page=1`),
       countClosedIssues(),
       countByLastPage(`https://api.github.com/repos/${REPO}/contributors?per_page=1`),
       countPlugins(),
+      countStars(),
     ]);
     return {
       commits: settled(commits, FALLBACK.commits, '提交数'),
       closedIssues: settled(closedIssues, FALLBACK.closedIssues, '已关闭 issue 数'),
       contributors: settled(contributors, FALLBACK.contributors, '贡献者数'),
       plugins: settled(plugins, FALLBACK.plugins, '插件数'),
+      stars: settled(stars, FALLBACK.stars, 'Star 数'),
     };
   })();
   return statsPromise;

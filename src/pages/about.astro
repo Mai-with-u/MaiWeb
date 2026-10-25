@@ -1,0 +1,599 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../sections/Navbar.astro';
+import Footer from '../sections/Footer.astro';
+import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
+import logoIcon from '../assets/logo-icon.png';
+import { links } from '../data/links';
+import { socialLinks } from '../data/community';
+import { formatCount, getCommunityStats, getContributors } from '../lib/github';
+
+// 关于我们：项目是什么 -> 设计理念 -> 她能做什么 -> 生态入口 -> 社区数据与贡献者 -> 加入社区 -> 开源与协议。
+// 文案整理自 MaiBot README 与文档站“关于本项目”页，统计数字和贡献者头像在构建时从 GitHub 拉取。
+const stats = await getCommunityStats();
+// 头像墙最多展示 48 位，接口失败时为空数组，整块不渲染
+const contributors = (await getContributors()).slice(0, 48);
+
+const statItems = [
+  { value: formatCount(stats.stars), label: 'GitHub Star' },
+  { value: formatCount(stats.contributors), label: '位贡献者' },
+  { value: formatCount(stats.commits), label: '次提交' },
+  { value: formatCount(stats.plugins), label: '个社区插件' },
+];
+
+const features = [
+  {
+    title: '没有人喜欢 GPT 的语言风格',
+    text: '不是长篇大论或 markdown 分点，而是或长或短的闲谈，更贴近真人的聊天习惯。',
+  },
+  {
+    title: '不再是傻乎乎的一问一答',
+    text: '懂得看气氛说话，在合适的时候开口，也在合适的时候闭嘴。',
+  },
+  {
+    title: '麦麦 · 成为人类',
+    text: '在多人对话里模仿大家的说话风格，自己琢磨新词和小圈子里的黑话，一直在进化。',
+  },
+  {
+    title: '永远都在更加了解你',
+    text: '基于心理学中的人格理论，持续积累对你的了解：你的信息、喜好和说话风格，她都记在心里。',
+  },
+  {
+    title: '插件系统',
+    text: '提供 API 与事件系统，接入新平台、扩展记忆、添加趣味互动，都可以交给插件。',
+  },
+];
+
+const ecosystem = [
+  { name: 'MaiBot 主程序', text: '核心智能体与 WebUI 管理界面', href: links.repo },
+  { name: '使用文档', text: '部署、配置、接入平台与常见问题', href: links.manual },
+  { name: '插件市场', text: '社区开发者分享的各类插件', href: links.pluginMarket },
+  { name: 'Windows 一键包', text: '整合运行环境，下载即可启动', href: links.oneKeyRepo },
+  { name: 'MaiDroid', text: '在 Android 设备上直接运行麦麦', href: links.droidRepo },
+  { name: '衍生项目', text: '虚拟主播、Minecraft 等更多玩法', href: '/projects/' },
+];
+---
+
+<Layout
+  title="关于我们 - MaiBot 官方网站"
+  description="MaiBot（麦麦 / MaiSaka）是一个致力于了解你、用真人方式聊天的数字生命。"
+  canonicalPath="/about/"
+>
+  <Navbar />
+  <main class="about">
+    <div class="about-container">
+      <header class="about-hero reveal">
+        <div class="about-hero-copy">
+          <nav class="breadcrumb" aria-label="面包屑导航">
+            <a href="/">首页</a>
+            <span aria-hidden="true">&gt;</span>
+            <span aria-current="page">关于我们</span>
+          </nav>
+          <p class="eyebrow">About MaiBot</p>
+          <h1>关于麦麦</h1>
+          <p class="lead">
+            MaiBot（麦麦 /
+            MaiSaka）是一个基于大语言模型的可交互智能体。她不只是帮你完成任务的“有用助手”，而是一个试着了解你、用接近真人的方式和你相处的数字生命——不追求完美，不追求高效，只追求亲切和真实。
+          </p>
+        </div>
+        <Image
+          src={logoIcon}
+          alt="麦麦Bot 图标"
+          class="about-avatar"
+          widths={[240, 480]}
+          sizes="15rem"
+          loading="eager"
+        />
+      </header>
+
+      <section class="philosophy reveal" aria-labelledby="philosophy-title">
+        <p class="section-label">设计理念</p>
+        <h2 id="philosophy-title" class="philosophy-quote">“最像，而不是最好。”</h2>
+        <div class="philosophy-body">
+          <p>
+            项目最初只是想给群聊机器人加几个小功能，结果越写越多，最后干脆重写。目标是在群聊里创造一个“生命体”——不是一个功能齐全的机器人，而是一个能让你感觉到真实存在的家伙。
+          </p>
+          <p>
+            如果一个人真的需要 AI
+            来陪伴，那未必是一个完美、什么都能解决的助手。也许更想要的，是一个会犯错、有自己想法和感受的“生命”。
+          </p>
+        </div>
+        <p class="philosophy-tagline">Code is open, but the soul is yours.</p>
+      </section>
+
+      <section class="block reveal" aria-labelledby="features-title">
+        <h2 id="features-title" class="block-title">她能做什么</h2>
+        <div class="feature-grid">
+          {
+            features.map((feature) => (
+              <article class="feature-card">
+                <h3>{feature.title}</h3>
+                <p>{feature.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="block reveal" aria-labelledby="ecosystem-title">
+        <h2 id="ecosystem-title" class="block-title">项目生态</h2>
+        <div class="link-grid">
+          {
+            ecosystem.map((item) => (
+              <a
+                class="link-card"
+                href={item.href}
+                {...(item.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                <strong>{item.name}</strong>
+                <span>{item.text}</span>
+                <span class="link-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="block reveal" aria-labelledby="community-title">
+        <h2 id="community-title" class="block-title">社区</h2>
+        <dl class="stat-grid">
+          {
+            statItems.map((item) => (
+              <div class="stat">
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        {
+          contributors.length > 0 && (
+            <div class="contributors">
+              <p class="contributors-caption">感谢每一位让麦麦变得更好的贡献者</p>
+              <ul class="avatar-grid">
+                {contributors.map((person) => (
+                  <li>
+                    <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" title={person.login}>
+                      <img
+                        src={person.avatarUrl}
+                        alt={person.login}
+                        width="48"
+                        height="48"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        <div class="join">
+          <div class="join-copy">
+            <h3>加入我们</h3>
+            <p>有问题想问、有想法想聊，或者只是想看麦麦整活，都欢迎来社区坐坐。</p>
+          </div>
+          <div class="join-actions">
+            <a class="btn btn-primary" href={links.community} data-dialog="qq" aria-haspopup="dialog">QQ 交流群</a>
+            {
+              socialLinks.map((item) => (
+                <a class="btn btn-ghost" href={item.url} target="_blank" rel="noopener noreferrer">
+                  {item.name}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="block license reveal" aria-labelledby="license-title">
+        <h2 id="license-title" class="block-title">开源与协议</h2>
+        <p>
+          MaiBot 基于 <a href={links.license} target="_blank" rel="noopener noreferrer">GPL-3.0</a> 许可证开源。使用前请阅读<a
+            href={links.eula}
+            target="_blank"
+            rel="noopener noreferrer">「用户协议」</a
+          >和<a href={links.privacy} target="_blank" rel="noopener noreferrer">「隐私协议」</a>，AI
+          生成的内容请仔细甄别。也感谢一路相伴的<a
+            href={links.acknowledgements}
+            target="_blank"
+            rel="noopener noreferrer">项目与社区</a
+          >。
+        </p>
+        <p class="warning">
+          <strong>注意</strong>MaiBot 是开源项目，完全免费使用。如果你看到有人售卖 MaiBot，请注意辨别，避免上当受骗。
+        </p>
+      </section>
+    </div>
+  </main>
+  <QqGroupsDialog />
+  <Footer />
+</Layout>
+
+<style>
+  .about {
+    position: relative;
+    padding: calc(var(--nav-offset) + 0.5rem) 0 clamp(4rem, 10vw, 7.5rem);
+  }
+
+  .about-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 7vw, 5.5rem);
+    width: 100%;
+    max-width: calc(72rem + var(--page-gutter) * 2);
+    margin: 0 auto;
+    padding-right: max(var(--page-gutter), var(--safe-right));
+    padding-left: max(var(--page-gutter), var(--safe-left));
+  }
+
+  /* ===== 页头：手机上头像在文字下方，宽屏放到右侧 ===== */
+  .about-hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding-top: 2.5rem;
+  }
+
+  .about-hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 8px;
+    color: var(--text-subtle);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .breadcrumb a:hover,
+  .breadcrumb span[aria-hidden='true'] {
+    color: var(--c-primary);
+  }
+
+  .eyebrow,
+  .section-label {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  h1 {
+    color: var(--text-strong);
+    font-size: var(--fs-h1);
+  }
+
+  .lead {
+    max-width: 42rem;
+    color: var(--text-muted);
+    font-size: var(--fs-lead);
+    line-height: 1.7;
+  }
+
+  .about-avatar {
+    width: clamp(8rem, 30vw, 15rem);
+    height: auto;
+    aspect-ratio: 1;
+    padding: 0.75rem;
+    border-radius: 32%;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    object-fit: contain;
+  }
+
+  /* ===== 设计理念 ===== */
+  .philosophy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background:
+      linear-gradient(135deg, rgba(var(--c-primary-rgb), 0.14), rgba(var(--c-primary-rgb), 0.03) 60%), var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .philosophy::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+    content: '';
+    background: var(--c-primary);
+  }
+
+  .philosophy-quote {
+    color: var(--text-strong);
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  }
+
+  .philosophy-body {
+    display: flex;
+    max-width: 48rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    color: var(--text-body);
+    font-size: var(--fs-lead);
+    line-height: 1.8;
+  }
+
+  .philosophy-tagline {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  /* ===== 通用区块 ===== */
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .block-title {
+    color: var(--text-strong);
+    font-size: var(--fs-h2);
+  }
+
+  .feature-grid,
+  .link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+  }
+
+  .feature-card,
+  .link-card,
+  .stat,
+  .join,
+  .license {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+
+  .feature-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    border-top: 3px solid var(--c-primary);
+  }
+
+  .feature-card:nth-child(3n + 2) {
+    border-top-color: var(--c-green);
+  }
+
+  .feature-card:nth-child(3n) {
+    border-top-color: var(--c-blue);
+  }
+
+  .feature-card h3 {
+    font-size: 1.125rem;
+  }
+
+  .feature-card p,
+  .link-card span {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+
+  .link-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 3rem 1.25rem 1.25rem;
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .link-card:hover {
+    border-color: rgba(var(--c-primary-rgb), 0.4);
+    transform: translateY(-2px);
+  }
+
+  .link-card strong {
+    font-family: var(--font-display);
+    font-size: 1rem;
+  }
+
+  .link-card .link-arrow {
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    color: var(--text-subtle);
+    font-size: 1.25rem;
+    transform: translateY(-50%);
+  }
+
+  /* ===== 社区数据：手机两列、宽屏四列 ===== */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.25rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .stat dt {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .stat dd {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .contributors {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contributors-caption {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .avatar-grid img {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform var(--transition-fast);
+  }
+
+  .avatar-grid a:hover img {
+    transform: translateY(-2px) scale(1.06);
+  }
+
+  .join {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .join-copy h3 {
+    font-size: 1.25rem;
+  }
+
+  .join-copy p {
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .join-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 1.125rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--c-primary-hover);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--border-strong);
+    color: var(--text-body);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+  }
+
+  /* ===== 开源与协议 ===== */
+  .license {
+    padding: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .license p {
+    color: var(--text-body);
+    line-height: 1.8;
+  }
+
+  .license a {
+    color: var(--c-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .license .warning {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    border-left: 4px solid var(--c-primary);
+    border-radius: var(--radius-sm);
+    background: rgba(var(--c-primary-rgb), 0.1);
+    font-size: var(--fs-small);
+  }
+
+  .license .warning strong {
+    color: var(--c-primary);
+  }
+
+  @media (min-width: 768px) {
+    .about-hero {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+    }
+
+    .stat-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .join {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .join-actions {
+      justify-content: flex-end;
+    }
+  }
+</style>
