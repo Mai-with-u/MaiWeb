@@ -1,0 +1,8 @@
+# 统一使用 LF 换行，避免 Windows 下 core.autocrlf 把工作区转成 CRLF 导致 Prettier 检查失败
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
