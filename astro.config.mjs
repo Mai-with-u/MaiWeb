@@ -4,7 +4,7 @@ import { defineConfig, envField } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   // 站点正式域名：canonical、OpenGraph 图片和分享链接都从这里拼出来，换域名时只改这一处
-  site: 'https://mai-mai.org',
+  site: 'https://www.maibot.chat',
   vite: {
     // 固定使用本仓库的 tsconfig。Vite 8 默认按文件逐级向上查找 tsconfig，node_modules 里的文件不在本仓库
     // include 范围内，会继续往上找；仓库检出在另一个项目目录里面（例如 .claude/worktrees 下的工作树）时，
