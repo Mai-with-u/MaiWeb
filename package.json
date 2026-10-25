@@ -29,9 +29,6 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@astrojs/react": "^5.0.7",
-    "astro": "^6.4.6",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "astro": "^6.4.6"
   }
 }

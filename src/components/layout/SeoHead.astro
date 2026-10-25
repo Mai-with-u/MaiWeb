@@ -10,7 +10,8 @@ interface Props {
 }
 
 const { title, description, canonicalPath } = Astro.props;
-const siteUrl = 'https://mai-mai.org';
+// 正式域名统一来自 astro.config 的 site 字段，换域名不用再改这里
+const siteUrl = Astro.site ?? new URL('https://mai-mai.org');
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const optimizedHero = await getImage({ src: heroImage, format: 'webp' });
 const ogImage = new URL(optimizedHero.src, siteUrl).toString();

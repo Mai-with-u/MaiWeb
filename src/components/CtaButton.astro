@@ -31,10 +31,7 @@ const corner = variant === 'green' ? 8 : 10;
   <!-- Layer 1: drop-shadow only -->
   <span class:list={['cta-wrap', `cta-wrap-${variant}`, `cta-wrap-${size}`]}>
     <!-- Layer 2: cut corner clip -->
-    <span
-      class:list={['cta-clip', `cta-clip-${variant}`]}
-      style={`--cta-corner: ${corner}px`}
-    >
+    <span class:list={['cta-clip', `cta-clip-${variant}`]} style={`--cta-corner: ${corner}px`}>
       <!-- Layer 3: glass background + border + content -->
       <a
         href={href}
@@ -226,15 +223,15 @@ const corner = variant === 'green' ? 8 : 10;
 
   /* === Sizing === */
   .cta-link-large {
-    padding: calc(14px * var(--control-scale)) calc(20px * var(--control-scale))
-      calc(14px * var(--control-scale)) calc(18px * var(--control-scale));
+    padding: calc(14px * var(--control-scale)) calc(20px * var(--control-scale)) calc(14px * var(--control-scale))
+      calc(18px * var(--control-scale));
     min-width: calc(194px * var(--control-scale));
     min-height: calc(71px * var(--control-scale));
   }
 
   .cta-link-small {
-    padding: calc(10px * var(--control-scale)) calc(18px * var(--control-scale))
-      calc(10px * var(--control-scale)) calc(12px * var(--control-scale));
+    padding: calc(10px * var(--control-scale)) calc(18px * var(--control-scale)) calc(10px * var(--control-scale))
+      calc(12px * var(--control-scale));
     gap: calc(16px * var(--control-scale));
     min-width: calc(123px * var(--control-scale));
     min-height: calc(45px * var(--control-scale));

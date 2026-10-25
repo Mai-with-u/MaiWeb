@@ -2,19 +2,19 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
   pull_request:
-    branches: [master]
+    branches: [master, dev]
 
 jobs:
   lint-and-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -23,10 +23,14 @@ jobs:
         run: npm ci
 
       - name: Run astro check
-        run: npx astro check
+        run: npm run check
 
       - name: Run Prettier check
-        run: npx prettier --check .
+        run: npm run format:check
 
       - name: Run ESLint
-        run: npx eslint .
+        run: npm run lint
+
+      # 构建失败（例如图片处理、页面渲染报错）之前只能在 Cloudflare 部署时才发现，这里提前拦住
+      - name: Build
+        run: npm run build
