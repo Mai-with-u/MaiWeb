@@ -930,7 +930,7 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
   /* ===== 桌面两栏 ===== */
   /* 宽屏两栏（与 global.css 的等比缩放条件一致），尺寸取 1600×900 设计稿的值：
-     演示屏 720px、文案 560px、间距 60px、每段文案高 720px、区块上下 160/80px。
+     演示屏 720px、文案 560px、间距 60px、每段文案高 720px（标题距段落顶 140px）、区块上下 160/80px。
      vw 上限只在根字号触到 12px 下限的窄桌面上起作用，防止横向溢出 */
   @media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
     .sticky-section {
@@ -958,11 +958,15 @@ import maiAvatar from '../assets/mai-avatar.jpg';
       width: min(35rem, 38vw);
     }
 
+    /* 设计稿：每段高 720px（最后一段 680px），标题统一落在段落顶部往下 140px 处 */
     .text-block,
     .text-block + .text-block {
       min-height: 45rem;
-      justify-content: center;
-      padding-top: 0;
+      padding-top: 8.75rem;
+    }
+
+    .text-block + .text-block:last-child {
+      min-height: 42.5rem;
     }
 
     .text-block-title {

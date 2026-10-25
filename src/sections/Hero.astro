@@ -385,12 +385,10 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
   }
 
   /* 立绘区：按设计稿 648×724 的比例留出画布，星形背景铺满，人物宽度占 63% 正好撑满高度 */
+  /* 立绘区只在宽屏两栏出现，单栏布局直接隐藏 */
   .hero-visual {
     position: relative;
     display: none;
-    width: 100%;
-    aspect-ratio: 648 / 724;
-    place-items: center;
   }
 
   .star-bg {
@@ -407,31 +405,33 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     color: #2b2b2b;
   }
 
-  .character-img {
+  /* <picture> 默认是行内元素，作为 flex 子项时会被图片固有尺寸撑开；
+     人物宽度必须设在 picture 上，img 再撑满 picture，百分比才会相对立绘区计算 */
+  .hero-visual picture {
     position: relative;
     z-index: 1;
-    width: 63%;
+    display: block;
+  }
+
+  .character-img {
+    width: 100%;
     height: auto;
     filter: drop-shadow(0 0.25rem 0.25rem rgba(0, 0, 0, 0.25));
     animation: float 4s ease-in-out infinite;
   }
 
+  /* 版本卡片：文字一行 + 固定宽度的小药丸，与设计稿一致 */
   .version-card {
     position: absolute;
-    right: 6%;
-    bottom: 22%;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.375rem;
     padding: 0.75rem 0.875rem;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgba(var(--c-primary-rgb), 0.12) 0%, rgba(var(--c-primary-rgb), 0.04) 100%);
+    background: linear-gradient(135deg, rgba(var(--c-primary-rgb), 0.1) 0%, rgba(var(--c-primary-rgb), 0.04) 100%);
     box-shadow:
       0 0.5rem 2rem rgba(var(--c-primary-rgb), 0.1),
       inset 0 0 0 1.5px rgba(var(--c-primary-rgb), 0.2),
       inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    text-align: center;
     backdrop-filter: blur(0.75rem) saturate(140%);
     transition: transform var(--transition-fast);
   }
@@ -441,23 +441,29 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
   }
 
   .version-text {
+    display: block;
+    margin-bottom: 0.375rem;
     color: var(--text-strong);
-    font-size: var(--fs-xs);
+    font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   .version-pill {
     display: inline-flex;
+    width: 7.5rem;
+    height: 1.25rem;
     align-items: center;
+    justify-content: center;
     gap: 0.25rem;
-    padding: 2px 0.5rem;
+    padding: 0 0.375rem;
     border-radius: 0.25rem;
     background: rgba(var(--c-primary-rgb), 0.2);
     color: var(--c-primary);
     font-size: 0.625rem;
     font-weight: 700;
-    line-height: 1.6;
+    backdrop-filter: blur(0.375rem);
   }
 
   .version-card:hover .version-pill {
@@ -465,10 +471,12 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
   }
 
   /* 宽屏两栏（与 global.css 的等比缩放条件一致）：
-     尺寸全部取 1600×900 设计稿的值并写成 rem，根字号缩放时整屏构图同比例缩放、留白不被挤掉 */
+     所有尺寸取改造前 1600×900 时的实测值并写成 rem，根字号缩放时整屏构图同比例缩放：
+     首屏上下内边距 80px；文案 554px + 间距 48px + 立绘区 648×724px；
+     人物宽 407px 居中；星形 648px 居中；版本卡片距立绘区右 160px、下 192px */
   @media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
     .hero {
-      padding-bottom: 2rem;
+      padding: max(5rem, calc(4.5rem + var(--safe-top))) 0 5rem;
     }
 
     .hero-inner {
@@ -485,6 +493,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     .hero-title {
       margin-bottom: 1.5rem;
       font-size: 3.625rem;
+      line-height: normal;
     }
 
     .title-line {
@@ -497,21 +506,42 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     }
 
     .hero-buttons {
+      gap: 0.625rem;
+    }
+
+    /* 设计稿里四个小按钮在 554px 文案栏内正好排成一行（只余几像素），宽屏下不换行也不压缩按钮，
+       字体渲染略宽时多出的一两像素溢进右侧间距，避免按钮折行把文案块撑高、整体上移 */
+    .hero-buttons-row {
+      flex-wrap: nowrap;
       gap: 0.75rem;
+    }
+
+    .hero-buttons-row > :global(*) {
+      flex-shrink: 0;
     }
 
     .hero-license {
       max-width: 31.25rem;
+      line-height: 1.5;
     }
 
+    /* 立绘区用 flex 居中，人物宽度按立绘区宽度的百分比计算（设计稿 407 / 648）：
+       百分比必须落在尺寸确定的容器上，否则会先按图片固有宽度定尺寸，人物变成一个不随窗口缩放的固定值 */
     .hero-visual {
-      display: grid;
+      display: flex;
       width: min(100%, 40.5rem);
+      aspect-ratio: 648 / 724;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-visual picture {
+      width: calc(407 / 648 * 100%);
     }
 
     .version-card {
-      right: 22%;
-      bottom: 26%;
+      right: calc(160 / 648 * 100%);
+      bottom: calc(192 / 724 * 100%);
     }
   }
 
