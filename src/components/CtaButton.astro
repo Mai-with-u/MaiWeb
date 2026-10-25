@@ -8,6 +8,8 @@ export interface Props {
   sublabel?: string;
   delay?: number;
   modal?: string;
+  // 点击后打开的原生弹窗名，对应 <dialog id="dialog-xxx">
+  dialog?: string;
   id?: string;
 }
 
@@ -20,6 +22,7 @@ const {
   sublabel,
   delay,
   modal,
+  dialog,
   id,
 } = Astro.props;
 
@@ -37,8 +40,9 @@ const corner = variant === 'green' ? 8 : 10;
         href={href}
         id={id}
         data-modal={modal || undefined}
-        aria-haspopup={modal ? 'dialog' : undefined}
-        aria-controls={modal ? 'global-modal' : undefined}
+        data-dialog={dialog || undefined}
+        aria-haspopup={modal || dialog ? 'dialog' : undefined}
+        aria-controls={dialog ? `dialog-${dialog}` : modal ? 'global-modal' : undefined}
         class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]}
         style={delay !== undefined ? `animation-delay: ${delay}s` : ''}
       >

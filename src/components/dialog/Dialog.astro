@@ -1,0 +1,128 @@
+---
+// 通用弹窗外壳，基于原生 <dialog>：
+// 页面上任意带 data-dialog="xxx" 的元素被点击 -> 打开 id 为 dialog-xxx 的弹窗；
+// 焦点圈定、Esc 关闭、关闭后焦点回到触发按钮都由浏览器原生处理，不再手写焦点陷阱。
+interface Props {
+  id: string;
+  labelledby: string;
+  width?: string;
+}
+
+const { id, labelledby, width = '760px' } = Astro.props;
+---
+
+<dialog id={`dialog-${id}`} class="dialog" aria-labelledby={labelledby} style={`--dialog-width: ${width}`}>
+  <div class="dialog-card">
+    <button type="button" class="dialog-close" data-dialog-close aria-label="关闭">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </button>
+    <slot />
+  </div>
+</dialog>
+
+<script>
+  // 同一页面引用多个弹窗时 Astro 只打包一份脚本，事件委托到 document 上统一处理
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    // 1. 点击触发器：找到对应弹窗并以模态方式打开
+    const trigger = target.closest<HTMLElement>('[data-dialog]');
+    if (trigger) {
+      const dialog = document.getElementById(`dialog-${trigger.dataset.dialog}`);
+      if (dialog instanceof HTMLDialogElement) {
+        event.preventDefault();
+        dialog.showModal();
+      }
+      return;
+    }
+
+    // 2. 点击关闭按钮：关闭所在弹窗
+    if (target.closest('[data-dialog-close]')) {
+      target.closest('dialog')?.close();
+      return;
+    }
+
+    // 3. 点击卡片外的遮罩：事件目标是 dialog 元素本身（卡片内容都包在 .dialog-card 里）
+    if (target instanceof HTMLDialogElement && target.open) target.close();
+  });
+</script>
+
+<style>
+  .dialog {
+    width: min(var(--dialog-width), calc(100vw - 32px));
+    max-width: none;
+    max-height: min(88dvh, calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom)));
+    margin: auto;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    color: var(--text-strong);
+    box-shadow: 0 24px 72px rgba(18, 24, 49, 0.22);
+    scrollbar-width: thin;
+  }
+
+  .dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .dialog[open] {
+    animation: dialog-in 0.22s ease-out;
+  }
+
+  .dialog[open]::backdrop {
+    animation: backdrop-in 0.22s ease-out;
+  }
+
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+  }
+
+  @keyframes backdrop-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .dialog-card {
+    position: relative;
+    padding: clamp(24px, 5vw, 40px);
+  }
+
+  .dialog-close {
+    position: absolute;
+    top: clamp(16px, 4vw, 28px);
+    right: clamp(16px, 4vw, 28px);
+    z-index: 2;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .dialog-close:hover,
+  .dialog-close:focus-visible {
+    border-color: rgba(var(--c-primary-rgb), 0.3);
+    background: rgba(var(--c-primary-rgb), 0.1);
+    color: var(--c-primary);
+  }
+</style>

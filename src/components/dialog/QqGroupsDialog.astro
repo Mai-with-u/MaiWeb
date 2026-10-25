@@ -1,0 +1,261 @@
+---
+import Dialog from './Dialog.astro';
+import { qqGroupSections, socialLinks } from '../../data/community';
+
+// QQ 群弹窗：首屏“QQ群”按钮带 data-dialog="qq"，点击后打开。
+// 群列表在构建时从数据层渲染成静态 HTML，样式可以正常走组件作用域，不再用 innerHTML 拼字符串。
+---
+
+<Dialog id="qq" labelledby="qq-dialog-title">
+  <div class="qq">
+    <header class="qq-header">
+      <h2 id="qq-dialog-title" class="qq-title">QQ 交流群</h2>
+      <span class="qq-accent" aria-hidden="true"></span>
+      <p class="qq-subtitle">MaiBot 有多个 QQ 交流群，按不同用途划分</p>
+    </header>
+
+    {
+      qqGroupSections.map((section) => (
+        <section class={`qq-section tone-${section.tone}`} aria-label={section.title}>
+          <h3 class="qq-section-label">{section.title}</h3>
+          <div class="qq-grid">
+            {section.groups.map((group) => (
+              <article class="qq-card">
+                <div class="qq-card-body">
+                  <h4 class="qq-card-title">
+                    <span class="qq-dot" aria-hidden="true" />
+                    {group.name}
+                  </h4>
+                  <p class="qq-card-desc">{group.description}</p>
+                </div>
+                <a
+                  class="qq-join"
+                  href={group.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`加入 ${group.name} QQ 群`}
+                >
+                  加入群聊 →
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+
+    <section class="qq-section" aria-label="其他平台">
+      <h3 class="qq-section-label tone-muted">其他平台</h3>
+      <div class="qq-social">
+        {
+          socialLinks.map((item) => (
+            <a class="qq-social-link" href={item.url} target="_blank" rel="noopener noreferrer">
+              <strong>{item.name}</strong>
+              <span>{item.description}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <aside class="qq-tip">
+      <strong>提示</strong>
+      <p>技术问题请优先在技术交流群中提问，闲聊群不提供技术答疑。如果你在开发 MaiBot 插件，欢迎加入插件开发群交流。</p>
+    </aside>
+  </div>
+</Dialog>
+
+<style>
+  .qq {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .qq-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-right: 56px;
+  }
+
+  .qq-title {
+    font-size: clamp(1.5rem, 1.3rem + 1vw, 1.75rem);
+    line-height: 1.1;
+  }
+
+  .qq-accent {
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--c-primary);
+  }
+
+  .qq-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  /* 每个分组用一种强调色，卡片底色、描边、按钮都由 --tone 派生 */
+  .qq-section {
+    --tone: var(--c-primary-rgb);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tone-green {
+    --tone: var(--c-green-rgb);
+  }
+
+  .tone-blue {
+    --tone: var(--c-blue-rgb);
+  }
+
+  .tone-purple {
+    --tone: var(--c-purple-rgb);
+  }
+
+  .qq-section-label {
+    padding: 4px 16px 4px 12px;
+    border-left: 4px solid rgb(var(--tone));
+    border-radius: 4px;
+    background: rgba(var(--tone), 0.1);
+    color: rgb(var(--tone));
+    font-size: var(--fs-small);
+    line-height: 1.4;
+  }
+
+  .qq-section-label.tone-muted {
+    border-color: var(--text-subtle);
+    background: var(--surface-muted);
+    color: var(--text-muted);
+  }
+
+  .qq-grid,
+  .qq-social {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+
+  .qq-card {
+    display: flex;
+    min-width: 0;
+    min-height: 140px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 24px 20px 20px;
+    border: 1px solid rgba(var(--tone), 0.2);
+    border-radius: var(--radius-sm);
+    background: rgba(var(--tone), 0.08);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+  }
+
+  .qq-card-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .qq-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .qq-dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: rgb(var(--tone));
+  }
+
+  .qq-card-desc {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .qq-join {
+    align-self: flex-start;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    background: rgb(var(--tone));
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1.35;
+    transition:
+      transform var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
+  .qq-join:hover,
+  .qq-join:focus-visible {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+
+  .qq-social-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--surface-muted);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .qq-social-link:hover,
+  .qq-social-link:focus-visible {
+    border-color: rgba(var(--c-primary-rgb), 0.4);
+    transform: translateY(-1px);
+  }
+
+  .qq-social-link strong {
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+  }
+
+  .qq-social-link span {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+
+  .qq-tip {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    border-left: 4px solid var(--c-primary);
+    border-radius: var(--radius-sm);
+    background: rgba(var(--c-primary-rgb), 0.1);
+  }
+
+  .qq-tip strong {
+    color: var(--c-primary);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+  }
+
+  .qq-tip p {
+    color: var(--text-body);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+</style>

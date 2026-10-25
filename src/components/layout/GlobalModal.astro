@@ -154,103 +154,9 @@
     if (!modal || !modalBody) return;
     lastTrigger = trigger;
     const content = trigger.getAttribute('data-modal');
-    modalCard?.classList.toggle('modal-card--qq', content === 'qq');
     modalCard?.classList.toggle('modal-card--versions', content === 'versions');
     trigger.setAttribute('aria-expanded', 'true');
-    if (content === 'qq') {
-      modalBody.innerHTML = `
-        <div class="qq-modal">
-          <header class="qq-modal__header">
-            <div class="qq-modal__title-wrap">
-              <h2 class="qq-modal__title" id="modal-title">QQ 交流群</h2>
-              <span class="qq-modal__accent" aria-hidden="true"></span>
-            </div>
-            <p class="qq-modal__subtitle">MaiBot 有多个 QQ 交流群，按不同用途划分</p>
-          </header>
-
-          <div class="qq-modal__content">
-            <section class="qq-section qq-section--tech" aria-labelledby="qq-tech-title">
-              <h3 class="qq-section__label" id="qq-tech-title">技术交流</h3>
-              <div class="qq-section__grid">
-                <article class="qq-card">
-                  <div class="qq-card__body">
-                    <div class="qq-card__title-row">
-                      <span class="qq-card__dot" aria-hidden="true"></span>
-                      <h4 class="qq-card__title">麦麦脑电图</h4>
-                    </div>
-                    <p class="qq-card__desc">技术交流 / 答疑</p>
-                  </div>
-                  <a class="qq-card__button" href="https://qm.qq.com/q/RzmCiRtHEW" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦脑电图 QQ 群">加入群聊 →</a>
-                </article>
-                <article class="qq-card">
-                  <div class="qq-card__body">
-                    <div class="qq-card__title-row">
-                      <span class="qq-card__dot" aria-hidden="true"></span>
-                      <h4 class="qq-card__title">麦麦大脑磁共振</h4>
-                    </div>
-                    <p class="qq-card__desc">技术交流 / 答疑</p>
-                  </div>
-                  <a class="qq-card__button" href="https://qm.qq.com/q/VQ3XZrWgMs" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦大脑磁共振 QQ 群">加入群聊 →</a>
-                </article>
-                <article class="qq-card">
-                  <div class="qq-card__body">
-                    <div class="qq-card__title-row">
-                      <span class="qq-card__dot" aria-hidden="true"></span>
-                      <h4 class="qq-card__title">麦麦要当 VTB</h4>
-                    </div>
-                    <p class="qq-card__desc">技术交流 / 答疑</p>
-                  </div>
-                  <a class="qq-card__button" href="https://qm.qq.com/q/wGePTl1UyY" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦要当 VTB QQ 群">加入群聊 →</a>
-                </article>
-              </div>
-            </section>
-
-            <section class="qq-section qq-section--chat" aria-labelledby="qq-chat-title">
-              <h3 class="qq-section__label" id="qq-chat-title">闲聊吹水</h3>
-              <div class="qq-section__grid">
-                <article class="qq-card">
-                  <div class="qq-card__body">
-                    <div class="qq-card__title-row">
-                      <span class="qq-card__dot" aria-hidden="true"></span>
-                      <h4 class="qq-card__title">麦麦之闲聊群</h4>
-                    </div>
-                    <p class="qq-card__desc">仅限闲聊，不答疑</p>
-                  </div>
-                  <a class="qq-card__button" href="https://qm.qq.com/q/JxvHZnxyec" target="_blank" rel="noopener noreferrer" aria-label="加入麦麦之闲聊群 QQ 群">加入群聊 →</a>
-                </article>
-              </div>
-            </section>
-
-            <section class="qq-section qq-section--plugin" aria-labelledby="qq-plugin-title">
-              <h3 class="qq-section__label" id="qq-plugin-title">插件开发</h3>
-              <div class="qq-section__grid">
-                <article class="qq-card">
-                  <div class="qq-card__body">
-                    <div class="qq-card__title-row">
-                      <span class="qq-card__dot" aria-hidden="true"></span>
-                      <h4 class="qq-card__title">插件开发群</h4>
-                    </div>
-                    <p class="qq-card__desc">进阶开发与测试</p>
-                  </div>
-                  <a class="qq-card__button" href="https://qm.qq.com/q/1036092828" target="_blank" rel="noopener noreferrer" aria-label="加入插件开发群 QQ 群">加入群聊 →</a>
-                </article>
-              </div>
-            </section>
-          </div>
-
-          <aside class="qq-tip">
-            <span class="qq-tip__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M9 21h6v-1.5H9V21Zm3-19a7 7 0 0 0-4.18 12.62c.55.41.93.98 1.08 1.63l.16.75h5.88l.16-.75c.15-.65.53-1.22 1.08-1.63A7 7 0 0 0 12 2Zm2.98 10.99a4.2 4.2 0 0 0-1.48 2.01h-3a4.2 4.2 0 0 0-1.48-2.01A5 5 0 1 1 14.98 13ZM9 18.5h6V17H9v1.5Z" />
-              </svg>
-            </span>
-            <div class="qq-tip__content">
-              <strong>提示</strong>
-              <p>技术问题请优先在技术交流群中提问，闲聊群不提供技术答疑。如果你在开发 MaiBot 插件，欢迎加入插件开发群交流。</p>
-            </div>
-          </aside>
-        </div>`;
-    } else if (content === 'versions') {
+    if (content === 'versions') {
       modalBody.innerHTML = versionsMarkup(trigger);
     } else {
       modalBody.innerHTML =
@@ -272,7 +178,7 @@
     modal.removeAttribute('aria-labelledby');
     modal.setAttribute('aria-label', '弹窗');
     modal.setAttribute('aria-hidden', 'true');
-    modalCard?.classList.remove('modal-card--qq', 'modal-card--versions');
+    modalCard?.classList.remove('modal-card--versions');
     document.removeEventListener('keydown', handleKeyDown);
     if (modalBody) modalBody.innerHTML = '';
     lastTrigger?.setAttribute('aria-expanded', 'false');

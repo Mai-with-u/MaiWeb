@@ -1,7 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
+import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
+
+import { links } from '../data/links';
 
 const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases/latest';
 ---
@@ -52,7 +55,15 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
             icon="docs"
             label="使用文档"
           />
-          <CtaButton variant="green" size="small" delay={0.6} href="#" icon="qq" label="QQ群" modal="qq" />
+          <CtaButton
+            variant="green"
+            size="small"
+            delay={0.6}
+            href={links.community}
+            icon="qq"
+            label="QQ群"
+            dialog="qq"
+          />
           <CtaButton
             variant="green"
             delay={0.7}
@@ -110,6 +121,8 @@ const fallbackDownloadUrl = 'https://github.com/Mai-with-u/MaiBotOneKey/releases
     </div>
   </div>
 </section>
+
+<QqGroupsDialog />
 
 <script>
   (async function () {
