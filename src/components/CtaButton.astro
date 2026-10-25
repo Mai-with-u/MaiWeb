@@ -9,6 +9,8 @@ export interface Props {
   delay?: number;
   // 点击后打开的原生弹窗名，对应 <dialog id="dialog-xxx">
   dialog?: string;
+  // 填站点名称时，点击先弹出离站确认，并在新标签页打开（见 LeaveSiteDialog）
+  leave?: string;
   id?: string;
 }
 
@@ -21,6 +23,7 @@ const {
   sublabel,
   delay,
   dialog,
+  leave,
   id,
 } = Astro.props;
 
@@ -39,6 +42,10 @@ const corner = variant === 'green' ? 8 : 10;
         href={href}
         id={id}
         data-dialog={dialog || undefined}
+        data-leave-confirm={leave ? '' : undefined}
+        data-leave-name={leave || undefined}
+        target={leave ? '_blank' : undefined}
+        rel={leave ? 'noopener noreferrer' : undefined}
         aria-haspopup={dialog ? 'dialog' : undefined}
         aria-controls={dialog ? `dialog-${dialog}` : undefined}
         class:list={['cta-link', `cta-link-${variant}`, `cta-link-${size}`, { 'cta-fade-in': delay !== undefined }]}

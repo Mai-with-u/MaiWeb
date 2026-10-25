@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import maiAvatar from '../assets/mai-avatar.jpg';
+import { links } from '../data/links';
 ---
 
 <section class="sticky-section">
@@ -48,6 +49,16 @@ import maiAvatar from '../assets/mai-avatar.jpg';
           <p>插件就像给 MaiBot 安装"App"，让它拥有更多功能！插件系统提供强大的 API 和事件系统，拥有无限扩展可能。</p>
           <p>无论是接入新平台、扩展记忆能力，还是添加趣味互动，都能在插件市场找到解决方案，让麦麦不断成长。</p>
         </div>
+        <a
+          class="text-block-link tone-blue"
+          href={links.pluginMarket}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-leave-confirm
+          data-leave-name="麦麦插件市场"
+        >
+          去插件市场逛逛 →
+        </a>
       </div>
     </div>
 
@@ -400,6 +411,24 @@ import maiAvatar from '../assets/mai-avatar.jpg';
 
   .text-block-desc p + p {
     margin-top: 1rem;
+  }
+
+  /* 段落末尾的跳转链接：跟随该段标题的强调色，下划线文字，和首屏协议链接同一种做法 */
+  .text-block-link {
+    align-self: flex-start;
+    margin-top: 1.5rem;
+    color: var(--tone-text);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+    transition: opacity var(--transition-fast);
+  }
+
+  .text-block-link:hover {
+    opacity: 0.8;
   }
 
   /* ===== 演示屏 =====

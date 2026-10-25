@@ -9,14 +9,17 @@ const REPO = 'Mai-with-u/MaiBot';
 const PLUGIN_INDEX = 'https://raw.githubusercontent.com/Mai-with-u/plugin-repo/main/plugins.json';
 const TIMEOUT_MS = 8000;
 
-// 2026-10-25 的快照，仅在接口不可用时展示
+// 2026-10-25 晚的快照，仅在接口不可用时展示（提交数取 dev 分支）
 const FALLBACK = {
-  commits: 7995,
+  commits: 8003,
   closedIssues: 990,
   contributors: 116,
   plugins: 433,
-  stars: 6523,
+  stars: 6530,
 };
+
+// 日常开发合在 dev 分支，默认分支 main 只在发版时同步，提交数取两者中较大的一个
+const COMMIT_BRANCHES = ['main', 'dev'];
 
 export interface CommunityStats {
   commits: number;
@@ -56,6 +59,17 @@ async function countByLastPage(url: string): Promise<number> {
   return items.length;
 }
 
+async function countCommits(): Promise<number> {
+  const counts = await Promise.allSettled(
+    COMMIT_BRANCHES.map((branch) =>
+      countByLastPage(`https://api.github.com/repos/${REPO}/commits?per_page=1&sha=${branch}`)
+    )
+  );
+  const values = counts.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
+  if (values.length === 0) throw new Error('commits unavailable');
+  return Math.max(...values);
+}
+
 async function countClosedIssues(): Promise<number> {
   const query = encodeURIComponent(`repo:${REPO} type:issue state:closed`);
   const response = await request(`https://api.github.com/search/issues?q=${query}&per_page=1`);
@@ -91,7 +105,7 @@ let contributorsPromise: Promise<Contributor[]> | undefined;
 export function getCommunityStats(): Promise<CommunityStats> {
   statsPromise ??= (async () => {
     const [commits, closedIssues, contributors, plugins, stars] = await Promise.allSettled([
-      countByLastPage(`https://api.github.com/repos/${REPO}/commits?per_page=1`),
+      countCommits(),
       countClosedIssues(),
       countByLastPage(`https://api.github.com/repos/${REPO}/contributors?per_page=1`),
       countPlugins(),
@@ -108,7 +122,7 @@ export function getCommunityStats(): Promise<CommunityStats> {
   return statsPromise;
 }
 
-// 贡献者头像墙：只取真人账号（排除 dependabot 等机器人），失败时返回空数组，页面据此隐藏头像墙
+// 贡献者头像墙：只取真人账号（排除 dependabot 等机器人），失败时返回空数组，页面改由浏览器端补请求（见 contributors-client.ts）
 export function getContributors(): Promise<Contributor[]> {
   contributorsPromise ??= (async () => {
     try {
@@ -128,7 +142,7 @@ export function getContributors(): Promise<Contributor[]> {
           profileUrl: item.html_url!,
         }));
     } catch (error) {
-      console.warn(`[github] 贡献者列表获取失败，隐藏头像墙：${(error as Error).message}`);
+      console.warn(`[github] 贡献者列表获取失败，交给浏览器端兜底：${(error as Error).message}`);
       return [];
     }
   })();

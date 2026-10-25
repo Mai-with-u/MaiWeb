@@ -5,8 +5,10 @@ import { links } from '../data/links';
 
 // 页脚：常用入口 + 开源协议说明。左下角藏着一个只用鼠标或手指才能点到的彩蛋。
 // Astro 7 起模板按 JSX 规则处理空白：跨行的空白会被整段去掉，“GPL-3.0”和“协议开源”之间的空格要用 {' '} 显式写出。
-const footerLinks = [
+// leave 为站点名称时，点击会先弹出离站确认（见 LeaveSiteDialog），并在新标签页打开
+const footerLinks: { label: string; href: string; leave?: string }[] = [
   { label: '使用文档', href: links.docs },
+  { label: '插件市场', href: links.pluginMarket, leave: '麦麦插件市场' },
   { label: '衍生项目', href: '/projects/' },
   { label: '关于我们', href: '/about/' },
   { label: 'GitHub', href: links.repo },
@@ -17,7 +19,15 @@ const footerLinks = [
   <div class="container footer-inner">
     <nav class="footer-links" aria-label="页脚导航">
       {footerLinks.map((item) => (
-        <a href={item.href}>{item.label}</a>
+        <a
+          href={item.href}
+          data-leave-confirm={item.leave ? '' : undefined}
+          data-leave-name={item.leave}
+          target={item.leave ? '_blank' : undefined}
+          rel={item.leave ? 'noopener noreferrer' : undefined}
+        >
+          {item.label}
+        </a>
       ))}
     </nav>
     <p class="footer-copyright">

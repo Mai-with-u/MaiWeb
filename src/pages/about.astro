@@ -21,7 +21,7 @@ const contributors = (await getContributors()).slice(0, 48);
 const relatedProjects = [
   { label: 'MaiBot 本体', sublabel: '自带 WebUI 后台', href: links.repo, icon: 'github' },
   { label: '使用文档', sublabel: '装、配、接平台、查报错', href: links.manual, icon: 'docs' },
-  { label: '插件市场', sublabel: '社区写的插件都在这', href: links.pluginMarket, icon: 'none' },
+  { label: '插件市场', sublabel: '社区写的插件都在这', href: links.pluginMarket, icon: 'none', leave: '麦麦插件市场' },
   { label: 'Windows 一键包', sublabel: '下了就能跑', href: links.oneKeyRepo, icon: 'download' },
   { label: 'MaiDroid', sublabel: '安卓手机上的麦麦', href: links.droidRepo, icon: 'download' },
   { label: '衍生项目', sublabel: '当主播、玩 MC 的麦麦', href: '/projects/', icon: 'paperplane' },
@@ -92,6 +92,7 @@ const relatedProjects = [
               icon={item.icon}
               label={item.label}
               sublabel={item.sublabel}
+              leave={'leave' in item ? item.leave : undefined}
             />
           ))}
         </div>
@@ -109,24 +110,20 @@ const relatedProjects = [
           <strong>{formatCount(stats.plugins)}</strong> 个社区插件。
         </p>
 
-        {contributors.length > 0 && (
-          <ul class="avatar-grid" aria-label="贡献者">
-            {contributors.map((person) => (
-              <li>
-                <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" title={person.login}>
-                  <img
-                    src={person.avatarUrl}
-                    alt={person.login}
-                    width="48"
-                    height="48"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* 构建时没拿到贡献者时渲染空列表并打上 data-contributors-pending，由页面脚本在浏览器端补上 */}
+        <ul
+          class="avatar-grid"
+          aria-label="贡献者"
+          data-contributors-pending={contributors.length === 0 ? '' : undefined}
+        >
+          {contributors.map((person) => (
+            <li>
+              <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" title={person.login}>
+                <img src={person.avatarUrl} alt={person.login} width="48" height="48" loading="lazy" decoding="async" />
+              </a>
+            </li>
+          ))}
+        </ul>
 
         <p class="join-text">提问、唠嗑、看麦麦整活，都在群里：</p>
         <div class="button-row">
@@ -176,6 +173,37 @@ const relatedProjects = [
   <QqGroupsDialog />
   <Footer />
 </Layout>
+
+<script>
+  import { copyScope, fetchContributorsInBrowser } from '../lib/contributors-client';
+
+  // 贡献者头像兜底：构建时没拿到列表就在浏览器端请求一次，按构建时同样的结构（li > a > img）填进去
+  const pendingList = document.querySelector<HTMLElement>('.avatar-grid[data-contributors-pending]');
+  if (pendingList) {
+    fetchContributorsInBrowser().then((people) => {
+      for (const person of people.slice(0, 48)) {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        const img = document.createElement('img');
+        link.href = person.profileUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.title = person.login;
+        img.src = person.avatarUrl;
+        img.alt = person.login;
+        img.width = 48;
+        img.height = 48;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        [item, link, img].forEach((element) => copyScope(pendingList, element));
+        link.append(img);
+        item.append(link);
+        pendingList.append(item);
+      }
+      pendingList.removeAttribute('data-contributors-pending');
+    });
+  }
+</script>
 
 <style>
   .about {

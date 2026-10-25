@@ -25,26 +25,25 @@ const actionCards = [
   },
 ];
 
-// 构建时拉取统计数字和贡献者头像，接口失败时数字退回快照、头像墙直接不渲染
+// 构建时拉取统计数字和贡献者头像，接口失败时数字退回快照；
+// 头像没拿到时仍渲染 6 行空轨道并打上 data-contributors-pending，由页面脚本在浏览器端补请求后填进去
 const stats = await getCommunityStats();
 const contributors = await getContributors();
 
-// 头像墙：6 行跑马灯，每行 14 个头像并复制一份实现无缝滚动，奇偶行反向
-const avatarRows =
-  contributors.length === 0
-    ? []
-    : Array.from({ length: 6 }, (_, rowIndex) => {
-        const offset = rowIndex * 7;
-        const row = Array.from(
-          { length: 14 },
-          (_, itemIndex) => contributors[(offset + itemIndex) % contributors.length]
-        );
-        return {
-          direction: rowIndex % 2 === 0 ? 'left' : 'right',
-          duration: 34 + rowIndex * 5,
-          avatars: [...row, ...row],
-        };
-      });
+// 头像墙：6 行跑马灯，每行 14 个头像并复制一份实现无缝滚动，奇偶行反向。
+// 第 n 行从第 n×7 个贡献者开始取，浏览器端兜底填充时用同样的规则
+const avatarRows = Array.from({ length: 6 }, (_, rowIndex) => {
+  const offset = rowIndex * 7;
+  const row =
+    contributors.length === 0
+      ? []
+      : Array.from({ length: 14 }, (_, itemIndex) => contributors[(offset + itemIndex) % contributors.length]);
+  return {
+    direction: rowIndex % 2 === 0 ? 'left' : 'right',
+    duration: 34 + rowIndex * 5,
+    avatars: [...row, ...row],
+  };
+});
 ---
 
 <main class="projects-page">
@@ -143,7 +142,14 @@ const avatarRows =
           绘图、群管理等几乎所有场景。每一个插件，都是某位开发者对 MaiBot 的一次扩充。
         </p>
       </div>
-      <a class="spotlight-link" href={links.pluginMarket} target="_blank" rel="noopener noreferrer">
+      <a
+        class="spotlight-link"
+        href={links.pluginMarket}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-leave-confirm
+        data-leave-name="麦麦插件市场"
+      >
         探索插件市场
         <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
           <path
@@ -169,7 +175,11 @@ const avatarRows =
 
       <div class="manifesto-grid">
         <article class="quote-card">
-          <div class="contributors-bg" aria-hidden="true">
+          <div
+            class="contributors-bg"
+            aria-hidden="true"
+            data-contributors-pending={contributors.length === 0 ? '' : undefined}
+          >
             {avatarRows.map((row) => (
               <div
                 class={`contributors-row ${row.direction === 'right' ? 'is-reverse' : ''}`}
@@ -1130,6 +1140,31 @@ const avatarRows =
 </style>
 
 <script>
+  import { copyScope, fetchContributorsInBrowser } from '../lib/contributors-client';
+
+  // 头像墙兜底：构建时没拿到贡献者（容器带 data-contributors-pending），就在浏览器端请求一次，
+  // 按构建时相同的规则（第 n 行从第 n×7 个开始取 14 个，再复制一份做无缝滚动）把头像填进每一行
+  const pendingWall = document.querySelector<HTMLElement>('.contributors-bg[data-contributors-pending]');
+  if (pendingWall) {
+    fetchContributorsInBrowser().then((people) => {
+      if (people.length === 0) return;
+      pendingWall.querySelectorAll<HTMLElement>('.contributors-track').forEach((track, rowIndex) => {
+        const row = Array.from({ length: 14 }, (_, i) => people[(rowIndex * 7 + i) % people.length]);
+        for (const person of [...row, ...row]) {
+          const img = document.createElement('img');
+          img.src = person.avatarUrl;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.className = 'contributor-avatar';
+          copyScope(track, img);
+          track.append(img);
+        }
+      });
+      pendingWall.removeAttribute('data-contributors-pending');
+    });
+  }
+
   function markCardLoaded(card: Element) {
     if (card) card.classList.add('is-loaded');
   }
