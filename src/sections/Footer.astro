@@ -117,7 +117,7 @@ const footerLinks: { label: string; href: string; leave?: string }[] = [
 
   .footer-copyright {
     max-width: 40rem;
-    color: var(--text-muted);
+    color: var(--text-subtle);
     font-family: var(--font-display);
     font-size: var(--fs-xs);
     font-weight: 700;
@@ -126,12 +126,13 @@ const footerLinks: { label: string; href: string; leave?: string }[] = [
   }
 
   .footer-link {
-    color: var(--c-primary);
+    color: inherit;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  .footer-link:hover {
+  .footer-link:hover,
+  .footer-link:focus-visible {
     color: var(--c-primary-hover);
   }
 
