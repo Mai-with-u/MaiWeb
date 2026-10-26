@@ -2,7 +2,7 @@
 // 文档站或仓库改路径时只需要改这一个文件，避免同一个链接散落多处后各自过时。
 
 const GITHUB_ORG = 'https://github.com/Mai-with-u';
-const DOCS = 'https://docs.mai-mai.org';
+const DOCS = 'https://docs.maibot.chat';
 
 export const links = {
   // 主仓库与协议：首屏、页脚和关于页的“开源与协议”都指向这里
@@ -28,7 +28,7 @@ export const links = {
   deployWindows: `${DOCS}/manual/deployment/windows`,
 
   // 插件市场展示页（数据来自 plugin-repo 仓库）
-  pluginMarket: 'https://plugins.maibot.chat/',
+  pluginMarket: 'https://plugin.maibot.chat/',
   pluginRepo: `${GITHUB_ORG}/plugin-repo`,
 
   // 安装包：首屏按设备推荐 Windows 一键包或 Android 安装包，接口失败时退回到这些发布页

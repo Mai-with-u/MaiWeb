@@ -38,7 +38,21 @@ src/
 - QQ 群变化时，改 `src/data/community.ts`，与文档站“交流群”页面保持一致。
 - 衍生项目的增删和排序，改 `src/data/projects.ts`。
 
-## 配置
+## Cloudflare 部署
+
+官网地址为 `https://maibot.chat`，Worker 名称为 `maiweb`，静态文件目录为 `dist/`。
+
+在 Cloudflare 的 **Workers & Pages → maiweb → Settings → Builds → Connect** 中连接 `Mai-with-u/MaiWeb`，设置：
+
+- 生产分支：`master`
+- 根目录：`/`
+- 构建命令：`npm run build`
+- 部署命令：`npx wrangler deploy`
+- Node.js：24（仓库的 `.node-version` 已指定）
+
+连接完成后，推送到 `master` 会自动构建并部署。首次连接前可在本地执行 `npm ci`、`npm run build` 和 `npx wrangler deploy` 部署。
+
+## 站点配置
 
 - **正式域名**：`astro.config.mjs` 中的 `site` 字段，canonical、OpenGraph 链接都从这里生成。
 - **GITHUB_TOKEN（可选）**：构建时请求 GitHub 统计接口用的令牌。不配置也能构建，但未登录请求每小时只有 60 次额度，被限流时页面会显示内置的快照数字。

@@ -1,4 +1,4 @@
-// 社区入口数据，与文档站“交流群”页面（docs.mai-mai.org/about/community）保持一致。
+// 社区入口数据，与文档站“交流群”页面（docs.maibot.chat/about/community）保持一致。
 // 文档站换群或新增群时，同步改这里即可，首页 QQ 群弹窗和关于页会一起更新。
 
 export type Tone = 'primary' | 'green' | 'blue' | 'purple';
