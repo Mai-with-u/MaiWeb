@@ -257,15 +257,21 @@ const isCurrent = (href: string) => (pathname === localPath(href) ? 'page' : und
     }
   }
 
-  /* === Inner: cut corner + background === */
+  /* === Inner: cut corner + background ===
+     宽度跟着内容走（外层 .navbar-blur 是 fit-content），不再写死宽度：写死时菜单后面会空出一大段。
+     右内边距 = (导航栏高度 - 部署按钮高度) / 2，按钮到右边和到上下边的距离始终相等，
+     按钮切角和底板切角之间的斜向间距也恰好接近这个值，三边是均匀的一圈 */
   .navbar-glass {
+    --nav-height: 4rem;
+    --cta-height: 2.75rem;
+    --cta-inset: calc((var(--nav-height) - var(--cta-height)) / 2);
     position: relative;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    width: min(47rem, calc(100vw - 2rem - var(--safe-left) - var(--safe-right)));
-    height: 4rem;
-    padding: 0 1rem;
+    max-width: calc(100vw - 2rem - var(--safe-left) - var(--safe-right));
+    height: var(--nav-height);
+    padding: 0 var(--cta-inset) 0 1rem;
     background: transparent;
     isolation: isolate;
   }
@@ -359,11 +365,11 @@ const isCurrent = (href: string) => (pathname === localPath(href) ? 'page' : und
     flex-shrink: 0;
   }
 
+  /* 菜单只占自己的宽度，不再 flex: 1 撑满剩余空间 */
   .nav-menu {
     display: none;
     align-items: center;
     gap: 0;
-    flex: 1;
   }
 
   .nav-separator {
@@ -615,7 +621,7 @@ const isCurrent = (href: string) => (pathname === localPath(href) ? 'page' : und
     align-items: center;
     justify-content: center;
     padding: 0.5rem 1.25rem;
-    height: 2.75rem;
+    height: var(--cta-height);
     min-width: 5.25rem;
     background: #e97f0f;
     color: #fff;
@@ -734,12 +740,13 @@ const isCurrent = (href: string) => (pathname === localPath(href) ? 'page' : und
 
   /* 窄屏（< 48rem）：收起文字菜单，改用汉堡按钮展开下拉面板 */
   @media (max-width: 767.98px) {
+    /* 手机上导航栏和部署按钮都更矮（导航栏回到原版的 56px），右内边距仍按同一公式算，和上下边距保持一致 */
     .navbar-glass {
-      width: auto;
+      --nav-height: 3.5rem;
+      --cta-height: 2.25rem;
       min-width: min(18.75rem, calc(100vw - 2rem - var(--safe-left) - var(--safe-right)));
-      max-width: calc(100vw - 2rem - var(--safe-left) - var(--safe-right));
       gap: 0.375rem;
-      padding: 0 0.5rem;
+      padding: 0 var(--cta-inset) 0 0.5rem;
     }
 
     .nav-divider {
@@ -765,7 +772,6 @@ const isCurrent = (href: string) => (pathname === localPath(href) ? 'page' : und
     }
 
     .nav-cta {
-      height: 2.25rem;
       min-width: 0;
       padding: 0.375rem 0.875rem;
       font-size: 0.875rem;
