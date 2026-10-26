@@ -20,7 +20,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
         </div>
         <div class="logo-text">
           <span class="logo-title">麦麦Bot</span>
-          <span class="logo-subtitle">MaiBot MaiSaka</span>
+          <span class="logo-subtitle">MaiBot</span>
         </div>
       </a>
 
@@ -29,9 +29,17 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
       <div class="nav-menu">
         <a href="/projects/" class="nav-item" aria-current={isCurrent('/projects/')}>
           衍生项目
-          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
-          </svg>
+        </a>
+        <div class="nav-separator"></div>
+        <a
+          href={links.pluginMarket}
+          class="nav-item"
+          data-leave-confirm
+          data-leave-name="麦麦插件市场"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          插件市场
         </a>
         <div class="nav-separator"></div>
         <div class="nav-dropdown">
@@ -83,9 +91,6 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
         <div class="nav-separator"></div>
         <a href="/about/" class="nav-item" aria-current={isCurrent('/about/')}>
           关于麦麦
-          <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-            <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
-          </svg>
         </a>
       </div>
 
@@ -169,6 +174,16 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
         衍生项目
       </a>
       <a
+        href={links.pluginMarket}
+        class="nav-item-mobile"
+        data-leave-confirm
+        data-leave-name="麦麦插件市场"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        插件市场
+      </a>
+      <a
         href={links.manual}
         class="nav-item-mobile"
         data-leave-confirm
@@ -246,9 +261,9 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    width: min(37.5rem, calc(100vw - 2rem - var(--safe-left) - var(--safe-right)));
-    height: 3.5rem;
-    padding: 0 0.75rem;
+    width: min(47rem, calc(100vw - 2rem - var(--safe-left) - var(--safe-right)));
+    height: 4rem;
+    padding: 0 1rem;
     background: transparent;
     isolation: isolate;
   }
@@ -320,7 +335,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .logo-title {
     font-family: var(--font-display);
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 700;
     color: #000;
     letter-spacing: 0.48px;
@@ -328,7 +343,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 
   .logo-subtitle {
     font-family: var(--font-display);
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 700;
     color: #808080;
     letter-spacing: 0.36px;
@@ -360,10 +375,10 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     display: flex;
     align-items: center;
     gap: 2px;
-    padding: 0.375rem 0.5rem;
+    padding: 0.5rem 0.625rem;
     border: none;
     font-family: var(--font-display);
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     font-weight: 700;
     color: #a2abbc;
     border-radius: 0.5rem;
@@ -449,7 +464,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     padding: 0.5625rem 0.75rem;
     border-radius: 0.625rem;
     font-family: var(--font-display);
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     font-weight: 700;
     color: #1b1b1b;
     white-space: nowrap;
@@ -598,12 +613,12 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     align-items: center;
     justify-content: center;
     padding: 0.5rem 1.25rem;
-    height: 2.5rem;
+    height: 2.75rem;
     min-width: 5.25rem;
     background: #e97f0f;
     color: #fff;
     font-family: var(--font-display);
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 700;
     letter-spacing: 0.48px;
     text-decoration: none;
@@ -696,7 +711,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     align-items: center;
     padding: 0.625rem 0.75rem;
     font-family: var(--font-display);
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #1b1b1b;
     border-radius: 0.5rem;
