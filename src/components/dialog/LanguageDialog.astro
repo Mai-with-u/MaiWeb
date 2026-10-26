@@ -18,8 +18,9 @@ const languages = [
     </h2>
     <p class="lang-subtitle">{locale === 'en' ? 'Choose your language' : 'Language'}</p>
     <ul class="lang-list">
-      {languages.map((language) => (
-        <li>
+      {/* --i 是这一项的序号，打开弹窗时各项按序号依次浮入 */}
+      {languages.map((language, index) => (
+        <li style={`--i: ${index}`}>
           {!language.current ? (
             <a
               class="lang-option"
@@ -50,11 +51,36 @@ const languages = [
 </Dialog>
 
 <script>
+  // 切换语言：一道底色从左往右扫满选项、弹窗淡出，约 0.26 秒后再跳到另一种语言的同一页面。
+  // 按住 Ctrl/⌘/Shift/Alt 或中键（想在新窗口打开）、系统开启“减少动效”时不拦截，照常直接跳转
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const SWITCH_DELAY = 260;
+
   document.querySelectorAll<HTMLAnchorElement>('[data-language-link]').forEach((link) => {
     const target = new URL(link.href);
     target.search = window.location.search;
     target.hash = window.location.hash;
     link.href = target.toString();
+
+    link.addEventListener('click', (event) => {
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      if (reduceMotion.matches) return;
+      event.preventDefault();
+      link.classList.add('is-switching');
+      link.closest('dialog')?.classList.add('is-switching');
+      setTimeout(() => window.location.assign(link.href), SWITCH_DELAY);
+    });
+  });
+
+  // 从新语言页面按浏览器“后退”回来时，页面可能直接从往返缓存里恢复，弹窗还开着、动画停在最后一帧，这里复原
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted) return;
+    document
+      .querySelectorAll('[data-language-link].is-switching')
+      .forEach((link) => link.classList.remove('is-switching'));
+    const dialog = document.getElementById('dialog-lang');
+    dialog?.classList.remove('is-switching');
+    if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
   });
 </script>
 
@@ -105,6 +131,103 @@ const languages = [
     width: 0.25rem;
     content: '';
     background: rgb(var(--tone));
+  }
+
+  /* ===== 动效 ===== */
+
+  /* 打开弹窗：标题和各个选项依次从下往上浮入（dialog 关闭时不渲染，每次打开都会重新播放） */
+  :global(#dialog-lang[open]) .lang-title,
+  :global(#dialog-lang[open]) .lang-subtitle,
+  :global(#dialog-lang[open]) .lang-list li {
+    animation: lang-in 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  }
+
+  :global(#dialog-lang[open]) .lang-subtitle {
+    animation-delay: 0.04s;
+  }
+
+  :global(#dialog-lang[open]) .lang-list li {
+    animation-delay: calc(0.1s + var(--i) * 0.06s);
+  }
+
+  @keyframes lang-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.625rem);
+    }
+  }
+
+  /* 当前语言那项：左侧竖条随入场从中间向上下展开 */
+  :global(#dialog-lang[open]) .is-current::before {
+    animation: bar-in 0.36s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+    animation-delay: calc(0.16s + var(--i, 0) * 0.06s);
+  }
+
+  @keyframes bar-in {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  /* 可切换的那项：悬停或键盘聚焦时底色加深、文字往右让一点、箭头往前探 */
+  a.lang-option {
+    transition:
+      padding-left 0.2s ease,
+      background 0.2s ease;
+  }
+
+  a.lang-option .lang-note {
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease,
+      color 0.2s ease;
+  }
+
+  a.lang-option:hover,
+  a.lang-option:focus-visible {
+    padding-left: 1.625rem;
+    outline: none;
+    background: linear-gradient(135deg, rgba(var(--tone), 0.2) 0%, rgba(var(--tone), 0.07) 100%);
+  }
+
+  a.lang-option:hover .lang-note,
+  a.lang-option:focus-visible .lang-note {
+    color: rgb(var(--tone));
+    transform: translateX(0.25rem);
+  }
+
+  /* 点击切换：一道底色从左往右扫满选项，箭头滑出去 */
+  a.lang-option::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: '';
+    background: rgba(var(--tone), 0.2);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  a.lang-option {
+    isolation: isolate;
+  }
+
+  a.lang-option.is-switching::after {
+    transform: none;
+    transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  a.lang-option.is-switching .lang-note {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+
+  /* 扫过之后整个弹窗淡出，衔接页面跳转（dialog 元素由外壳组件渲染，所以用全局选择器） */
+  :global(#dialog-lang.is-switching) {
+    opacity: 0;
+    transform: scale(0.98);
+    transition:
+      opacity 0.16s ease 0.12s,
+      transform 0.16s ease 0.12s;
   }
 
   .lang-name {
