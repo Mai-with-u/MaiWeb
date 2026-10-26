@@ -1,6 +1,8 @@
 ---
+import { useI18n } from '../../lib/i18n';
 import Dialog from './Dialog.astro';
 import { qqGroupSections, socialLinks } from '../../data/community';
+const { t, locale } = useI18n(Astro.url);
 
 // QQ 群弹窗：首屏“QQ群”按钮带 data-dialog="qq"，点击后打开。
 // 群列表在构建时从数据层渲染成静态 HTML，样式可以正常走组件作用域，不再用 innerHTML 拼字符串。
@@ -10,33 +12,33 @@ import { qqGroupSections, socialLinks } from '../../data/community';
   <div class="qq">
     <header class="qq-header">
       <h2 id="qq-dialog-title" class="qq-title">
-        QQ 交流群
+        {t('QQ 交流群')}
       </h2>
       <span class="qq-accent" aria-hidden="true"></span>
-      <p class="qq-subtitle">按用途分了好几个群，挑一个进来吧</p>
+      <p class="qq-subtitle">{t('按用途分了好几个群，挑一个进来吧')}</p>
     </header>
 
     {qqGroupSections.map((section) => (
-      <section class={`qq-section tone-${section.tone}`} aria-label={section.title}>
-        <h3 class="qq-section-label">{section.title}</h3>
+      <section class={`qq-section tone-${section.tone}`} aria-label={t(section.title)}>
+        <h3 class="qq-section-label">{t(section.title)}</h3>
         <div class="qq-grid">
           {section.groups.map((group) => (
             <article class="qq-card">
               <div class="qq-card-body">
                 <h4 class="qq-card-title">
                   <span class="qq-dot" aria-hidden="true" />
-                  {group.name}
+                  {t(group.name)}
                 </h4>
-                <p class="qq-card-desc">{group.description}</p>
+                <p class="qq-card-desc">{t(group.description)}</p>
               </div>
               <a
                 class="qq-join"
                 href={group.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`加入 ${group.name} QQ 群`}
+                aria-label={locale === 'en' ? `Join ${t(group.name)} on QQ` : `加入 ${group.name} QQ 群`}
               >
-                加入群聊 →
+                {t('加入群聊 →')}
               </a>
             </article>
           ))}
@@ -44,11 +46,17 @@ import { qqGroupSections, socialLinks } from '../../data/community';
       </section>
     ))}
 
-    <section class="qq-section" aria-label="不用 QQ 的话">
-      <h3 class="qq-section-label tone-muted">不用 QQ 的话</h3>
+    <section class="qq-section" aria-label={t('不用 QQ 的话')}>
+      <h3 class="qq-section-label tone-muted">{t('不用 QQ 的话')}</h3>
       <div class="qq-social">
         {socialLinks.map((item) => (
-          <a class="qq-social-link" href={item.url} target="_blank" rel="noopener noreferrer" title={item.description}>
+          <a
+            class="qq-social-link"
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={t(item.description)}
+          >
             {item.name}
           </a>
         ))}
@@ -56,8 +64,8 @@ import { qqGroupSections, socialLinks } from '../../data/community';
     </section>
 
     <aside class="qq-tip">
-      <strong>先看一眼再进群</strong>
-      <p>技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。</p>
+      <strong>{t('先看一眼再进群')}</strong>
+      <p>{t('技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。')}</p>
     </aside>
   </div>
 </Dialog>

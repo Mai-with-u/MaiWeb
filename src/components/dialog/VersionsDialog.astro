@@ -1,6 +1,8 @@
 ---
+import { useI18n } from '../../lib/i18n';
 import Dialog from './Dialog.astro';
 import { links } from '../../data/links';
+const { t } = useI18n(Astro.url);
 
 // “其他版本”弹窗：首屏“其他版本”按钮带 data-dialog="versions"，点击后打开。
 // 两个平台的安装包都静态列出；下载地址和版本号先用发布页兜底，
@@ -8,29 +10,29 @@ import { links } from '../../data/links';
 const platforms = [
   {
     id: 'windows',
-    name: 'MaiBot Windows 一键包',
-    package: 'EXE 一键包',
-    description: '运行环境和启动器都打包好了，Windows 上下载就能用。',
+    name: t('MaiBot Windows 一键包'),
+    package: t('EXE 一键包'),
+    description: t('运行环境和启动器都打包好了，Windows 上下载就能用。'),
     downloadUrl: links.oneKeyLatest,
     projectUrl: links.oneKeyRepo,
     note: '',
   },
   {
     id: 'android',
-    name: 'MaiDroid Android 客户端',
-    package: 'APK 安装包',
-    description: '直接在安卓手机上跑麦麦，不用另外准备服务器。',
+    name: t('MaiDroid Android 客户端'),
+    package: t('APK 安装包'),
+    description: t('直接在安卓手机上跑麦麦，不用另外准备服务器。'),
     downloadUrl: links.droidReleases,
     projectUrl: links.droidRepo,
-    note: '还在测试阶段。安装时要是被系统拦下，允许浏览器安装应用就行。',
+    note: t('还在测试阶段。安装时要是被系统拦下，允许浏览器安装应用就行。'),
   },
 ];
 
 const methods = [
-  { name: 'uv 安装', description: 'Windows、Linux、macOS 都能用', href: links.deployUv },
-  { name: 'Docker 部署', description: '装进容器里跑', href: links.deployDocker },
-  { name: 'Linux 部署', description: '放在服务器上一直开着', href: links.deployLinux },
-  { name: '历史版本', description: '源码和每一版的更新说明', href: links.releases },
+  { name: t('uv 安装'), description: t('Windows、Linux、macOS 都能用'), href: links.deployUv },
+  { name: t('Docker 部署'), description: t('装进容器里跑'), href: links.deployDocker },
+  { name: t('Linux 部署'), description: t('放在服务器上一直开着'), href: links.deployLinux },
+  { name: t('历史版本'), description: t('源码和每一版的更新说明'), href: links.releases },
 ];
 ---
 
@@ -38,7 +40,7 @@ const methods = [
   <div class="versions">
     <header class="versions-header">
       <h2 id="versions-dialog-title" class="versions-title">
-        其他版本
+        {t('其他版本')}
       </h2>
     </header>
 
@@ -46,9 +48,9 @@ const methods = [
       {platforms.map((platform) => (
         <section class={`platform platform-${platform.id}`} data-platform={platform.id} aria-label={platform.name}>
           <div class="platform-topline">
-            <span class="platform-current">你正在用</span>
+            <span class="platform-current">{t('你正在用')}</span>
             <span class="platform-version" data-download-version={platform.id}>
-              最新版
+              {t('最新版')}
             </span>
           </div>
           <h3>{platform.name}</h3>
@@ -62,10 +64,11 @@ const methods = [
               target="_blank"
               rel="noopener noreferrer"
             >
-              下载 {platform.package}
+              {t('下载')}
+              {platform.package}
             </a>
             <a class="platform-project" href={platform.projectUrl} target="_blank" rel="noopener noreferrer">
-              查看项目
+              {t('查看项目')}
             </a>
           </div>
         </section>
@@ -74,7 +77,7 @@ const methods = [
 
     <section class="methods" aria-labelledby="versions-methods-title">
       <h3 id="versions-methods-title" class="methods-title">
-        高级部署
+        {t('高级部署')}
       </h3>
       <div class="methods-grid">
         {methods.map((method) => (

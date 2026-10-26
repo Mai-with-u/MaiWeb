@@ -1,26 +1,28 @@
 ---
+import { useI18n } from '../lib/i18n';
 import { Image } from 'astro:assets';
 import easterEgg from '../assets/easter-egg.png';
 import { links } from '../data/links';
+const { locale, t, localPath } = useI18n(Astro.url);
 
 // 页脚：常用入口 + 开源协议说明。左下角藏着一个只用鼠标或手指才能点到的彩蛋。
 // Astro 7 起模板按 JSX 规则处理空白：跨行的空白会被整段去掉，“GPL-3.0”和“协议开源”之间的空格要用 {' '} 显式写出。
 // leave 为站点名称时，点击会先弹出离站确认（见 LeaveSiteDialog），并在新标签页打开
 const footerLinks: { label: string; href: string; leave?: string }[] = [
-  { label: '使用文档', href: links.docs },
-  { label: '插件市场', href: links.pluginMarket, leave: '麦麦插件市场' },
-  { label: '衍生项目', href: '/projects/' },
-  { label: '关于麦麦', href: '/about/' },
+  { label: t('使用文档'), href: links.docs },
+  { label: t('插件市场'), href: links.pluginMarket, leave: t('麦麦插件市场') },
+  { label: t('衍生项目'), href: '/projects/' },
+  { label: t('关于麦麦'), href: '/about/' },
   { label: 'GitHub', href: links.repo },
 ];
 ---
 
 <footer class="footer">
   <div class="container footer-inner">
-    <nav class="footer-links" aria-label="页脚导航">
+    <nav class="footer-links" aria-label={t('页脚导航')}>
       {footerLinks.map((item) => (
         <a
-          href={item.href}
+          href={localPath(item.href)}
           data-leave-confirm={item.leave ? '' : undefined}
           data-leave-name={item.leave}
           target={item.leave ? '_blank' : undefined}
@@ -31,21 +33,22 @@ const footerLinks: { label: string; href: string; leave?: string }[] = [
       ))}
     </nav>
     <p class="footer-copyright">
-      MaiSaka 以{' '}
+      {t('MaiSaka 以')}{' '}
       <a href={links.license} target="_blank" rel="noopener noreferrer" class="footer-link">
         GPL-3.0
-      </a>{' '}
-      协议开源；使用即表示您同意并知悉
+      </a>
+      {locale === 'en' ? '' : ' '}
+      {t('协议开源；使用即表示您同意并知悉')}
       <a href={links.eula} target="_blank" rel="noopener noreferrer" class="footer-link">
-        「用户协议」
+        {t('「用户协议」')}
       </a>
-      和
+      {t('和')}
       <a href={links.privacy} target="_blank" rel="noopener noreferrer" class="footer-link">
-        「隐私协议」
+        {t('「隐私协议」')}
       </a>
-      的相关内容。
+      {t('的相关内容。')}
       <br />
-      AI 生成内容请仔细甄别。
+      {t('AI 生成内容请仔细甄别。')}
     </p>
   </div>
 
@@ -53,7 +56,7 @@ const footerLinks: { label: string; href: string; leave?: string }[] = [
     <Image src={easterEgg} alt="" width={120} height={120} />
   </div>
   <div class="easter-bubble" aria-hidden="true">
-    <span class="easter-bubble-text">麦麦说得对</span>
+    <span class="easter-bubble-text">{t('麦麦说得对')}</span>
   </div>
 </footer>
 

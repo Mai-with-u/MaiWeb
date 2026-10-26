@@ -1,25 +1,27 @@
 ---
+import { useI18n } from '../lib/i18n';
 import { Image } from 'astro:assets';
 import logoIcon from '../assets/logo-icon.png';
 import LanguageDialog from '../components/dialog/LanguageDialog.astro';
 import LeaveSiteDialog from '../components/dialog/LeaveSiteDialog.astro';
 import { links } from '../data/links';
+const { t, localPath } = useI18n(Astro.url);
 
 // 当前页对应的导航项加 aria-current，屏幕阅读器能读出“当前页面”，样式上也高亮
 const pathname = Astro.url.pathname.replace(/\/?$/, '/');
-const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
+const isCurrent = (href: string) => (pathname === localPath(href) ? 'page' : undefined);
 ---
 
 <div class="navbar-blur">
-  <nav class="navbar-wrap" aria-label="主导航">
+  <nav class="navbar-wrap" aria-label={t('主导航')}>
     <div class="navbar-glass">
       <div class="navbar-accent"></div>
-      <a href="/" class="navbar-logo" aria-label="麦麦Bot 首页">
+      <a href={localPath('/')} class="navbar-logo" aria-label={t('麦麦Bot 首页')}>
         <div class="logo-icon">
           <Image src={logoIcon} alt="" width={40} height={40} loading="eager" decoding="async" />
         </div>
         <div class="logo-text">
-          <span class="logo-title">麦麦Bot</span>
+          <span class="logo-title">{t('麦麦Bot')}</span>
           <span class="logo-subtitle">MaiBot</span>
         </div>
       </a>
@@ -27,19 +29,19 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
       <div class="nav-divider"></div>
 
       <div class="nav-menu">
-        <a href="/projects/" class="nav-item" aria-current={isCurrent('/projects/')}>
-          衍生项目
+        <a href={localPath('/projects/')} class="nav-item" aria-current={isCurrent('/projects/')}>
+          {t('衍生项目')}
         </a>
         <div class="nav-separator"></div>
         <a
           href={links.pluginMarket}
           class="nav-item"
           data-leave-confirm
-          data-leave-name="麦麦插件市场"
+          data-leave-name={t('麦麦插件市场')}
           target="_blank"
           rel="noopener noreferrer"
         >
-          插件市场
+          {t('插件市场')}
         </a>
         <div class="nav-separator"></div>
         <div class="nav-dropdown">
@@ -50,7 +52,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
             aria-expanded="false"
             aria-controls="nav-docs-menu"
           >
-            使用文档
+            {t('使用文档')}
             <svg class="nav-arrow" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
               <path d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z"></path>
             </svg>
@@ -60,42 +62,42 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
               href={links.manual}
               class="nav-dropdown-link"
               data-leave-confirm
-              data-leave-name="MaiBot 文档站"
+              data-leave-name={t('MaiBot 文档站')}
               target="_blank"
               rel="noopener noreferrer"
             >
-              用户手册
+              {t('用户手册')}
             </a>
             <a
               href={links.develop}
               class="nav-dropdown-link"
               data-leave-confirm
-              data-leave-name="MaiBot 文档站"
+              data-leave-name={t('MaiBot 文档站')}
               target="_blank"
               rel="noopener noreferrer"
             >
-              开发文档
+              {t('开发文档')}
             </a>
             <a
               href={links.faq}
               class="nav-dropdown-link"
               data-leave-confirm
-              data-leave-name="MaiBot 文档站"
+              data-leave-name={t('MaiBot 文档站')}
               target="_blank"
               rel="noopener noreferrer"
             >
-              常见问题
+              {t('常见问题')}
             </a>
           </div>
         </div>
         <div class="nav-separator"></div>
-        <a href="/about/" class="nav-item" aria-current={isCurrent('/about/')}>
-          关于麦麦
+        <a href={localPath('/about/')} class="nav-item" aria-current={isCurrent('/about/')}>
+          {t('关于麦麦')}
         </a>
       </div>
 
       <div class="nav-actions">
-        <button class="theme-toggle" type="button" aria-label="切换深色模式">
+        <button class="theme-toggle" type="button" aria-label={t('切换深色模式')}>
           <svg
             class="icon-sun"
             viewBox="0 0 24 24"
@@ -124,7 +126,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
         <button
           class="lang-switch"
           type="button"
-          aria-label="切换语言"
+          aria-label={t('切换语言')}
           data-dialog="lang"
           aria-haspopup="dialog"
           aria-controls="dialog-lang"
@@ -136,7 +138,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
         <button
           class="nav-hamburger"
           type="button"
-          aria-label="展开菜单"
+          aria-label={t('展开菜单')}
           aria-expanded="false"
           aria-controls="nav-mobile-menu"
         >
@@ -159,62 +161,62 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
             href={links.manual}
             class="nav-cta"
             data-leave-confirm
-            data-leave-name="MaiBot 文档站"
+            data-leave-name={t('MaiBot 文档站')}
             target="_blank"
             rel="noopener noreferrer"
           >
-            部署
+            {t('部署')}
           </a>
         </span>
       </div>
     </div>
 
     <div class="nav-menu-mobile" id="nav-mobile-menu">
-      <a href="/projects/" class="nav-item-mobile" aria-current={isCurrent('/projects/')}>
-        衍生项目
+      <a href={localPath('/projects/')} class="nav-item-mobile" aria-current={isCurrent('/projects/')}>
+        {t('衍生项目')}
       </a>
       <a
         href={links.pluginMarket}
         class="nav-item-mobile"
         data-leave-confirm
-        data-leave-name="麦麦插件市场"
+        data-leave-name={t('麦麦插件市场')}
         target="_blank"
         rel="noopener noreferrer"
       >
-        插件市场
+        {t('插件市场')}
       </a>
       <a
         href={links.manual}
         class="nav-item-mobile"
         data-leave-confirm
-        data-leave-name="MaiBot 文档站"
+        data-leave-name={t('MaiBot 文档站')}
         target="_blank"
         rel="noopener noreferrer"
       >
-        用户手册
+        {t('用户手册')}
       </a>
       <a
         href={links.develop}
         class="nav-item-mobile"
         data-leave-confirm
-        data-leave-name="MaiBot 文档站"
+        data-leave-name={t('MaiBot 文档站')}
         target="_blank"
         rel="noopener noreferrer"
       >
-        开发文档
+        {t('开发文档')}
       </a>
       <a
         href={links.faq}
         class="nav-item-mobile"
         data-leave-confirm
-        data-leave-name="MaiBot 文档站"
+        data-leave-name={t('MaiBot 文档站')}
         target="_blank"
         rel="noopener noreferrer"
       >
-        常见问题
+        {t('常见问题')}
       </a>
-      <a href="/about/" class="nav-item-mobile" aria-current={isCurrent('/about/')}>
-        关于麦麦
+      <a href={localPath('/about/')} class="nav-item-mobile" aria-current={isCurrent('/about/')}>
+        {t('关于麦麦')}
       </a>
     </div>
   </nav>
@@ -804,6 +806,8 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
 </style>
 
 <script>
+  import { translator } from '../lib/i18n';
+  const t = translator(document.documentElement.lang === 'en' ? 'en' : 'zh-CN');
   const logo = document.querySelector('.navbar-logo');
   if (logo) {
     logo.addEventListener('click', (e) => {
@@ -897,7 +901,7 @@ const isCurrent = (href: string) => (pathname === href ? 'page' : undefined);
     const setMobileMenu = (open: boolean) => {
       mobileMenu.classList.toggle('is-open', open);
       hamburger.setAttribute('aria-expanded', String(open));
-      hamburger.setAttribute('aria-label', open ? '收起菜单' : '展开菜单');
+      hamburger.setAttribute('aria-label', t(open ? '收起菜单' : '展开菜单'));
     };
 
     hamburger.addEventListener('click', () => setMobileMenu(!mobileMenu.classList.contains('is-open')));

@@ -1,10 +1,12 @@
 ---
+import { useI18n } from '../lib/i18n';
 import { getImage } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import VersionsDialog from '../components/dialog/VersionsDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
 import { links } from '../data/links';
+const { locale, t } = useI18n(Astro.url);
 
 // 首屏布局：单栏（手机、竖屏平板、横屏手机）只放文案和按钮，占满一屏并垂直居中；
 // 宽屏（>= 1024px 且宽高比 >= 5:4）切成左右两栏，右侧才显示立绘，并按 1600×900 设计稿等比缩放。
@@ -21,15 +23,19 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     <div class="hero-content">
       <h1 class="hero-title animate-fade-in">
         <span class="title-line">
-          我在<span class="title-underline">试着学习</span>
+          {t('我在')}
+          <span class="title-underline">{t('试着学习')}</span>
         </span>
         <span class="title-line">
-          像人类一样<span class="title-highlight">陪伴你</span>
+          {t('像人类一样')}
+          <span class="title-highlight">{t('陪伴你')}</span>
         </span>
       </h1>
 
       <p class="hero-subtitle animate-fade-in animate-delay-2">
-        泥壕! 我是<span class="subtitle-highlight">麦麦</span>，一个正在努力成为人类的BOT。
+        {t('泥壕! 我是')}
+        <span class="subtitle-highlight">{t('麦麦')}</span>
+        {t('，一个正在努力成为人类的BOT。')}
       </p>
 
       <div class="hero-buttons">
@@ -39,8 +45,8 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
           id="hero-download"
           href={links.oneKeyLatest}
           icon="download"
-          label="立即下载"
-          sublabel="Windows 一键包"
+          label={t('立即下载')}
+          sublabel={t('Windows 一键包')}
           delay={0.3}
         />
         <div class="hero-buttons-row">
@@ -49,17 +55,17 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
             size="small"
             href={links.manual}
             icon="download"
-            label="其他版本"
+            label={t('其他版本')}
             dialog="versions"
             delay={0.4}
           />
-          <CtaButton variant="green" size="small" href={links.docs} icon="docs" label="使用文档" delay={0.5} />
+          <CtaButton variant="green" size="small" href={links.docs} icon="docs" label={t('使用文档')} delay={0.5} />
           <CtaButton
             variant="green"
             size="small"
             href={links.community}
             icon="qq"
-            label="QQ群"
+            label={t('QQ群')}
             dialog="qq"
             delay={0.6}
           />
@@ -68,19 +74,20 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
       </div>
 
       <p class="hero-license animate-fade-in animate-delay-4">
-        MaiSaka 以{' '}
+        {t('MaiSaka 以')}{' '}
         <a href={links.license} target="_blank" rel="noopener noreferrer">
           GPL-3.0
-        </a>{' '}
-        协议开源；使用即表示您同意并知悉
+        </a>
+        {locale === 'en' ? '' : ' '}
+        {t('协议开源；使用即表示您同意并知悉')}
         <a href={links.eula} target="_blank" rel="noopener noreferrer">
-          「用户协议」
+          {t('「用户协议」')}
         </a>
-        和
+        {t('和')}
         <a href={links.privacy} target="_blank" rel="noopener noreferrer">
-          「隐私协议」
+          {t('「隐私协议」')}
         </a>
-        的相关内容。AI 生成内容请仔细甄别。
+        {t('的相关内容。AI 生成内容请仔细甄别。')}
       </p>
     </div>
 
@@ -103,7 +110,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
         />
         <img
           src={placeholder}
-          alt="麦麦"
+          alt={t('麦麦')}
           class="character-img"
           width={heroImage.width}
           height={heroImage.height}
@@ -113,7 +120,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
       </picture>
       <a class="version-card" id="hero-release" href={links.latestRelease} target="_blank" rel="noopener noreferrer">
         <span class="version-label">.Version</span>
-        <span class="version-text">获取中……</span>
+        <span class="version-text">{t('获取中……')}</span>
       </a>
     </div>
   </div>
@@ -123,6 +130,8 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
 <VersionsDialog />
 
 <script>
+  import { translator } from '../lib/i18n';
+  const t = translator(document.documentElement.lang === 'en' ? 'en' : 'zh-CN');
   import { links, releaseApis } from '../data/links';
 
   // 首屏下载按钮与版本号：页面加载后在浏览器端查询 GitHub Releases。
@@ -245,9 +254,9 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     // 主按钮：按当前平台切换下载地址和副标题
     const main = document.getElementById('hero-download') as HTMLAnchorElement | null;
     if (main) {
-      const label = platform === 'android' ? 'Android 安装包' : 'Windows 一键包';
+      const label = t(platform === 'android' ? 'Android 安装包' : 'Windows 一键包');
       main.href = resolve(platform).url;
-      main.setAttribute('aria-label', `立即下载 ${label}`);
+      main.setAttribute('aria-label', `${t('立即下载')} ${label}`);
       const sublabel = main.querySelector('.cta-sublabel');
       if (sublabel) sublabel.textContent = label;
     }
@@ -258,7 +267,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     });
     document.querySelectorAll<HTMLElement>('[data-download-version]').forEach((label) => {
       const version = downloads[label.dataset.downloadVersion === 'android' ? 'android' : 'windows']?.version;
-      if (version) label.textContent = `版本 ${version}`;
+      if (version) label.textContent = `${t('版本')} ${version}`;
     });
   }
 
@@ -269,7 +278,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     const version = (release?.tag_name || release?.name)?.replace(/^v/, '');
     const versionText = document.querySelector('.version-text');
     // 查不到版本（例如 GitHub 接口限流）时，直接引导去发布页。
-    if (versionText) versionText.textContent = version || '查看最新版本';
+    if (versionText) versionText.textContent = version || t('查看最新版本');
     const releaseLink = document.getElementById('hero-release') as HTMLAnchorElement | null;
     if (releaseLink && isGitHubUrl(release?.html_url)) releaseLink.href = release.html_url;
   });
@@ -346,6 +355,25 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     font-family: 'Times New Roman', Times, serif;
     font-size: var(--fs-lead);
     line-height: 1.5;
+  }
+
+  :global(html[lang='en']) .hero-subtitle {
+    font-family: var(--font-body);
+  }
+
+  :global(html[lang='en']) .hero-title {
+    font-size: clamp(1.875rem, 8vw, 3.625rem);
+    letter-spacing: -0.025em;
+  }
+
+  :global(html[lang='en']) .title-highlight {
+    white-space: nowrap;
+  }
+
+  :global(html[lang='en']) .hero-buttons-row :global(.cta-link-small) {
+    min-width: 0;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
   }
 
   .subtitle-highlight {

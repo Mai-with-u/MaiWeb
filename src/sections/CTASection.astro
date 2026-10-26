@@ -1,6 +1,8 @@
 ---
+import { useI18n } from '../lib/i18n';
 import CtaButton from '../components/CtaButton.astro';
 import { links } from '../data/links';
+const { t } = useI18n(Astro.url);
 
 // 首页收尾的行动号召：两行标语 + “现在开始”按钮，按钮落到文档站的快速上手
 ---
@@ -8,12 +10,12 @@ import { links } from '../data/links';
 <section class="cta-section" id="cta">
   <div class="container cta-inner reveal">
     <h2 class="cta-title">
-      <span class="title-orange">你想要的，一切尽在 MaiSaka！</span>
-      <span class="title-dark">一个致力于了解你的数字生命。</span>
+      <span class="title-orange">{t('你想要的，一切尽在 MaiSaka！')}</span>
+      <span class="title-dark">{t('一个致力于了解你的数字生命。')}</span>
     </h2>
 
     <div class="cta-action reveal-delay-1">
-      <CtaButton variant="primary" size="large" href={links.manual} icon="paperplane" label="现在开始" />
+      <CtaButton variant="primary" size="large" href={links.manual} icon="paperplane" label={t('现在开始')} />
     </div>
   </div>
 </section>
@@ -50,6 +52,11 @@ import { links } from '../data/links';
 
   .title-orange {
     color: var(--c-primary);
+  }
+
+  :global(html[lang='en']) .cta-title {
+    max-width: 20ch;
+    letter-spacing: -0.025em;
   }
 
   .title-dark {

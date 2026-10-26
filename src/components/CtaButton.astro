@@ -1,4 +1,6 @@
 ---
+import { useI18n } from '../lib/i18n';
+const { t, localPath } = useI18n(Astro.url);
 export interface Props {
   variant?: 'primary' | 'green';
   size?: 'large' | 'small';
@@ -39,11 +41,11 @@ const corner = variant === 'green' ? 8 : 10;
     <span class:list={['cta-clip', `cta-clip-${variant}`]} style={`--cta-corner: ${corner}px`}>
       <!-- Layer 3: glass background + border + content -->
       <a
-        href={href}
+        href={localPath(href)}
         id={id}
         data-dialog={dialog || undefined}
         data-leave-confirm={leave ? '' : undefined}
-        data-leave-name={leave || undefined}
+        data-leave-name={leave ? t(leave) : undefined}
         target={leave ? '_blank' : undefined}
         rel={leave ? 'noopener noreferrer' : undefined}
         aria-haspopup={dialog ? 'dialog' : undefined}
@@ -84,8 +86,8 @@ const corner = variant === 'green' ? 8 : 10;
           )}
         </span>
         <span class="cta-text">
-          <span class="cta-label">{label}</span>
-          {sublabel && <span class="cta-sublabel">{sublabel}</span>}
+          <span class="cta-label">{t(label)}</span>
+          {sublabel && <span class="cta-sublabel">{t(sublabel)}</span>}
         </span>
       </a>
     </span>

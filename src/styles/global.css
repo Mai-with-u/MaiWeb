@@ -63,6 +63,13 @@
   --transition-fast: 0.2s ease;
 }
 
+/* Latin copy uses a local font stack, independent of the Chinese font CDN. */
+html[lang='en'] {
+  --font-display: 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Segoe UI', system-ui, sans-serif;
+  --font-reading: 'Segoe UI', system-ui, sans-serif;
+}
+
 [data-theme='dark'] {
   color-scheme: dark;
 

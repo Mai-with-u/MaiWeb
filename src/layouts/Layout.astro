@@ -3,6 +3,8 @@ import '../styles/global.css';
 import SeoHead from '../components/layout/SeoHead.astro';
 import PageBackground from '../components/layout/PageBackground.astro';
 import RevealScript from '../components/layout/RevealScript.astro';
+import { useI18n } from '../lib/i18n';
+const { locale, t, localPath } = useI18n(Astro.url);
 
 interface Props {
   title?: string;
@@ -20,9 +22,9 @@ const {
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={locale}>
   <head>
-    <SeoHead title={title} description={description} canonicalPath={canonicalPath} noindex={noindex} />
+    <SeoHead title={t(title)} description={t(description)} canonicalPath={localPath(canonicalPath)} noindex={noindex} />
   </head>
   <body>
     <PageBackground />

@@ -1,4 +1,5 @@
 ---
+import { useI18n } from '../lib/i18n';
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../sections/Navbar.astro';
@@ -13,6 +14,7 @@ import maiHuman2 from '../assets/mai-human-2.jpg';
 import { links } from '../data/links';
 import { socialLinks } from '../data/community';
 import { formatCount, getCommunityStats, getContributors } from '../lib/github';
+const { locale, t, localPath } = useI18n(Astro.url);
 
 // 关于麦麦：麦麦是谁 -> 她的来历和长相（甲鱼形态、人类形态）-> 做她的初衷（“最像，而不是最好”）
 // -> 相关项目 -> 一起玩（社区数据、贡献者、进群）-> 开源协议和防骗提醒。
@@ -23,18 +25,24 @@ const stats = await getCommunityStats();
 const contributors = (await getContributors()).slice(0, 48);
 
 const relatedProjects = [
-  { label: 'MaiBot 本体', sublabel: '自带 WebUI 后台', href: links.repo, icon: 'github' },
-  { label: '使用文档', sublabel: '装、配、接平台、查报错', href: links.manual, icon: 'docs' },
-  { label: '插件市场', sublabel: '社区写的插件都在这', href: links.pluginMarket, icon: 'none', leave: '麦麦插件市场' },
-  { label: 'Windows 一键包', sublabel: '下了就能跑', href: links.oneKeyRepo, icon: 'download' },
-  { label: 'MaiDroid', sublabel: '安卓手机上的麦麦', href: links.droidRepo, icon: 'download' },
-  { label: '衍生项目', sublabel: '当主播、玩 MC 的麦麦', href: '/projects/', icon: 'paperplane' },
+  { label: t('MaiBot 本体'), sublabel: t('自带 WebUI 后台'), href: links.repo, icon: 'github' },
+  { label: t('使用文档'), sublabel: t('装、配、接平台、查报错'), href: links.manual, icon: 'docs' },
+  {
+    label: t('插件市场'),
+    sublabel: t('社区写的插件都在这'),
+    href: links.pluginMarket,
+    icon: 'none',
+    leave: t('麦麦插件市场'),
+  },
+  { label: t('Windows 一键包'), sublabel: t('下了就能跑'), href: links.oneKeyRepo, icon: 'download' },
+  { label: 'MaiDroid', sublabel: t('安卓手机上的麦麦'), href: links.droidRepo, icon: 'download' },
+  { label: t('衍生项目'), sublabel: t('当主播、玩 MC 的麦麦'), href: '/projects/', icon: 'paperplane' },
 ] as const;
 ---
 
 <Layout
-  title="关于麦麦 - MaiBot 官方网站"
-  description="MaiBot（麦麦 / MaiSaka）是一个致力于了解你、用真人方式聊天的数字生命。"
+  title={t('关于麦麦 - MaiBot 官方网站')}
+  description={t('MaiBot（麦麦 / MaiSaka）是一个致力于了解你、用真人方式聊天的数字生命。')}
   canonicalPath="/about/"
 >
   <Navbar />
@@ -42,23 +50,25 @@ const relatedProjects = [
     <div class="about-container">
       <header class="about-hero reveal">
         <div class="about-hero-copy">
-          <nav class="breadcrumb" aria-label="面包屑导航">
-            <a href="/">首页</a>
+          <nav class="breadcrumb" aria-label={t('面包屑导航')}>
+            <a href={localPath('/')}>{t('首页')}</a>
             <span aria-hidden="true">&gt;</span>
-            <span aria-current="page">关于麦麦</span>
+            <span aria-current="page">{t('关于麦麦')}</span>
           </nav>
           <h1 class="about-title">
-            关于<span class="title-highlight">麦麦</span>
+            {t('关于')}
+            <span class="title-highlight">{t('麦麦')}</span>
           </h1>
           <p class="lead">
-            麦麦（MaiBot，也叫
-            MaiSaka）是一个用大语言模型驱动的聊天机器人。她会看群里的气氛决定要不要插话，会学大家说话的样子，也会慢慢记住你是个什么样的人。比起把事情办得又快又好，她更想聊起来像个真人。
+            {t(
+              '麦麦（MaiBot，也叫 MaiSaka）是一个用大语言模型驱动的聊天机器人。她会看群里的气氛决定要不要插话，会学大家说话的样子，也会慢慢记住你是个什么样的人。比起把事情办得又快又好，她更想聊起来像个真人。'
+            )}
           </p>
         </div>
         {/* 手机上图标整个隐藏（导航栏左上角已经有同一个图标），用 lazy 让隐藏时浏览器不去下载它 */}
         <Image
           src={logoIcon}
-          alt="麦麦Bot 图标"
+          alt={t('麦麦Bot 图标')}
           class="about-avatar"
           widths={[240, 480]}
           sizes="15rem"
@@ -73,74 +83,78 @@ const relatedProjects = [
         {/* 甲鱼形态：标题、甲鱼、正文是同级的三块，手机上甲鱼缩小放到标题右边，宽一点的屏幕放到左侧一整列 */}
         <div class="persona-intro">
           <h2 id="persona-title" class="block-title persona-title">
-            麦麦其实
+            {t('麦麦其实')}
             <wbr />
-            是条鱼
+            {t('是条鱼')}
           </h2>
           <Image
             src={maiFish}
-            alt="麦麦的萨卡班甲鱼形态"
+            alt={t('麦麦的萨卡班甲鱼形态')}
             class="persona-fish"
             widths={[320, 640]}
             sizes="(min-width: 768px) 17rem, 6.5rem"
           />
           <div class="persona-body">
-            <p>麦麦有萨卡班甲鱼形态和二次元纸片人形态。</p>
-            <h3 class="persona-subtitle">怎么活到今天的</h3>
+            <p>{t('麦麦有萨卡班甲鱼形态和二次元纸片人形态。')}</p>
+            <h3 class="persona-subtitle">{t('怎么活到今天的')}</h3>
             <p>
-              本体是萨卡班甲鱼意外和橙子混合而来的生物，因为橙子富含维生素 C
-              能够抗氧化，使得这只萨卡班甲鱼抗了四亿年的氧化，新鲜地活到了今天。
+              {t(
+                '本体是萨卡班甲鱼意外和橙子混合而来的生物，因为橙子富含维生素 C 能够抗氧化，使得这只萨卡班甲鱼抗了四亿年的氧化，新鲜地活到了今天。'
+              )}
             </p>
             <p>
-              2011 年苹果公司登顶世界市值第一后，苹果压过橙子，橙子由此式微，失去维生素 C 庇护的萨卡班甲鱼只得化身 AI
-              苟活至今。
+              {t(
+                '2011 年苹果公司登顶世界市值第一后，苹果压过橙子，橙子由此式微，失去维生素 C 庇护的萨卡班甲鱼只得化身 AI 苟活至今。'
+              )}
             </p>
-            <h3 class="persona-subtitle">长什么样</h3>
-            <p>不同于一般的萨卡班甲鱼，麦麦的上半身呈橙色，头顶有二叶嫩芽，通过茎连接。</p>
-            <p>尾部光滑，连接有一四叶草，通过该组件，麦麦可以获得向前的推力。</p>
+            <h3 class="persona-subtitle">{t('长什么样')}</h3>
+            <p>{t('不同于一般的萨卡班甲鱼，麦麦的上半身呈橙色，头顶有二叶嫩芽，通过茎连接。')}</p>
+            <p>{t('尾部光滑，连接有一四叶草，通过该组件，麦麦可以获得向前的推力。')}</p>
           </div>
         </div>
 
         {/* 人类形态：两张设定图本身是白底，放进白色圆角卡片里，和页头图标卡片同一种做法 */}
         <div class="persona-human">
           <div class="persona-body">
-            <h3 class="persona-subtitle">变成人的时候</h3>
-            <p>由于购买橙子需要人类身份，麦麦有时候会化身更加拟人的形态，便于与人类互动。</p>
+            <h3 class="persona-subtitle">{t('变成人的时候')}</h3>
+            <p>{t('由于购买橙子需要人类身份，麦麦有时候会化身更加拟人的形态，便于与人类互动。')}</p>
             <dl class="persona-traits">
               <div>
-                <dt>头发</dt>
-                <dd>橙色波浪短卷发</dd>
+                <dt>{t('头发')}</dt>
+                <dd>{t('橙色波浪短卷发')}</dd>
               </div>
               <div>
-                <dt>眼睛</dt>
-                <dd>蓝紫色</dd>
+                <dt>{t('眼睛')}</dt>
+                <dd>{t('蓝紫色')}</dd>
               </div>
             </dl>
-            <p>右脸贴有小型四叶草印花，四叶草是人物最明确的身份标志。</p>
-            <p>其他细节麦麦爱穿啥穿啥。</p>
-            <h3 class="persona-subtitle">上网冲浪的时候</h3>
+            <p>{t('右脸贴有小型四叶草印花，四叶草是人物最明确的身份标志。')}</p>
+            <p>{t('其他细节麦麦爱穿啥穿啥。')}</p>
+            <h3 class="persona-subtitle">{t('上网冲浪的时候')}</h3>
             <p>
-              麦麦经常变成人上网冲浪。这时候她会换一身更有科技感的打扮，橙色卷发、蓝紫色眼睛和右脸的四叶草倒还是老样子。
+              {t(
+                '麦麦经常变成人上网冲浪。这时候她会换一身更有科技感的打扮，橙色卷发、蓝紫色眼睛和右脸的四叶草倒还是老样子。'
+              )}
             </p>
           </div>
           <div class="persona-forms">
             <figure class="form-card">
               <Image
                 src={maiHuman1}
-                alt="麦麦变成人时的全身设定图"
+                alt={t('麦麦变成人时的全身设定图')}
                 widths={[240, 480, 720]}
                 sizes="(min-width: 768px) 13rem, 45vw"
               />
-              <figcaption>平时</figcaption>
+              <figcaption>{t('平时')}</figcaption>
             </figure>
             <figure class="form-card">
               <Image
                 src={maiHuman2}
-                alt="麦麦上网冲浪时的设定图，戴着耳机、穿白色外套"
+                alt={t('麦麦上网冲浪时的设定图，戴着耳机、穿白色外套')}
                 widths={[240, 480, 720]}
                 sizes="(min-width: 768px) 13rem, 45vw"
               />
-              <figcaption>上网冲浪时</figcaption>
+              <figcaption>{t('上网冲浪时')}</figcaption>
             </figure>
           </div>
         </div>
@@ -148,21 +162,23 @@ const relatedProjects = [
 
       <section class="motto reveal" aria-labelledby="motto-title">
         <h2 id="motto-title" class="motto-title">
-          <span class="motto-underline">最像</span>，而不是最好。
+          <span class="motto-underline">{t('最像')}</span>
+          {t('，而不是最好。')}
         </h2>
         <div class="motto-body">
           <p>
-            麦麦一开始只是给牛牛 bot 加的几个小功能，加着加着越写越多，最后干脆推倒重写。想做的是 QQ
-            群里的一个“活着的家伙”：功能不用多全，但得让人觉得她真的在。
+            {t(
+              '麦麦一开始只是给牛牛 bot 加的几个小功能，加着加着越写越多，最后干脆推倒重写。想做的是 QQ 群里的一个“活着的家伙”：功能不用多全，但得让人觉得她真的在。'
+            )}
           </p>
-          <p>真需要 AI 陪着的人，想要的可能是一个会犯错、有自己想法和脾气的家伙，完美的助手反倒其次。</p>
+          <p>{t('真需要 AI 陪着的人，想要的可能是一个会犯错、有自己想法和脾气的家伙，完美的助手反倒其次。')}</p>
         </div>
         <p class="motto-tagline">Code is open, but the soul is yours.</p>
       </section>
 
       <section class="block reveal" aria-labelledby="related-title">
         <h2 id="related-title" class="block-title">
-          相关项目
+          {t('相关项目')}
         </h2>
         <div class="button-row">
           {relatedProjects.map((item) => (
@@ -181,20 +197,22 @@ const relatedProjects = [
 
       <section class="block reveal" aria-labelledby="community-title">
         <h2 id="community-title" class="block-title">
-          一起玩
+          {t('一起玩')}
         </h2>
         <p class="community-text">
           {/* Astro 7 会去掉跨行的空白，数字前后的空格用 {' '} 显式写出，四个数字两侧的间距才一致 */}
-          到现在已经有 <strong>{formatCount(stats.contributors)}</strong> 位贡献者给麦麦交过代码，攒了{' '}
-          <strong>{formatCount(stats.commits)}</strong> 次提交，GitHub 上收到了{' '}
-          <strong>{formatCount(stats.stars)}</strong> 个 Star，插件市场里有{' '}
-          <strong>{formatCount(stats.plugins)}</strong> 个社区插件。
+          {t('到现在已经有')}
+          <strong>{formatCount(stats.contributors)}</strong>
+          {t('位贡献者给麦麦交过代码，攒了')} <strong>{formatCount(stats.commits)}</strong>
+          {t('次提交，GitHub 上收到了')} <strong>{formatCount(stats.stars)}</strong>
+          {t('个 Star，插件市场里有')} <strong>{formatCount(stats.plugins)}</strong>
+          {t('个社区插件。')}
         </p>
 
         {/* 构建时没拿到贡献者时渲染空列表并打上 data-contributors-pending，由页面脚本在浏览器端补上 */}
         <ul
           class="avatar-grid"
-          aria-label="贡献者"
+          aria-label={t('贡献者')}
           data-contributors-pending={contributors.length === 0 ? '' : undefined}
         >
           {contributors.map((person) => (
@@ -206,9 +224,16 @@ const relatedProjects = [
           ))}
         </ul>
 
-        <p class="join-text">提问、唠嗑、看麦麦整活，都在群里：</p>
+        <p class="join-text">{t('提问、唠嗑、看麦麦整活，都在群里：')}</p>
         <div class="button-row">
-          <CtaButton variant="primary" size="small" href={links.community} icon="qq" label="QQ 交流群" dialog="qq" />
+          <CtaButton
+            variant="primary"
+            size="small"
+            href={links.community}
+            icon="qq"
+            label={t('QQ 交流群')}
+            dialog="qq"
+          />
           {socialLinks.map((item) => (
             <CtaButton
               variant="green"
@@ -223,30 +248,31 @@ const relatedProjects = [
 
       <section class="block reveal" aria-labelledby="license-title">
         <h2 id="license-title" class="block-title">
-          开源与协议
+          {t('开源与协议')}
         </h2>
         <p class="license-text">
-          麦麦用{' '}
+          {t('麦麦用')}{' '}
           <a href={links.license} target="_blank" rel="noopener noreferrer">
             GPL-3.0
-          </a>{' '}
-          协议开源，用之前记得看一眼
+          </a>
+          {locale === 'en' ? '' : ' '}
+          {t('协议开源，用之前记得看一眼')}
           <a href={links.eula} target="_blank" rel="noopener noreferrer">
-            「用户协议」
+            {t('「用户协议」')}
           </a>
-          和
+          {t('和')}
           <a href={links.privacy} target="_blank" rel="noopener noreferrer">
-            「隐私协议」
+            {t('「隐私协议」')}
           </a>
-          。她说的话是 AI 生成的，别全当真。帮过麦麦的项目和社区，都写在
+          {t('。她说的话是 AI 生成的，别全当真。帮过麦麦的项目和社区，都写在')}
           <a href={links.acknowledgements} target="_blank" rel="noopener noreferrer">
-            致谢页
+            {t('致谢页')}
           </a>
-          里。
+          {t('里。')}
         </p>
         <div class="mai-says">
-          <Image src={maiAvatar} alt="麦麦" class="mai-says-avatar" width={44} height={44} />
-          <p class="mai-says-bubble">麦麦是免费的！看到有人卖 MaiBot，多留个心眼，别被骗了。</p>
+          <Image src={maiAvatar} alt={t('麦麦')} class="mai-says-avatar" width={44} height={44} />
+          <p class="mai-says-bubble">{t('麦麦是免费的！看到有人卖 MaiBot，多留个心眼，别被骗了。')}</p>
         </div>
       </section>
     </div>

@@ -1,7 +1,9 @@
 ---
+import { useI18n } from '../../lib/i18n';
 import { Image } from 'astro:assets';
 import Dialog from './Dialog.astro';
 import maiAvatar from '../../assets/mai-avatar.jpg';
+const { t, localPath } = useI18n(Astro.url);
 
 // 离站确认弹窗：页面上带 data-leave-confirm 的链接被点击时，由麦麦用聊天气泡问一句要不要去、去哪个地址，
 // 用户点回复气泡“去看看”才在新标签页打开；勾选“这次就别再问了”后，当前标签页内后续点击直接打开。
@@ -15,29 +17,35 @@ import maiAvatar from '../../assets/mai-avatar.jpg';
       <Image src={maiAvatar} alt="" class="leave-avatar" width={44} height={44} />
       <div class="bubble bubble-mai">
         <h2 id="leave-dialog-title" class="leave-title">
-          要去
+          {t('要去')}
           <span class="leave-name" data-leave-name>
-            外部页面
+            {t('外部页面')}
           </span>
-          看看吗？
+          {t('看看吗？')}
         </h2>
-        <p class="leave-desc">我帮你在新标签页打开：</p>
+        <p class="leave-desc">{t('我帮你在新标签页打开：')}</p>
         <p class="leave-url" data-leave-url></p>
       </div>
     </div>
 
     <div class="leave-replies">
       <button type="button" class="bubble bubble-reply reply-later" data-dialog-close>
-        先不去了
+        {t('先不去了')}
       </button>
-      <a class="bubble bubble-reply reply-go" data-leave-go href="/" target="_blank" rel="noopener noreferrer">
-        去看看
+      <a
+        class="bubble bubble-reply reply-go"
+        data-leave-go
+        href={localPath('/')}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t('去看看')}
       </a>
     </div>
 
     <label class="leave-skip">
       <input type="checkbox" data-leave-skip />
-      这次就别再问了
+      {t('这次就别再问了')}
     </label>
   </div>
 </Dialog>
