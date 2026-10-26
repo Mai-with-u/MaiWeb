@@ -222,6 +222,7 @@ export const en: Record<string, string> = {
   先不去了: 'Not now',
   去看看: "Let's go",
   这次就别再问了: "Don't ask again in this tab",
+  选一个回复: 'Pick a reply',
   查看最新版本: 'Latest release',
   'Android 安装包': 'Android installer',
   版本: 'Version',

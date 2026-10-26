@@ -3,60 +3,95 @@ import { useI18n } from '../../lib/i18n';
 import { Image } from 'astro:assets';
 import Dialog from './Dialog.astro';
 import maiAvatar from '../../assets/mai-avatar.jpg';
-const { t, localPath } = useI18n(Astro.url);
+const { t } = useI18n(Astro.url);
 
-// 离站确认弹窗：页面上带 data-leave-confirm 的链接被点击时，由麦麦用聊天气泡问一句要不要去、去哪个地址，
-// 用户点回复气泡“去看看”才在新标签页打开；勾选“这次就别再问了”后，当前标签页内后续点击直接打开。
-// 气泡样式沿用首页特性区聊天演示：麦麦是带头像的灰色气泡，用户回复是右侧的绿色气泡。
+// 离站确认弹窗：页面上带 data-leave-confirm 的链接被点击时，弹出和麦麦的聊天窗口，流程是
+// 麦麦“正在输入” -> 发出“要去 X 看看吗？” -> 再输入 -> 发出新标签页地址 -> 下方浮现回复选项
+// -> 用户选一句 -> 这句作为用户的绿色气泡发出去 -> 选“去看看”就打开新标签页，选“先不去了”就收起弹窗。
+// 消息和候选都放在 <template> 里预先渲染好（带上组件的作用域属性和翻译），脚本只负责克隆、填名字和地址、控制节奏。
+// 勾选“这次就别再问了”后，当前标签页内后续点击外链直接打开，不再弹窗。
 // 链接可用 data-leave-name 指定站点名称，不写时显示域名。
 ---
 
-<Dialog id="leave" labelledby="leave-dialog-title" width="29rem">
+<Dialog id="leave" labelledby="leave-dialog-title" width="36rem">
   <div class="leave">
-    <div class="leave-row">
-      <Image src={maiAvatar} alt="" class="leave-avatar" width={44} height={44} />
-      <div class="bubble bubble-mai">
-        <h2 id="leave-dialog-title" class="leave-title">
-          {t('要去')}
-          <span class="leave-name" data-leave-name>
-            {t('外部页面')}
-          </span>
-          {t('看看吗？')}
-        </h2>
-        <p class="leave-desc">{t('我帮你在新标签页打开：')}</p>
-        <p class="leave-url" data-leave-url></p>
+    <header class="leave-head">
+      <span class="leave-head-name">{t('麦麦')}</span>
+      {/* 给读屏软件的标题：内容由脚本按目标站点填写 */}
+      <h2 id="leave-dialog-title" class="visually-hidden" data-leave-title>
+        {t('外部页面')}
+      </h2>
+    </header>
+
+    {/* 聊天记录：新消息出现时读屏软件会读出来 */}
+    <div class="leave-log" data-leave-log aria-live="polite"></div>
+
+    {/* 外层负责选完后整块收起（grid 行高 1fr -> 0fr），内层放分割线、候选和“不再提醒” */}
+    <div class="leave-options" data-leave-options role="group" aria-label={t('选一个回复')} inert>
+      <div class="leave-options-inner">
+        <button type="button" class="leave-option option-go" data-choice="go">
+          {t('去看看')}
+        </button>
+        <button type="button" class="leave-option option-stay" data-choice="stay">
+          {t('先不去了')}
+        </button>
+        <label class="leave-skip">
+          <input type="checkbox" data-leave-skip />
+          {t('这次就别再问了')}
+        </label>
       </div>
     </div>
-
-    <div class="leave-replies">
-      <button type="button" class="bubble bubble-reply reply-later" data-dialog-close>
-        {t('先不去了')}
-      </button>
-      <a
-        class="bubble bubble-reply reply-go"
-        data-leave-go
-        href={localPath('/')}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {t('去看看')}
-      </a>
-    </div>
-
-    <label class="leave-skip">
-      <input type="checkbox" data-leave-skip />
-      {t('这次就别再问了')}
-    </label>
   </div>
+
+  {/* 麦麦的一行消息：头像 + 气泡。同一轮里第二条起加 msg-follow，头像位置留空，和微信、QQ 的连发样式一致 */}
+  <template data-leave-tpl="mai">
+    <div class="msg msg-mai">
+      <Image src={maiAvatar} alt="" class="msg-avatar" width={44} height={44} />
+      <p class="bubble bubble-mai is-typing">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+      </p>
+    </div>
+  </template>
+
+  <template data-leave-tpl="ask">
+    {t('要去')}
+    <span class="leave-name" data-slot="name"></span>
+    {t('看看吗？')}
+  </template>
+
+  <template data-leave-tpl="url">
+    {t('我帮你在新标签页打开：')}
+    <span class="leave-url" data-slot="url"></span>
+  </template>
+
+  {/* 用户的回复外面包一层 msg-slot：出现时行高从 0 展开，和候选收起同时进行，弹窗高度平滑变化 */}
+  <template data-leave-tpl="user">
+    <div class="msg-slot">
+      <div class="msg msg-user">
+        <p class="bubble bubble-user" data-slot="text"></p>
+      </div>
+    </div>
+  </template>
 </Dialog>
 
 <script>
   const SKIP_KEY = 'maiweb-leave-confirm-skip';
   const dialog = document.getElementById('dialog-leave');
-  const nameLabel = dialog?.querySelector<HTMLElement>('[data-leave-name]');
-  const urlLabel = dialog?.querySelector<HTMLElement>('[data-leave-url]');
+  const log = dialog?.querySelector<HTMLElement>('[data-leave-log]');
+  const options = dialog?.querySelector<HTMLElement>('[data-leave-options]');
+  const title = dialog?.querySelector<HTMLElement>('[data-leave-title]');
   const skipBox = dialog?.querySelector<HTMLInputElement>('[data-leave-skip]');
-  const goLink = dialog?.querySelector<HTMLAnchorElement>('[data-leave-go]');
+  const template = (name: string) => dialog?.querySelector<HTMLTemplateElement>(`template[data-leave-tpl="${name}"]`);
+  const maiTpl = template('mai');
+  const askTpl = template('ask');
+  const urlTpl = template('url');
+  const userTpl = template('user');
+
+  // 系统开启“减少动效”时跳过所有等待，消息和选项立即出现，选择后立即跳转
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, reduceMotion.matches ? 0 : ms));
 
   const skipped = () => {
     try {
@@ -66,7 +101,91 @@ const { t, localPath } = useI18n(Astro.url);
     }
   };
 
-  if (dialog instanceof HTMLDialogElement && nameLabel && urlLabel && skipBox && goLink) {
+  // 打开新标签页：先开空白页、断开 opener（防止目标页反过来控制本页）再跳转，这样还能知道有没有被浏览器拦截；
+  // 被拦截时退回到当前标签页打开，保证点了“去看看”就一定能去
+  const openInNewTab = (url: string) => {
+    const win = window.open('', '_blank');
+    if (win) {
+      win.opener = null;
+      win.location.href = url;
+    } else {
+      window.location.assign(url);
+    }
+  };
+
+  if (
+    dialog instanceof HTMLDialogElement &&
+    log &&
+    options &&
+    title &&
+    skipBox &&
+    maiTpl &&
+    askTpl &&
+    urlTpl &&
+    userTpl
+  ) {
+    const optionButtons = Array.from(options.querySelectorAll<HTMLButtonElement>('[data-choice]'));
+    // 每次打开弹窗都换一个编号；弹窗中途被关掉后，还在等待中的旧流程发现编号变了就停下，不会往新弹窗里插消息
+    let round = 0;
+    let targetUrl = '';
+    let choosing = false;
+
+    const fill = (fragment: DocumentFragment, slots: Record<string, string>) => {
+      for (const [slot, text] of Object.entries(slots)) {
+        const el = fragment.querySelector<HTMLElement>(`[data-slot="${slot}"]`);
+        if (el) el.textContent = text;
+      }
+      return fragment;
+    };
+
+    // 麦麦发一条消息：先插入“正在输入”的气泡，等一会儿再把三个点换成正文
+    const maiSays = async (
+      id: number,
+      content: HTMLTemplateElement,
+      slots: Record<string, string>,
+      follow: boolean
+    ) => {
+      const row = maiTpl.content.firstElementChild?.cloneNode(true) as HTMLElement;
+      const bubble = row.querySelector<HTMLElement>('.bubble')!;
+      row.classList.toggle('msg-follow', follow);
+      log.append(row);
+      await wait(follow ? 260 : 320);
+      if (id !== round) return;
+      bubble.classList.remove('is-typing');
+      bubble.classList.add('is-said');
+      bubble.replaceChildren(fill(content.content.cloneNode(true) as DocumentFragment, slots));
+    };
+
+    const userSays = (text: string) => {
+      const fragment = fill(userTpl.content.cloneNode(true) as DocumentFragment, { text });
+      log.append(fragment);
+    };
+
+    const setOptions = (state: 'hidden' | 'shown' | 'leaving') => {
+      options.dataset.state = state;
+      options.inert = state !== 'shown';
+    };
+
+    // 选中某个候选：只有它带 is-selected（亮起竖条），并把焦点挪过去，回车或空格即可确认
+    const select = (button: HTMLButtonElement | undefined) => {
+      optionButtons.forEach((item) => item.classList.toggle('is-selected', item === button));
+      if (button && document.activeElement !== button) button.focus({ preventScroll: true });
+    };
+
+    // 整段对话：麦麦问 -> 麦麦给地址 -> 候选浮现并把焦点放到第一个候选上
+    const play = async (id: number, name: string, url: string) => {
+      await wait(80);
+      if (id !== round) return;
+      await maiSays(id, askTpl, { name }, false);
+      await wait(110);
+      if (id !== round) return;
+      await maiSays(id, urlTpl, { url }, true);
+      await wait(90);
+      if (id !== round) return;
+      setOptions('shown');
+      select(optionButtons[0]);
+    };
+
     // 拦截顺序：用户按住 Ctrl/⌘/Shift/Alt 或用中键时是明确想自己开新窗口，不拦截；已勾选不再提醒时也不拦截
     document.addEventListener('click', (event) => {
       const target = event.target;
@@ -77,23 +196,76 @@ const { t, localPath } = useI18n(Astro.url);
 
       event.preventDefault();
       const url = new URL(link.href);
-      nameLabel.textContent = link.dataset.leaveName || url.hostname;
-      urlLabel.textContent = `${url.host}${url.pathname.replace(/\/$/, '')}`;
-      goLink.href = link.href;
+      const name = link.dataset.leaveName || url.hostname;
+      targetUrl = link.href;
+      choosing = false;
       skipBox.checked = false;
+      log.replaceChildren();
+      setOptions('hidden');
+      select(undefined);
+      dialog.classList.remove('is-leaving');
+      // 读屏标题沿用第一条消息的句子
+      title.replaceChildren(fill(askTpl.content.cloneNode(true) as DocumentFragment, { name }));
       dialog.showModal();
+      round += 1;
+      play(round, name, `${url.host}${url.pathname.replace(/\/$/, '')}`);
     });
 
-    // “去看看”是真正的链接点击，由浏览器在新标签页打开，不会被拦截弹窗；同时记下“不再提醒”并关闭弹窗
-    goLink.addEventListener('click', () => {
-      if (skipBox.checked) {
+    // 选一句回复：选项淡出 -> 这句作为用户消息发出 -> 停一会儿让人看到 -> 跳转或收起。
+    // 新标签页必须在点击后的短时间内打开才不会被浏览器当成弹窗拦截，所以这里的停顿控制在 1 秒以内
+    options.addEventListener('click', async (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>('[data-choice]');
+      if (!button || choosing) return;
+      choosing = true;
+      const id = round;
+      const go = button.dataset.choice === 'go';
+
+      if (go && skipBox.checked) {
         try {
           sessionStorage.setItem(SKIP_KEY, '1');
         } catch {
           // 隐私模式下可能无法写入，只影响“不再提醒”，跳转照常
         }
       }
-      dialog.close();
+
+      setOptions('leaving');
+      userSays(button.textContent?.trim() ?? '');
+      await wait(go ? 450 : 400);
+      if (id !== round) return;
+
+      if (go) {
+        openInNewTab(targetUrl);
+        dialog.close();
+        return;
+      }
+      // 不去：弹窗淡出后再关闭
+      dialog.classList.add('is-leaving');
+      await wait(180);
+      if (id === round) dialog.close();
+    });
+
+    // 鼠标移入或 Tab 键切到某个候选时，选中就跟过去，高亮始终只有一个
+    optionButtons.forEach((button) => {
+      button.addEventListener('pointerenter', () => {
+        if (options.dataset.state === 'shown') select(button);
+      });
+      button.addEventListener('focus', () => select(button));
+    });
+
+    // 候选之间可以用上下方向键切换，和游戏里的对话选项一样
+    options.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      const index = optionButtons.findIndex((item) => item.classList.contains('is-selected'));
+      if (index === -1) return;
+      event.preventDefault();
+      const next = (index + (event.key === 'ArrowDown' ? 1 : -1) + optionButtons.length) % optionButtons.length;
+      select(optionButtons[next]);
+    });
+
+    // 被 Esc、关闭按钮或点遮罩关掉时，作废正在进行的流程
+    dialog.addEventListener('close', () => {
+      round += 1;
+      dialog.classList.remove('is-leaving');
     });
   }
 </script>
@@ -102,18 +274,75 @@ const { t, localPath } = useI18n(Astro.url);
   .leave {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding-top: 0.5rem;
+    gap: 1.25rem;
   }
 
-  .leave-row {
+  /* 聊天抬头：小头像 + 名字，下面一条细线，右边给关闭按钮留位置 */
+  /* 聊天抬头：只写名字，右边给关闭按钮留位置；不再画分割线，避免卡片被切成一格一格 */
+  .leave-head {
     display: flex;
-    align-items: flex-start;
-    gap: 0.625rem;
-    padding-right: 2rem;
+    align-items: center;
+    padding-right: 3rem;
   }
 
-  .leave-avatar {
+  .leave-head-name {
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  /* 聊天记录区预留麦麦两条消息的高度，“正在输入”换成正文时弹窗不会一跳一跳地变高；
+     不给用户的回复留空位，回复出现时由 msg-slot 展开 */
+  .leave-log {
+    display: flex;
+    min-height: 9rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .msg {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    animation: msg-in 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  }
+
+  .msg-mai {
+    padding-right: 2.5rem;
+    transform-origin: bottom left;
+  }
+
+  .msg-slot {
+    display: grid;
+    grid-template-rows: 1fr;
+    animation: slot-grow 0.28s ease both;
+  }
+
+  .msg-slot > .msg {
+    min-height: 0;
+  }
+
+  @keyframes slot-grow {
+    from {
+      grid-template-rows: 0fr;
+    }
+  }
+
+  .msg-user {
+    justify-content: flex-end;
+    padding-left: 4rem;
+    transform-origin: bottom right;
+  }
+
+  @keyframes msg-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.625rem) scale(0.94);
+    }
+  }
+
+  .msg-avatar {
     flex-shrink: 0;
     width: 2.75rem;
     height: 2.75rem;
@@ -121,20 +350,23 @@ const { t, localPath } = useI18n(Astro.url);
     object-fit: cover;
   }
 
-  /* 聊天气泡：大圆角，靠近说话人的那个角收成小圆角 */
+  /* 连发的第二条不重复显示头像，但保留位置，气泡左边缘对齐 */
+  .msg-follow .msg-avatar {
+    visibility: hidden;
+  }
+
+  /* 聊天气泡：大圆角，靠近说话人的那个角收成小圆角；样式沿用首页特性区的聊天演示 */
   .bubble {
+    min-width: 0;
+    padding: 0.875rem 1.125rem;
     border-radius: 1.25rem;
     font-family: var(--font-reading);
+    font-size: 1.0625rem;
     font-weight: 700;
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
   .bubble-mai {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 0.375rem;
-    padding: 0.875rem 1.125rem;
     border-bottom-left-radius: 0.25rem;
     background: #eeeef0;
     color: #2b2b2b;
@@ -145,10 +377,59 @@ const { t, localPath } = useI18n(Astro.url);
     color: #f9fafc;
   }
 
-  .leave-title {
-    font-family: var(--font-reading);
-    font-size: 1.0625rem;
-    line-height: 1.4;
+  .bubble-user {
+    border-bottom-right-radius: 0.25rem;
+    background: #35d28d;
+    color: #000;
+  }
+
+  /* 正在输入：三个点依次上下跳 */
+  .bubble.is-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 3.25rem;
+  }
+
+  .typing-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+    animation: typing 1s ease-in-out infinite;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: none;
+      opacity: 0.4;
+    }
+    30% {
+      transform: translateY(-0.25rem);
+      opacity: 0.9;
+    }
+  }
+
+  /* 三个点换成正文时，文字淡入 */
+  .bubble.is-said {
+    animation: said-in 0.24s ease-out;
+  }
+
+  @keyframes said-in {
+    from {
+      opacity: 0.2;
+    }
   }
 
   .leave-name {
@@ -156,58 +437,159 @@ const { t, localPath } = useI18n(Astro.url);
     color: var(--c-primary);
   }
 
-  .leave-desc {
-    font-size: var(--fs-small);
-  }
-
   .leave-url {
+    display: block;
+    margin-top: 0.25rem;
     overflow-wrap: anywhere;
-    color: inherit;
     font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
-    font-size: var(--fs-xs);
+    font-size: 0.875rem;
     font-weight: 400;
     opacity: 0.7;
   }
 
-  /* 用户的回复：右侧一排气泡，主选项是首页聊天演示里的那种绿色 */
-  .leave-replies {
+  /* 回复候选：沿用首屏小按钮的造型（左侧竖条、浅色渐变底、内描边、右下切角），文字靠左。
+     “去看看”是绿色，“先不去了”是中性灰；当前选中的那项亮起左侧竖条、底色加深、文字向右让一点。
+     外层用 grid 行高控制收起：选完后 1fr -> 0fr，和用户回复的展开同时进行 */
+  .leave-options {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.28s ease;
+  }
+
+  .leave-options[data-state='leaving'] {
+    grid-template-rows: 0fr;
+  }
+
+  .leave-options-inner {
+    position: relative;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    min-height: 0;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding-top: 1.25rem;
+    overflow: hidden;
   }
 
-  .bubble-reply {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    padding: 0 1.125rem;
-    border: none;
-    border-bottom-right-radius: 0.25rem;
-    font-size: var(--fs-small);
-    cursor: pointer;
+  /* 分割线跟候选一起出现：从左往右画出来 */
+  .leave-options-inner::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    content: '';
+    background: var(--border-subtle);
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
     transition:
-      transform var(--transition-fast),
-      filter var(--transition-fast);
+      transform 0.36s cubic-bezier(0.2, 0.9, 0.3, 1),
+      opacity 0.2s ease;
   }
 
-  .bubble-reply:hover,
-  .bubble-reply:focus-visible {
-    transform: translateY(-2px);
+  .leave-options[data-state='shown'] .leave-options-inner::before {
+    opacity: 1;
+    transform: none;
   }
 
-  .reply-go {
-    background: #35d28d;
-    color: #000;
+  .leave-option,
+  .leave-skip {
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition:
+      opacity 0.2s ease,
+      transform 0.26s cubic-bezier(0.2, 0.9, 0.3, 1.2),
+      padding-left 0.2s ease,
+      background 0.2s ease;
   }
 
-  .reply-go:hover {
-    filter: brightness(0.95);
+  .leave-options[data-state='shown'] .leave-option,
+  .leave-options[data-state='shown'] .leave-skip {
+    opacity: 1;
+    transform: none;
   }
 
-  .reply-later {
-    background: rgba(53, 210, 141, 0.14);
+  .leave-options[data-state='shown'] .leave-option:nth-child(1) {
+    transition-delay: 0.05s, 0.05s, 0s, 0s;
+  }
+
+  .leave-options[data-state='shown'] .leave-option:nth-child(2) {
+    transition-delay: 0.1s, 0.1s, 0s, 0s;
+  }
+
+  .leave-options[data-state='shown'] .leave-skip {
+    transition-delay: 0.15s;
+  }
+
+  /* 选完后候选淡出，外层同时收起 */
+  .leave-options[data-state='leaving'] .leave-option,
+  .leave-options[data-state='leaving'] .leave-skip {
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  .leave-option {
+    position: relative;
+    display: flex;
+    min-height: 3.5rem;
+    align-items: center;
+    padding: 0.875rem 1.25rem;
+    border: none;
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.625rem), calc(100% - 0.625rem) 100%, 0 100%);
+  }
+
+  .leave-option::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0.25rem;
+    content: '';
+    background: currentColor;
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
+
+  /* 当前选中的候选（脚本维护 is-selected，鼠标移入、键盘切换都会更新），任何时候只亮一个，和游戏里的选项光标一样 */
+  .leave-option:focus {
+    outline: none;
+  }
+
+  .leave-option.is-selected {
+    padding-left: 1.75rem;
+  }
+
+  .leave-option.is-selected::before {
+    transform: none;
+  }
+
+  .option-go {
+    background: linear-gradient(135deg, rgba(var(--c-green-rgb), 0.12) 0%, rgba(var(--c-green-rgb), 0.04) 100%);
+    box-shadow: inset 0 0 0 2px rgba(var(--c-green-rgb), 0.2);
+    color: var(--c-green-strong);
+  }
+
+  .option-go.is-selected {
+    background: linear-gradient(135deg, rgba(var(--c-green-rgb), 0.24) 0%, rgba(var(--c-green-rgb), 0.08) 100%);
+  }
+
+  :global([data-theme='dark']) .option-go {
+    color: var(--c-green);
+  }
+
+  .option-stay {
+    background: linear-gradient(135deg, rgba(128, 128, 128, 0.12) 0%, rgba(128, 128, 128, 0.04) 100%);
+    box-shadow: inset 0 0 0 2px rgba(128, 128, 128, 0.18);
     color: var(--text-body);
+  }
+
+  .option-stay.is-selected {
+    background: linear-gradient(135deg, rgba(128, 128, 128, 0.22) 0%, rgba(128, 128, 128, 0.08) 100%);
   }
 
   .leave-skip {
@@ -215,6 +597,7 @@ const { t, localPath } = useI18n(Astro.url);
     align-self: flex-end;
     align-items: center;
     gap: 0.375rem;
+    margin-top: 0.125rem;
     color: var(--text-muted);
     font-size: var(--fs-xs);
     cursor: pointer;
@@ -223,6 +606,34 @@ const { t, localPath } = useI18n(Astro.url);
   .leave-skip input {
     width: 0.875rem;
     height: 0.875rem;
-    accent-color: #35d28d;
+    accent-color: var(--c-green-strong);
+  }
+
+  /* 选“先不去了”后弹窗淡出再关闭（dialog 元素由外壳组件渲染，所以用全局选择器） */
+  :global(#dialog-leave.is-leaving) {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  :global(#dialog-leave.is-leaving)::backdrop {
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+
+  @media (max-width: 480px) {
+    .msg-mai {
+      padding-right: 0.5rem;
+    }
+
+    .msg-user {
+      padding-left: 2.5rem;
+    }
+
+    .leave-log {
+      min-height: 11rem;
+    }
   }
 </style>
