@@ -15,36 +15,40 @@ const { t, locale } = useI18n(Astro.url);
         {t('QQ 交流群')}
       </h2>
       <span class="qq-accent" aria-hidden="true"></span>
-      <p class="qq-subtitle">{t('按用途分了好几个群，挑一个进来吧')}</p>
     </header>
 
-    {qqGroupSections.map((section) => (
-      <section class={`qq-section tone-${section.tone}`} aria-label={t(section.title)}>
-        <h3 class="qq-section-label">{t(section.title)}</h3>
-        <div class="qq-grid">
-          {section.groups.map((group) => (
-            <article class="qq-card">
-              <div class="qq-card-body">
-                <h4 class="qq-card-title">
-                  <span class="qq-dot" aria-hidden="true" />
-                  {t(group.name)}
-                </h4>
-                <p class="qq-card-desc">{t(group.description)}</p>
-              </div>
-              <a
-                class="qq-join"
-                href={group.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={locale === 'en' ? `Join ${t(group.name)} on QQ` : `加入 ${group.name} QQ 群`}
-              >
-                {t('加入群聊 →')}
-              </a>
-            </article>
-          ))}
-        </div>
-      </section>
-    ))}
+    <div class="qq-sections">
+      {qqGroupSections.map((section) => (
+        <section
+          class:list={['qq-section', `tone-${section.tone}`, { 'qq-section-wide': section.groups.length > 1 }]}
+          aria-label={t(section.title)}
+        >
+          <h3 class="qq-section-label">{t(section.title)}</h3>
+          <div class="qq-grid">
+            {section.groups.map((group) => (
+              <article class="qq-card">
+                <div class="qq-card-body">
+                  <h4 class="qq-card-title">
+                    <span class="qq-dot" aria-hidden="true" />
+                    {t(group.name)}
+                  </h4>
+                  <p class="qq-card-desc">{t(group.description)}</p>
+                </div>
+                <a
+                  class="qq-join"
+                  href={group.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={locale === 'en' ? `Join ${t(group.name)} on QQ` : `加入 ${group.name} QQ 群`}
+                >
+                  {t('加入群聊 →')}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
 
     <section class="qq-section" aria-label={t('不用 QQ 的话')}>
       <h3 class="qq-section-label tone-muted">{t('不用 QQ 的话')}</h3>
@@ -64,7 +68,6 @@ const { t, locale } = useI18n(Astro.url);
     </section>
 
     <aside class="qq-tip">
-      <strong>{t('先看一眼再进群')}</strong>
       <p>{t('技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。')}</p>
     </aside>
   </div>
@@ -97,16 +100,21 @@ const { t, locale } = useI18n(Astro.url);
     background: var(--c-primary);
   }
 
-  .qq-subtitle {
-    color: var(--text-muted);
-    font-size: 0.9375rem;
-    line-height: 1.4;
+  .qq-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
+    gap: 1.5rem 0.75rem;
+  }
+
+  .qq-section-wide {
+    grid-column: 1 / -1;
   }
 
   /* 每个分组用一种强调色，卡片底色、描边、按钮都由 --tone 派生 */
   .qq-section {
     --tone: var(--c-primary-rgb);
     display: flex;
+    min-width: 0;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
@@ -248,12 +256,6 @@ const { t, locale } = useI18n(Astro.url);
     border-left: 0.25rem solid var(--c-primary);
     border-radius: var(--radius-sm);
     background: rgba(var(--c-primary-rgb), 0.1);
-  }
-
-  .qq-tip strong {
-    color: var(--c-primary);
-    font-family: var(--font-display);
-    font-size: var(--fs-small);
   }
 
   .qq-tip p {

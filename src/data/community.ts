@@ -35,6 +35,11 @@ export const qqGroupSections: QqGroupSection[] = [
         description: '技术交流',
         url: 'https://qun.qq.com/universal-share/share?ac=1&svctype=5&tempid=h5_group_info&busi_data=eyJncm91cENvZGUiOiI3Mjk5NTcwMzMifQ%3D%3D',
       },
+      {
+        name: '麦麦7群之青春麦麦不会得玉米症',
+        description: '群号：995845542',
+        url: 'https://qun.qq.com/universal-share/share?ac=1&svctype=5&tempid=h5_group_info&busi_data=eyJncm91cENvZGUiOiI5OTU4NDU1NDIifQ%3D%3D',
+      },
     ],
   },
   {

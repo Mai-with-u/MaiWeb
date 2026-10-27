@@ -215,11 +215,8 @@ export const en: Record<string, string> = {
   下载: 'Download ',
   查看项目: 'View project',
   高级部署: 'Advanced setup',
-  '按用途分了好几个群，挑一个进来吧':
-    'Choose a group that fits what you want to chat about. QQ groups primarily use Chinese.',
   '加入群聊 →': 'Join group →',
   '不用 QQ 的话': 'Beyond QQ',
-  先看一眼再进群: 'Before you join',
   '技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。':
     'Ask technical questions in the support groups. The casual group is for chatting, not troubleshooting. Building a plugin? Join the plugin developers.',
   要去: 'Want to visit ',
@@ -251,6 +248,8 @@ export const en: Record<string, string> = {
   麦麦大脑磁共振: 'Mai Brain MRI',
   麦麦脑电图: 'Mai EEG',
   麦麦心理测验: 'Mai Personality Test',
+  麦麦7群之青春麦麦不会得玉米症: 'Mai Group 7',
+  '群号：995845542': 'QQ group: 995845542',
   闲聊吹水: 'Casual chat',
   闲聊群: 'Hangout',
   '仅限闲聊，不答疑': 'Casual conversation only, no technical support',
