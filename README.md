@@ -1,6 +1,6 @@
 # MaiWeb
 
-麦麦（MaiBot / MaiSaka）的官方网站，基于 [Astro](https://astro.build/) 构建的纯静态站点，部署在 Cloudflare。
+麦麦（MaiBot / MaiSaka）的官方网站，基于 [Astro](https://astro.build/) 构建静态页面，部署在 Cloudflare；一键包下载由 Worker 查询最新版本并跳转。
 
 ## 开发
 
@@ -17,6 +17,7 @@ npm run preview    # 预览构建产物
 
 ```bash
 npm run check          # astro check 类型检查
+npm test               # 下载跳转、版本选择与异常处理
 npm run lint           # ESLint
 npm run format:check   # Prettier 格式检查，可用 npm run format 自动修复
 npm run build
@@ -51,6 +52,10 @@ src/
 - Node.js：24（仓库的 `.node-version` 已指定）
 
 连接完成后，推送到 `master` 会自动构建并部署。首次连接前可在本地执行 `npm ci`、`npm run build` 和 `npx wrangler deploy` 部署。
+
+`/downloads/onekey/cnb` 由 `src/worker.ts` 处理：每次请求读取 CNB 官方公开清单，找到 `latestTag` 对应的标准 Windows 安装包，再返回不缓存的 302 跳转。下载文件由 CNB 直接提供，不经过官网转发，也不依赖浏览器访问 GitHub API。查询失败时显示提示，让用户选择 GitHub 源。其余路径继续由 Cloudflare Static Assets 提供服务。
+
+`npm run dev` 通过 Vite 中间件运行同一段下载逻辑。`npm run preview` 仅预览静态页面；验证完整部署可在构建后运行 `npx wrangler dev --local`，配置检查使用 `npx wrangler deploy --dry-run`。
 
 ## 站点配置
 

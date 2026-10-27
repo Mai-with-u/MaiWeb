@@ -1,11 +1,27 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
+import { CNB_DOWNLOAD_PATH, downloadCnbLatest } from './src/lib/cnb-download.ts';
 
 // https://astro.build/config
 export default defineConfig({
   // 站点正式域名：canonical、OpenGraph 图片和分享链接都从这里拼出来，换域名时只改这一处
   site: 'https://maibot.chat',
   vite: {
+    plugins: [
+      {
+        name: 'cnb-download-preview',
+        configureServer(server) {
+          server.middlewares.use(async (req, res, next) => {
+            const url = new URL(req.url || '/', 'http://localhost');
+            if (url.pathname.replace(/\/$/, '') !== CNB_DOWNLOAD_PATH) return next();
+            const response = await downloadCnbLatest(new Request(url, { method: req.method }));
+            res.statusCode = response.status;
+            response.headers.forEach((value, key) => res.setHeader(key, value));
+            res.end(await response.text());
+          });
+        },
+      },
+    ],
     // 固定使用本仓库的 tsconfig。Vite 8 默认按文件逐级向上查找 tsconfig，node_modules 里的文件不在本仓库
     // include 范围内，会继续往上找；仓库检出在另一个项目目录里面（例如 .claude/worktrees 下的工作树）时，
     // 就会读到外层项目的 tsconfig，而外层没有安装依赖，会报 "Tsconfig not found astro/tsconfigs/strict"。

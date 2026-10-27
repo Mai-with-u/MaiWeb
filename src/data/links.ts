@@ -34,6 +34,7 @@ export const links = {
   // 安装包：首屏按设备推荐 Windows 一键包或 Android 安装包，接口失败时退回到这些发布页
   oneKeyRepo: `${GITHUB_ORG}/MaiBotOneKey`,
   oneKeyLatest: `${GITHUB_ORG}/MaiBotOneKey/releases/latest`,
+  oneKeyCnbDownload: '/downloads/onekey/cnb',
   droidRepo: `${GITHUB_ORG}/MaiDroid`,
   droidReleases: `${GITHUB_ORG}/MaiDroid/releases`,
 

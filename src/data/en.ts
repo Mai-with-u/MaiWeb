@@ -1,5 +1,12 @@
 // English UI copy. Proper names and external URLs remain unchanged unless listed here.
 export const en: Record<string, string> = {
+  选择下载源: 'Choose a download source',
+  'CNB 国内源': 'CNB mirror',
+  '国内网络推荐，直接下载最新安装包。': 'Recommended for mainland China. Download the latest installer directly.',
+  'GitHub 源': 'GitHub',
+  '从 GitHub 官方仓库下载安装包。': 'Download the installer from the official GitHub repository.',
+  '从 CNB 下载': 'Download from CNB',
+  '从 GitHub 下载': 'Download from GitHub',
   'MaiBot 官方网站': 'MaiBot — Official Website',
   'MaiBot - 一个正在努力成为人类的BOT':
     'Meet MaiBot, an AI companion learning to connect with you in a more human way.',

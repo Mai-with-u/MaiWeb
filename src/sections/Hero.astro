@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import VersionsDialog from '../components/dialog/VersionsDialog.astro';
+import DownloadSourcesDialog from '../components/dialog/DownloadSourcesDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
 import { links } from '../data/links';
 const { locale, t } = useI18n(Astro.url);
@@ -43,6 +44,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
           variant="primary"
           size="large"
           id="hero-download"
+          dialog="download-sources"
           href={links.oneKeyLatest}
           icon="download"
           label={t('立即下载')}
@@ -128,6 +130,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
 
 <QqGroupsDialog />
 <VersionsDialog />
+<DownloadSourcesDialog />
 
 <script>
   import { translator } from '../lib/i18n';
@@ -257,6 +260,15 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
       const label = t(platform === 'android' ? 'Android 安装包' : 'Windows 一键包');
       main.href = resolve(platform).url;
       main.setAttribute('aria-label', `${t('立即下载')} ${label}`);
+      if (platform === 'windows') {
+        main.dataset.dialog = 'download-sources';
+        main.setAttribute('aria-haspopup', 'dialog');
+        main.setAttribute('aria-controls', 'dialog-download-sources');
+      } else {
+        delete main.dataset.dialog;
+        main.removeAttribute('aria-haspopup');
+        main.removeAttribute('aria-controls');
+      }
       const sublabel = main.querySelector('.cta-sublabel');
       if (sublabel) sublabel.textContent = label;
     }

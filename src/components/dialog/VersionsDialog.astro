@@ -61,6 +61,9 @@ const methods = [
               class="platform-download"
               href={platform.downloadUrl}
               data-download={platform.id}
+              data-dialog={platform.id === 'windows' ? 'download-sources' : undefined}
+              aria-haspopup={platform.id === 'windows' ? 'dialog' : undefined}
+              aria-controls={platform.id === 'windows' ? 'dialog-download-sources' : undefined}
               target="_blank"
               rel="noopener noreferrer"
             >

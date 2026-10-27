@@ -7,10 +7,14 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/**', '.astro/**', 'node_modules/**'],
+    ignores: ['dist/**', '.astro/**', '.wrangler/**', 'node_modules/**'],
   },
   js.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
+  {
+    files: ['astro.config.mjs', 'tests/**/*.mjs'],
+    languageOptions: { globals: globals.node },
+  },
   {
     files: ['**/*.astro'],
     languageOptions: {
