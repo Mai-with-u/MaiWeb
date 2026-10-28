@@ -4,7 +4,7 @@ import Dialog from './Dialog.astro';
 import { links } from '../../data/links';
 const { t } = useI18n(Astro.url);
 
-// “其他版本”弹窗：首屏“其他版本”按钮带 data-dialog="versions"，点击后打开。
+// “其他部署方式”弹窗：隐藏首页已经推荐的安装包，保留其他平台和高级部署入口。
 // 两个平台的安装包都静态列出；下载地址和版本号先用发布页兜底，
 // 首屏脚本查到 GitHub Releases 后再回填到带 data-download / data-download-version 的元素上。
 const platforms = [
@@ -32,7 +32,6 @@ const methods = [
   { name: t('uv 安装'), description: t('Windows、Linux、macOS 都能用'), href: links.deployUv },
   { name: t('Docker 部署'), description: t('装进容器里跑'), href: links.deployDocker },
   { name: t('Linux 部署'), description: t('放在服务器上一直开着'), href: links.deployLinux },
-  { name: t('历史版本'), description: t('源码和每一版的更新说明'), href: links.releases },
 ];
 ---
 
@@ -40,7 +39,7 @@ const methods = [
   <div class="versions">
     <header class="versions-header">
       <h2 id="versions-dialog-title" class="versions-title">
-        {t('其他版本')}
+        {t('其他部署方式')}
       </h2>
     </header>
 
@@ -48,7 +47,6 @@ const methods = [
       {platforms.map((platform) => (
         <section class={`platform platform-${platform.id}`} data-platform={platform.id} aria-label={platform.name}>
           <div class="platform-topline">
-            <span class="platform-current">{t('你正在用')}</span>
             <span class="platform-version" data-download-version={platform.id}>
               {t('最新版')}
             </span>
@@ -144,22 +142,9 @@ const methods = [
     min-height: 1.5rem;
   }
 
-  /* 首屏脚本按 UA 在 html 上写入 data-download-platform，命中的平台卡片显示“当前设备” */
-  .platform-current {
+  :global(html[data-download-platform='windows']) .platform-windows,
+  :global(html[data-download-platform='android']) .platform-android {
     display: none;
-    padding: 0.1875rem 0.625rem;
-    border-radius: 62.4375rem;
-    background: rgb(var(--tone));
-    color: #121831;
-    font-family: var(--font-display);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    line-height: 1.4;
-  }
-
-  :global(html[data-download-platform='windows']) .platform-windows .platform-current,
-  :global(html[data-download-platform='android']) .platform-android .platform-current {
-    display: inline-flex;
   }
 
   .platform-version {

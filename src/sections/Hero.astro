@@ -7,7 +7,7 @@ import VersionsDialog from '../components/dialog/VersionsDialog.astro';
 import DownloadSourcesDialog from '../components/dialog/DownloadSourcesDialog.astro';
 import heroImage from '../assets/maimai-v2.png';
 import { links } from '../data/links';
-const { locale, t } = useI18n(Astro.url);
+const { t } = useI18n(Astro.url);
 
 // 首屏布局：单栏（手机、竖屏平板、横屏手机）只放文案和按钮，占满一屏并垂直居中；
 // 宽屏（>= 1024px 且宽高比 >= 5:4）切成左右两栏，右侧才显示立绘，并按 1600×900 设计稿等比缩放。
@@ -57,7 +57,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
             size="small"
             href={links.manual}
             icon="download"
-            label={t('其他版本')}
+            label={t('其他部署方式')}
             dialog="versions"
             delay={0.4}
           />
@@ -67,30 +67,13 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
             size="small"
             href={links.community}
             icon="qq"
-            label={t('QQ群')}
+            label={t('加入社区')}
             dialog="qq"
             delay={0.6}
           />
           <CtaButton variant="green" size="small" href={links.repo} icon="github" label="GitHub" delay={0.7} />
         </div>
       </div>
-
-      <p class="hero-license animate-fade-in animate-delay-4">
-        {t('MaiSaka 以')}{' '}
-        <a href={links.license} target="_blank" rel="noopener noreferrer">
-          GPL-3.0
-        </a>
-        {locale === 'en' ? '' : ' '}
-        {t('协议开源；使用即表示您同意并知悉')}
-        <a href={links.eula} target="_blank" rel="noopener noreferrer">
-          {t('「用户协议」')}
-        </a>
-        {t('和')}
-        <a href={links.privacy} target="_blank" rel="noopener noreferrer">
-          {t('「隐私协议」')}
-        </a>
-        {t('的相关内容。AI 生成内容请仔细甄别。')}
-      </p>
     </div>
 
     <div class="hero-visual animate-fade-in animate-delay-4">
@@ -133,6 +116,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
 <DownloadSourcesDialog />
 
 <script>
+  import { getDownloadPlatform } from '../lib/download-platform';
   import { translator } from '../lib/i18n';
   const t = translator(document.documentElement.lang === 'en' ? 'en' : 'zh-CN');
   import { links, releaseApis } from '../data/links';
@@ -160,8 +144,8 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     windows: { url: links.oneKeyLatest },
     android: { url: links.droidReleases },
   };
-  const platform: Platform = /Android/i.test(navigator.userAgent) ? 'android' : 'windows';
-  // “其他版本”弹窗据此给当前平台的卡片标上“当前设备”
+  const platform = getDownloadPlatform(navigator.userAgent, navigator.maxTouchPoints);
+  // 弹窗隐藏首页已经推荐的安装包；没有对应客户端的设备显示全部部署选项。
   document.documentElement.dataset.downloadPlatform = platform;
 
   function isGitHubUrl(value: string | undefined): value is string {
@@ -257,20 +241,27 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     // 主按钮：按当前平台切换下载地址和副标题
     const main = document.getElementById('hero-download') as HTMLAnchorElement | null;
     if (main) {
-      const label = t(platform === 'android' ? 'Android 安装包' : 'Windows 一键包');
-      main.href = resolve(platform).url;
-      main.setAttribute('aria-label', `${t('立即下载')} ${label}`);
-      if (platform === 'windows') {
-        main.dataset.dialog = 'download-sources';
+      const deploymentOnly = platform === 'deployment';
+      const title = t(deploymentOnly ? '查看部署方式' : '立即下载');
+      const label = deploymentOnly ? '' : t(platform === 'android' ? 'Android 安装包' : 'Windows 一键包');
+      main.href = deploymentOnly ? links.manual : resolve(platform).url;
+      main.setAttribute('aria-label', label ? `${title} ${label}` : title);
+      const titleElement = main.querySelector('.cta-label');
+      if (titleElement) titleElement.textContent = title;
+      if (platform !== 'android') {
+        main.dataset.dialog = deploymentOnly ? 'versions' : 'download-sources';
         main.setAttribute('aria-haspopup', 'dialog');
-        main.setAttribute('aria-controls', 'dialog-download-sources');
+        main.setAttribute('aria-controls', deploymentOnly ? 'dialog-versions' : 'dialog-download-sources');
       } else {
         delete main.dataset.dialog;
         main.removeAttribute('aria-haspopup');
         main.removeAttribute('aria-controls');
       }
-      const sublabel = main.querySelector('.cta-sublabel');
-      if (sublabel) sublabel.textContent = label;
+      const sublabel = main.querySelector<HTMLElement>('.cta-sublabel');
+      if (sublabel) {
+        sublabel.textContent = label;
+        sublabel.hidden = deploymentOnly;
+      }
     }
 
     // “其他版本”弹窗：两个平台的下载地址和版本号
@@ -400,34 +391,30 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     flex-direction: column;
     align-items: flex-start;
     gap: 0.625rem;
-    margin-bottom: 1rem;
   }
 
   .hero-buttons-row {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 24rem);
     gap: 0.625rem 0.75rem;
   }
 
-  .hero-license {
-    max-width: 32rem;
-    color: var(--text-subtle);
-    font-family: var(--font-display);
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    line-height: 1.6;
+  .hero-buttons-row :global(.cta-blur),
+  .hero-buttons-row :global(.cta-wrap),
+  .hero-buttons-row :global(.cta-clip),
+  .hero-buttons-row :global(.cta-link-small) {
+    width: 100%;
+    min-width: 0;
   }
 
-  .hero-license a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  .hero-buttons-row :global(.cta-link-small) {
+    gap: 0.5rem;
+    padding-inline: 0.625rem;
   }
 
-  .hero-license a:hover,
-  .hero-license a:focus-visible {
-    color: var(--c-primary-hover);
+  .hero-buttons-row :global(.cta-label) {
+    font-size: clamp(0.875rem, 3.5vw, 1rem);
   }
 
   /* 立绘区：按设计稿 648×724 的比例留出画布，星形背景铺满，人物宽度占 63% 正好撑满高度 */
@@ -541,9 +528,10 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
       max-width: none;
     }
 
-    .hero-title {
-      margin-bottom: 1.5rem;
-      font-size: 3.625rem;
+    .hero-title,
+    :global(html[lang='en']) .hero-title {
+      margin-bottom: 1.625rem;
+      font-size: 3.875rem;
       line-height: normal;
     }
 
@@ -552,28 +540,51 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     }
 
     .hero-subtitle {
-      margin-bottom: 2rem;
-      font-size: 1.25rem;
+      margin-bottom: 2.125rem;
+      font-size: 1.375rem;
     }
 
     .hero-buttons {
-      gap: 0.625rem;
-    }
-
-    /* 设计稿里四个小按钮在 554px 文案栏内正好排成一行（只余几像素），宽屏下不换行也不压缩按钮，
-       字体渲染略宽时多出的一两像素溢进右侧间距，避免按钮折行把文案块撑高、整体上移 */
-    .hero-buttons-row {
-      flex-wrap: nowrap;
       gap: 0.75rem;
     }
 
-    .hero-buttons-row > :global(*) {
-      flex-shrink: 0;
+    /* 首屏按钮略微放大，四个次要入口以两行两列对齐。 */
+    .hero-buttons :global(.cta-link-large) {
+      min-width: 13.125rem;
+      min-height: 4.8125rem;
+      padding: 0.9375rem 1.375rem 0.9375rem 1.25rem;
     }
 
-    .hero-license {
-      max-width: 31.25rem;
-      line-height: 1.5;
+    .hero-buttons :global(.cta-wrap-large .cta-label) {
+      font-size: 1.625rem;
+    }
+
+    .hero-buttons :global(.cta-wrap-large .cta-sublabel) {
+      font-size: 1.0625rem;
+    }
+
+    .hero-buttons :global(.cta-wrap-large .cta-icon) {
+      width: 2.4375rem;
+      height: 2.4375rem;
+    }
+
+    .hero-buttons-row :global(.cta-link-small) {
+      min-height: 3.0625rem;
+      gap: 0.625rem;
+      padding-block: 0.6875rem;
+    }
+
+    .hero-buttons-row :global(.cta-label) {
+      font-size: 1.0625rem;
+    }
+
+    .hero-buttons-row :global(.cta-icon) {
+      width: 1.375rem;
+      height: 1.375rem;
+    }
+
+    .hero-buttons-row {
+      gap: 0.75rem;
     }
 
     /* 立绘区用 flex 居中，人物宽度按立绘区宽度的百分比计算（设计稿 407 / 648）：
