@@ -44,8 +44,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
           variant="primary"
           size="large"
           id="hero-download"
-          dialog="download-sources"
-          href={links.oneKeyLatest}
+          href={links.oneKeyDownload}
           icon="download"
           label={t('立即下载')}
           sublabel={t('Windows 一键包')}
@@ -121,29 +120,21 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
   const t = translator(document.documentElement.lang === 'en' ? 'en' : 'zh-CN');
   import { links, releaseApis } from '../data/links';
 
-  // 首屏下载按钮与版本号：页面加载后在浏览器端查询 GitHub Releases。
-  // 顺序：按 UA 判断平台 -> 先用会话缓存或发布页兜底填好链接 -> 并行查询核心版本、Windows 一键包、Android 安装包
-  //      -> 查到后回填按钮、“其他版本”弹窗和版本卡片，并写入会话缓存。
+  // 首屏下载按钮与版本号。
+  // 安装包地址不在浏览器里查：按钮直接指向官网的 /downloads/ 下载入口，由 Worker 按访客地区选 CNB 或 GitHub 再跳转，
+  // 国内访客不用先连上 GitHub 接口也能下载。页面脚本只负责：
+  // 按 UA 判断平台并切换主按钮 -> 向 /downloads/latest.json 查安装包版本号（会话内缓存）-> 回填“其他部署方式”弹窗的版本标签。
+  // 立绘旁的核心版本号仍由浏览器查询 GitHub Releases。
   // 放在浏览器端而不是构建时，是为了让 CDN 上的静态页面始终显示最新版本，不受构建时间影响。
-  type Platform = 'windows' | 'android';
-  type ReleaseAsset = { name?: string; browser_download_url?: string; state?: string };
-  type GitHubRelease = {
-    tag_name?: string;
-    name?: string;
-    html_url?: string;
-    draft?: boolean;
-    published_at?: string;
-    created_at?: string;
-    assets?: ReleaseAsset[];
-  };
-  type DownloadInfo = { url: string; version?: string };
-  type DownloadCache = Partial<Record<Platform, DownloadInfo>>;
+  type GitHubRelease = { tag_name?: string; name?: string; html_url?: string };
+  type Versions = Record<string, { version?: string } | null>;
 
-  const CACHE_KEY = 'maisaka-download-links-v2';
-  const fallback: Record<Platform, DownloadInfo> = {
-    windows: { url: links.oneKeyLatest },
-    android: { url: links.droidReleases },
-  };
+  const CACHE_KEY = 'maisaka-download-versions-v1';
+  // 平台 -> 下载入口和版本接口里的应用名
+  const apps = {
+    windows: { download: links.oneKeyDownload, id: 'onekey' },
+    android: { download: links.droidDownload, id: 'maidroid' },
+  } as const;
   const platform = getDownloadPlatform(navigator.userAgent, navigator.maxTouchPoints);
   // 弹窗隐藏首页已经推荐的安装包；没有对应客户端的设备显示全部部署选项。
   document.documentElement.dataset.downloadPlatform = platform;
@@ -158,149 +149,79 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     }
   }
 
-  function readCache(): DownloadCache {
+  async function fetchJson<T>(url: string, headers?: Record<string, string>): Promise<T | undefined> {
     try {
-      return JSON.parse(sessionStorage.getItem(CACHE_KEY) || '{}') as DownloadCache;
-    } catch {
-      return {};
-    }
-  }
-
-  function writeCache(cache: DownloadCache) {
-    try {
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-    } catch {
-      // 隐私模式下可能无法写入，链接照样可用，只是下次进入要重新查询
-    }
-  }
-
-  async function fetchJson<T>(url: string): Promise<T | undefined> {
-    try {
-      const response = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+      const response = await fetch(url, { headers });
       return response.ok ? ((await response.json()) as T) : undefined;
     } catch {
       return undefined;
     }
   }
 
-  const uploaded = (release: GitHubRelease) =>
-    (release.assets || []).filter((asset) => !asset.state || asset.state === 'uploaded');
-
-  // Windows 一键包：取发布里的 .exe 安装程序
-  function findWindowsAsset(release: GitHubRelease) {
-    return uploaded(release).find((asset) => /\.exe$/i.test(asset.name || ''));
-  }
-
-  // Android：排除 debug / unsigned 包，优先“maidroid_版本号.apk”，其次 universal 包，都没有时只在唯一候选时采用
-  function findAndroidAsset(release: GitHubRelease) {
-    const candidates = uploaded(release).filter(
-      (asset) => /\.apk$/i.test(asset.name || '') && !/(debug|unsigned)/i.test(asset.name || '')
-    );
-    const canonical = release.tag_name ? `maidroid_${release.tag_name}.apk`.toLowerCase() : '';
-    return (
-      candidates.find((asset) => (asset.name || '').toLowerCase() === canonical) ||
-      candidates.find((asset) => /universal/i.test(asset.name || '')) ||
-      (candidates.length === 1 ? candidates[0] : undefined)
-    );
-  }
-
-  function toDownload(
-    release: GitHubRelease | undefined,
-    find: (_release: GitHubRelease) => ReleaseAsset | undefined
-  ): DownloadInfo | undefined {
-    const url = release && find(release)?.browser_download_url;
-    if (!release || !isGitHubUrl(url)) return undefined;
-    return { url, version: release.tag_name || release.name };
-  }
-
-  async function resolveAndroid(): Promise<DownloadInfo | undefined> {
-    // MaiDroid 目前只有预发布版本，/releases/latest 查不到，所以取最近 10 个发布按时间倒序找第一个可用安装包
-    const releases = (await fetchJson<GitHubRelease[]>(releaseApis.droid)) || [];
-    const sorted = releases
-      .filter((release) => !release.draft)
-      .sort(
-        (a, b) =>
-          (Date.parse(b.published_at || b.created_at || '') || 0) -
-          (Date.parse(a.published_at || a.created_at || '') || 0)
-      );
-    for (const release of sorted) {
-      const download = toDownload(release, findAndroidAsset);
-      if (download) return download;
+  // 主按钮：Windows 和 Android 点击直接下载推荐的安装包，选源交给下载入口；
+  // iPhone、iPad 等没有客户端的设备改成“查看部署方式”，点击打开“其他部署方式”弹窗。
+  const main = document.getElementById('hero-download') as HTMLAnchorElement | null;
+  if (main) {
+    const deploymentOnly = platform === 'deployment';
+    const title = t(deploymentOnly ? '查看部署方式' : '立即下载');
+    const label = deploymentOnly ? '' : t(platform === 'android' ? 'Android 安装包' : 'Windows 一键包');
+    main.href = deploymentOnly ? links.manual : apps[platform].download;
+    main.setAttribute('aria-label', label ? `${title} ${label}` : title);
+    const titleElement = main.querySelector('.cta-label');
+    if (titleElement) titleElement.textContent = title;
+    if (deploymentOnly) {
+      main.dataset.dialog = 'versions';
+      main.setAttribute('aria-haspopup', 'dialog');
+      main.setAttribute('aria-controls', 'dialog-versions');
     }
-    return undefined;
+    const sublabel = main.querySelector<HTMLElement>('.cta-sublabel');
+    if (sublabel) {
+      sublabel.textContent = label;
+      sublabel.hidden = deploymentOnly;
+    }
   }
 
-  const downloads = readCache();
-
-  function applyDownloads() {
-    const resolve = (target: Platform) => {
-      const cached = downloads[target];
-      return cached && isGitHubUrl(cached.url) ? cached : fallback[target];
-    };
-
-    // 主按钮：按当前平台切换下载地址和副标题
-    const main = document.getElementById('hero-download') as HTMLAnchorElement | null;
-    if (main) {
-      const deploymentOnly = platform === 'deployment';
-      const title = t(deploymentOnly ? '查看部署方式' : '立即下载');
-      const label = deploymentOnly ? '' : t(platform === 'android' ? 'Android 安装包' : 'Windows 一键包');
-      main.href = deploymentOnly ? links.manual : resolve(platform).url;
-      main.setAttribute('aria-label', label ? `${title} ${label}` : title);
-      const titleElement = main.querySelector('.cta-label');
-      if (titleElement) titleElement.textContent = title;
-      if (platform !== 'android') {
-        main.dataset.dialog = deploymentOnly ? 'versions' : 'download-sources';
-        main.setAttribute('aria-haspopup', 'dialog');
-        main.setAttribute('aria-controls', deploymentOnly ? 'dialog-versions' : 'dialog-download-sources');
-      } else {
-        delete main.dataset.dialog;
-        main.removeAttribute('aria-haspopup');
-        main.removeAttribute('aria-controls');
-      }
-      const sublabel = main.querySelector<HTMLElement>('.cta-sublabel');
-      if (sublabel) {
-        sublabel.textContent = label;
-        sublabel.hidden = deploymentOnly;
-      }
-    }
-
-    // “其他版本”弹窗：两个平台的下载地址和版本号
-    document.querySelectorAll<HTMLAnchorElement>('a[data-download]').forEach((link) => {
-      link.href = resolve(link.dataset.download === 'android' ? 'android' : 'windows').url;
-    });
+  // “其他部署方式”弹窗的版本标签：查不到版本的安装包保持静态的“最新版”
+  function applyVersions(versions: Versions) {
     document.querySelectorAll<HTMLElement>('[data-download-version]').forEach((label) => {
-      const version = downloads[label.dataset.downloadVersion === 'android' ? 'android' : 'windows']?.version;
+      const app = apps[label.dataset.downloadVersion === 'android' ? 'android' : 'windows'];
+      const version = versions[app.id]?.version;
       if (version) label.textContent = `${t('版本')} ${version}`;
     });
   }
 
-  applyDownloads();
+  function readCache(): Versions | undefined {
+    try {
+      const value = sessionStorage.getItem(CACHE_KEY);
+      return value ? (JSON.parse(value) as Versions) : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  const cached = readCache();
+  if (cached) applyVersions(cached);
+  else
+    fetchJson<Versions>(links.downloadVersions).then((versions) => {
+      if (!versions) return;
+      applyVersions(versions);
+      // 两个安装包都查到才缓存；有一个没查到时，下次进入页面再试
+      if (!Object.values(apps).every((app) => versions[app.id]?.version)) return;
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(versions));
+      } catch {
+        // 隐私模式下可能无法写入，下次进入要重新查询
+      }
+    });
 
   // 版本信息：显示核心最新版本号，点击可查看该版本的发布说明。
-  const coreVersion = fetchJson<GitHubRelease>(releaseApis.core).then((release) => {
+  fetchJson<GitHubRelease>(releaseApis.core, { Accept: 'application/vnd.github+json' }).then((release) => {
     const version = (release?.tag_name || release?.name)?.replace(/^v/, '');
     const versionText = document.querySelector('.version-text');
     // 查不到版本（例如 GitHub 接口限流）时，直接引导去发布页。
     if (versionText) versionText.textContent = version || t('查看最新版本');
     const releaseLink = document.getElementById('hero-release') as HTMLAnchorElement | null;
     if (releaseLink && isGitHubUrl(release?.html_url)) releaseLink.href = release.html_url;
-  });
-
-  const windows = downloads.windows
-    ? Promise.resolve()
-    : fetchJson<GitHubRelease>(releaseApis.oneKey).then((release) => {
-        const download = toDownload(release, findWindowsAsset);
-        if (download) downloads.windows = download;
-      });
-  const android = downloads.android
-    ? Promise.resolve()
-    : resolveAndroid().then((download) => {
-        if (download) downloads.android = download;
-      });
-
-  Promise.allSettled([coreVersion, windows, android]).then(() => {
-    writeCache(downloads);
-    applyDownloads();
   });
 </script>
 

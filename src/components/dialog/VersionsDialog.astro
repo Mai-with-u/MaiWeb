@@ -5,15 +5,15 @@ import { links } from '../../data/links';
 const { t } = useI18n(Astro.url);
 
 // “其他部署方式”弹窗：隐藏首页已经推荐的安装包，保留其他平台和高级部署入口。
-// 两个平台的安装包都静态列出；下载地址和版本号先用发布页兜底，
-// 首屏脚本查到 GitHub Releases 后再回填到带 data-download / data-download-version 的元素上。
+// 两个平台的安装包都静态列出，下载地址是官网的下载入口，由 Worker 按访客地区选源；
+// Windows 一键包点击后先打开手动选源弹窗。版本号由首屏脚本查询后回填到带 data-download-version 的元素上。
 const platforms = [
   {
     id: 'windows',
     name: t('MaiBot Windows 一键包'),
     package: t('EXE 一键包'),
     description: t('运行环境和启动器都打包好了，Windows 上下载就能用。'),
-    downloadUrl: links.oneKeyLatest,
+    downloadUrl: links.oneKeyDownload,
     projectUrl: links.oneKeyRepo,
     note: '',
   },
@@ -22,7 +22,7 @@ const platforms = [
     name: t('MaiDroid Android 客户端'),
     package: t('APK 安装包'),
     description: t('直接在安卓手机上跑麦麦，不用另外准备服务器。'),
-    downloadUrl: links.droidReleases,
+    downloadUrl: links.droidDownload,
     projectUrl: links.droidRepo,
     note: t('还在测试阶段。安装时要是被系统拦下，允许浏览器安装应用就行。'),
   },
@@ -58,7 +58,6 @@ const methods = [
             <a
               class="platform-download"
               href={platform.downloadUrl}
-              data-download={platform.id}
               data-dialog={platform.id === 'windows' ? 'download-sources' : undefined}
               aria-haspopup={platform.id === 'windows' ? 'dialog' : undefined}
               aria-controls={platform.id === 'windows' ? 'dialog-download-sources' : undefined}

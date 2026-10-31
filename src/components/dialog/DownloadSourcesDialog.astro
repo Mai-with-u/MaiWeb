@@ -4,6 +4,9 @@ import { links } from '../../data/links';
 import { useI18n } from '../../lib/i18n';
 
 const { t } = useI18n(Astro.url);
+
+// 手动选源弹窗：首屏按钮已经按访客地区自动选源，这里留给想指定来源的用户，
+// 从“其他部署方式”里的 Windows 一键包进入。两个入口都只走点名的那个源，不替用户换源。
 ---
 
 <Dialog id="download-sources" labelledby="download-sources-title" width="36rem">
@@ -19,7 +22,7 @@ const { t } = useI18n(Astro.url);
           {t('从 CNB 下载')} <span aria-hidden="true">↗</span>
         </span>
       </a>
-      <a class="source" href={links.oneKeyLatest} data-download="windows" target="_blank" rel="noopener noreferrer">
+      <a class="source" href={links.oneKeyGitHubDownload} target="_blank" rel="noopener noreferrer">
         <strong>{t('GitHub 源')}</strong>
         <span>{t('从 GitHub 官方仓库下载安装包。')}</span>
         <span class="source-action">

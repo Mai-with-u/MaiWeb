@@ -31,21 +31,26 @@ export const links = {
   pluginMarket: 'https://plugin.maibot.chat/',
   pluginRepo: `${GITHUB_ORG}/plugin-repo`,
 
-  // 安装包：首屏按设备推荐 Windows 一键包或 Android 安装包，接口失败时退回到这些发布页
+  // 安装包：首屏按设备推荐 Windows 一键包或 Android 安装包。
+  // /downloads/ 开头的是官网自己的下载入口，由 Worker 选好 CNB 或 GitHub 再跳转（见 src/lib/downloads.ts）；
+  // 两个发布页是所有源都查不到时的落脚点
   oneKeyRepo: `${GITHUB_ORG}/MaiBotOneKey`,
   oneKeyLatest: `${GITHUB_ORG}/MaiBotOneKey/releases/latest`,
+  oneKeyDownload: '/downloads/onekey',
   oneKeyCnbDownload: '/downloads/onekey/cnb',
+  oneKeyGitHubDownload: '/downloads/onekey/github',
   droidRepo: `${GITHUB_ORG}/MaiDroid`,
   droidReleases: `${GITHUB_ORG}/MaiDroid/releases`,
+  droidDownload: '/downloads/maidroid',
+  // 各安装包的最新版本号，和上面的下载入口用同一套选源规则
+  downloadVersions: '/downloads/latest.json',
 
   // 本站仓库：404 页“报告问题”和衍生项目里的官网卡片
   siteRepo: `${GITHUB_ORG}/MaiWeb`,
   siteIssues: `${GITHUB_ORG}/MaiWeb/issues`,
 } as const;
 
-// 首屏下载与版本号在浏览器端实时查询的 GitHub Releases 接口
+// 首屏版本卡片在浏览器端实时查询的 GitHub Releases 接口（安装包的版本号改由 downloadVersions 提供）
 export const releaseApis = {
   core: 'https://api.github.com/repos/Mai-with-u/MaiBot/releases/latest',
-  oneKey: 'https://api.github.com/repos/Mai-with-u/MaiBotOneKey/releases/latest',
-  droid: 'https://api.github.com/repos/Mai-with-u/MaiDroid/releases?per_page=10',
 } as const;

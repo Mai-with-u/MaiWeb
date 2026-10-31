@@ -6,8 +6,9 @@ export function getLocale(url: URL): Locale {
   return /^\/en(?:\/|$)/.test(url.pathname) ? 'en' : 'zh-CN';
 }
 
+// 站内页面在英文版前面加 /en；/downloads/ 是 Worker 的下载跳转入口，没有英文版页面，原样保留
 export function localePath(href: string, locale: Locale): string {
-  if (!href.startsWith('/') || href.startsWith('//')) return href;
+  if (!href.startsWith('/') || href.startsWith('//') || href.startsWith('/downloads/')) return href;
   const path = href.replace(/^\/en(?=\/|$)/, '') || '/';
   return locale === 'en' ? `/en${path}` : path;
 }
