@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
-import { CNB_DOWNLOAD_PATH, downloadCnbLatest } from './src/lib/cnb-download.ts';
+import { handleDownloads } from './src/lib/downloads.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,12 +9,18 @@ export default defineConfig({
   vite: {
     plugins: [
       {
-        name: 'cnb-download-preview',
+        // npm run dev 时用同一段逻辑处理 /downloads/ 下载入口。本地请求没有 Cloudflare 的地区信息，
+        // 默认按海外访客走 GitHub；要模拟中国大陆访客，请求时带上 CF-IPCountry: CN 请求头。
+        name: 'download-routes-preview',
         configureServer(server) {
           server.middlewares.use(async (req, res, next) => {
             const url = new URL(req.url || '/', 'http://localhost');
-            if (url.pathname.replace(/\/$/, '') !== CNB_DOWNLOAD_PATH) return next();
-            const response = await downloadCnbLatest(new Request(url, { method: req.method }));
+            const country = req.headers['cf-ipcountry'];
+            const pending = handleDownloads(new Request(url, { method: req.method }), {
+              country: typeof country === 'string' ? country : undefined,
+            });
+            if (!pending) return next();
+            const response = await pending;
             res.statusCode = response.status;
             response.headers.forEach((value, key) => res.setHeader(key, value));
             res.end(await response.text());

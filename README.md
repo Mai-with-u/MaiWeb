@@ -53,9 +53,15 @@ src/
 
 连接完成后，推送到 `master` 会自动构建并部署。首次连接前可在本地执行 `npm ci`、`npm run build` 和 `npx wrangler deploy` 部署。
 
-`/downloads/onekey/cnb` 由 `src/worker.ts` 处理：每次请求读取 CNB 官方公开清单，找到 `latestTag` 对应的标准 Windows 安装包，再返回不缓存的 302 跳转。下载文件由 CNB 直接提供，不经过官网转发，也不依赖浏览器访问 GitHub API。查询失败时显示提示，让用户选择 GitHub 源。其余路径继续由 Cloudflare Static Assets 提供服务。
+`/downloads/` 下的下载入口由 `src/worker.ts` 处理（逻辑在 `src/lib/downloads.ts`），应用名为 `onekey`（Windows 一键包）和 `maidroid`（Android 安装包）：
 
-`npm run dev` 通过 Vite 中间件运行同一段下载逻辑。`npm run preview` 仅预览静态页面；验证完整部署可在构建后运行 `npx wrangler dev --local`，配置检查使用 `npx wrangler deploy --dry-run`。
+- `/downloads/<应用>`：按 Cloudflare 提供的访客地区选源。中国大陆访客先读 CNB 官方公开清单，失败时改查 GitHub 最新正式版；其他地区直接查 GitHub。都查不到时跳到 GitHub 发布页。
+- `/downloads/<应用>/cnb`、`/downloads/<应用>/github`：只走指定的源，对应首页“选择下载源”弹窗。CNB 查不到时显示提示，让用户改选 GitHub。
+- `/downloads/latest.json`：按同样的选源规则返回各安装包的版本号。
+
+跳转一律是不缓存的 302，下载文件由 CNB 或 GitHub 直接提供，不经过官网转发，浏览器也不需要访问 GitHub API。CNB 以自己的 `latest.json` 为准，同步滞后时提供的是 CNB 上已有的版本。Worker 查询 GitHub 接口的成功结果在边缘节点缓存 5 分钟。其余路径继续由 Cloudflare Static Assets 提供服务。
+
+`npm run dev` 通过 Vite 中间件运行同一段下载逻辑，本地请求默认按海外访客处理，带上 `CF-IPCountry: CN` 请求头可模拟中国大陆访客。`npm run preview` 仅预览静态页面；验证完整部署可在构建后运行 `npx wrangler dev --local`，配置检查使用 `npx wrangler deploy --dry-run`。
 
 ## 站点配置
 
