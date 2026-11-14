@@ -30,6 +30,26 @@ const { t } = useI18n(Astro.url);
         </span>
       </a>
     </div>
+    <a
+      class="other-methods"
+      href={links.manual}
+      data-dialog="versions"
+      aria-haspopup="dialog"
+      aria-controls="dialog-versions"
+    >
+      <span class="other-text">
+        <strong>{t('不是 Windows？查看其他版本')}</strong>
+        <span class="other-tags">
+          <span>{t('Android 客户端')}</span>
+          <span>uv</span>
+          <span>Docker</span>
+          <span>{t('Linux 服务器')}</span>
+        </span>
+      </span>
+      <span class="other-arrow" aria-hidden="true">
+        →
+      </span>
+    </a>
   </div>
 </Dialog>
 
@@ -75,6 +95,63 @@ const { t } = useI18n(Astro.url);
   .source:focus-visible {
     border-color: var(--c-primary);
     transform: translateY(-2px);
+  }
+
+  /* 其他平台入口：整行卡片，列出 Android 和高级部署方式，让非 Windows 用户一眼能找到 */
+  .other-methods {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .other-methods:hover,
+  .other-methods:focus-visible {
+    border-color: var(--c-primary);
+    border-style: solid;
+    background: rgba(var(--c-primary-rgb), 0.05);
+  }
+
+  .other-text {
+    display: grid;
+    flex: 1;
+    gap: 0.625rem;
+  }
+
+  .other-text strong {
+    font-size: 1.0625rem;
+  }
+
+  .other-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .other-tags span {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .other-arrow {
+    color: var(--c-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    transition: transform var(--transition-fast);
+  }
+
+  .other-methods:hover .other-arrow,
+  .other-methods:focus-visible .other-arrow {
+    transform: translateX(0.25rem);
   }
 
   .source strong {

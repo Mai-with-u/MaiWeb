@@ -1,0 +1,339 @@
+---
+import { links } from '../data/links';
+import { useI18n } from '../lib/i18n';
+
+const { t } = useI18n(Astro.url);
+
+// 首屏“使用Agent帮助部署”：点击后，原来的按钮组以动画切换成一个终端窗口，
+// 里面是可复制的提示词，粘贴给 Claude Code、Codex 等 AI 编程助手即可按官方文档部署麦麦；点“返回”切回按钮组。
+// 按钮组通过 slot 传入，其中 id 为 agent-deploy-open 的元素负责打开终端。
+// 提示词只引用文档站和仓库地址，具体步骤以文档为准。
+const prompt = `请帮我在这台电脑上部署 MaiBot（麦麦），一个会学习、像人类一样聊天的 QQ 机器人。
+
+请严格按官方文档操作，不要凭记忆编造命令：
+- 部署文档：${links.manual}
+- 主仓库：${links.repo}
+
+要求：
+1. 先检查系统环境（操作系统、Python、Git、uv 等），缺什么先告诉我再安装。
+2. 优先选择最简单、适合我系统的部署方式（Windows 可用一键包，其他系统用 uv 或 Docker）。
+3. 需要我填写的内容（模型 API Key、QQ 号等）请停下来问我，不要自己编造，也不要把密钥写进公开位置。
+4. 部署完成后启动麦麦，并告诉我如何验证它在正常运行、如何再次启动和停止。
+5. 遇到报错先自己排查，解决不了再告诉我完整的报错信息。`;
+---
+
+<div class="agent-deploy" data-state="buttons">
+  <div class="agent-face agent-face-buttons">
+    <slot />
+  </div>
+
+  <div class="agent-face agent-face-terminal" inert>
+    <div class="terminal" role="group" aria-label={t('使用Agent帮助部署')}>
+      <div class="terminal-bar">
+        <span class="terminal-dots" aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+        <span class="terminal-title">{t('复制后发给 Claude Code、Codex 等 Agent')}</span>
+      </div>
+      <pre class="prompt" id="agent-deploy-prompt" tabindex="0">{prompt}</pre>
+      <div class="terminal-actions">
+        <button type="button" class="terminal-btn terminal-back" id="agent-deploy-back">
+          <span aria-hidden="true">←</span>
+          {t('返回')}
+        </button>
+        <button
+          type="button"
+          class="terminal-btn terminal-copy"
+          id="agent-deploy-copy"
+          data-copy-label={t('复制提示词')}
+          data-copied-label={t('已复制')}
+          data-failed-label={t('复制失败，请手动选择')}
+        >
+          {t('复制提示词')}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.agent-deploy');
+  const openButton = document.getElementById('agent-deploy-open');
+  const backButton = document.getElementById('agent-deploy-back');
+  const copyButton = document.getElementById('agent-deploy-copy');
+  const promptEl = document.getElementById('agent-deploy-prompt');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // 切换两面：先把容器高度锁在当前值，换面后再过渡到新一面的高度，避免下方内容跳动
+  function setState(state: 'buttons' | 'terminal') {
+    if (!root || root.dataset.state === state) return;
+    const faces = {
+      buttons: root.querySelector<HTMLElement>('.agent-face-buttons'),
+      terminal: root.querySelector<HTMLElement>('.agent-face-terminal'),
+    };
+    const from = root.offsetHeight;
+    root.dataset.state = state;
+    faces.buttons?.toggleAttribute('inert', state !== 'buttons');
+    faces.terminal?.toggleAttribute('inert', state !== 'terminal');
+    const to = faces[state]?.offsetHeight ?? from;
+
+    if (!reduceMotion.matches) {
+      root.style.height = `${from}px`;
+      void root.offsetHeight;
+      root.style.height = `${to}px`;
+      const done = (event: TransitionEvent) => {
+        if (event.target !== root || event.propertyName !== 'height') return;
+        root.style.height = '';
+        root.removeEventListener('transitionend', done);
+      };
+      root.addEventListener('transitionend', done);
+    }
+
+    (state === 'terminal' ? copyButton : openButton)?.focus({ preventScroll: true });
+  }
+
+  openButton?.addEventListener('click', (event) => {
+    event.preventDefault();
+    setState('terminal');
+  });
+  backButton?.addEventListener('click', () => setState('buttons'));
+  root?.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && root.dataset.state === 'terminal') setState('buttons');
+  });
+
+  let timer: number | undefined;
+  copyButton?.addEventListener('click', async () => {
+    const text = promptEl?.textContent ?? '';
+    let label = copyButton.dataset.copiedLabel;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // 非安全上下文或权限被拒：选中文本后用旧接口复制，再不行就保留选区让用户手动复制
+      let copied = false;
+      if (promptEl) {
+        const range = document.createRange();
+        range.selectNodeContents(promptEl);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+        try {
+          copied = document.execCommand('copy');
+        } catch {
+          copied = false;
+        }
+      }
+      if (!copied) label = copyButton.dataset.failedLabel;
+    }
+    copyButton.textContent = label ?? '';
+    copyButton.classList.toggle('is-done', label === copyButton.dataset.copiedLabel);
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      copyButton.textContent = copyButton.dataset.copyLabel ?? '';
+      copyButton.classList.remove('is-done');
+    }, 2000);
+  });
+</script>
+
+<style>
+  .agent-deploy {
+    position: relative;
+    width: min(100%, 26rem);
+    transition: height 0.38s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  /* 两面叠放：当前一面正常占位撑起高度，另一面绝对定位叠在上面并淡出 */
+  .agent-face {
+    transition:
+      opacity 0.28s ease,
+      transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+      filter 0.28s ease;
+  }
+
+  .agent-face-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .agent-deploy[data-state='terminal'] .agent-face-buttons,
+  .agent-deploy[data-state='buttons'] .agent-face-terminal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    filter: blur(4px);
+  }
+
+  .agent-deploy[data-state='terminal'] .agent-face-buttons {
+    transform: translateX(-1.5rem) scale(0.98);
+  }
+
+  .agent-deploy[data-state='buttons'] .agent-face-terminal {
+    transform: translateX(1.5rem) scale(0.98);
+  }
+
+  /* 终端窗口：两种主题下都保持深色 */
+  .terminal {
+    overflow: hidden;
+    border: 1px solid #2c2f36;
+    border-radius: var(--radius-md);
+    background: #16181d;
+    box-shadow: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.22);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.875rem;
+    border-bottom: 1px solid #2c2f36;
+    background: #1f2228;
+  }
+
+  .terminal-dots {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.4rem;
+  }
+
+  .terminal-dots i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: #ff5f57;
+  }
+
+  .terminal-dots i:nth-child(2) {
+    background: #febc2e;
+  }
+
+  .terminal-dots i:nth-child(3) {
+    background: #28c840;
+  }
+
+  .terminal-title,
+  .prompt,
+  .terminal-btn {
+    font-family: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, 'Liberation Mono', monospace;
+  }
+
+  .terminal-title {
+    min-width: 0;
+    overflow: hidden;
+    color: #8b919c;
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prompt {
+    max-height: 10.5rem;
+    margin: 0;
+    padding: 0.875rem 1rem;
+    overflow: auto;
+    background: transparent;
+    color: #d6dae1;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    scrollbar-color: #3a3e47 transparent;
+    scrollbar-width: thin;
+  }
+
+  .prompt::before {
+    content: '$ ';
+    color: #28c840;
+    font-weight: 700;
+  }
+
+  /* 末尾闪烁的光标 */
+  .prompt::after {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    margin-left: 0.15em;
+    content: '';
+    vertical-align: text-bottom;
+    background: #d6dae1;
+    animation: caret 1s steps(1) infinite;
+  }
+
+  @keyframes caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .prompt:focus-visible {
+    outline: 2px solid rgba(var(--c-primary-rgb), 0.6);
+    outline-offset: -2px;
+  }
+
+  .terminal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.625rem;
+    padding: 0.625rem 0.75rem;
+    border-top: 1px solid #2c2f36;
+    background: #1b1d22;
+  }
+
+  .terminal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.45rem 0.875rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .terminal-back {
+    border: 1px solid #3a3e47;
+    background: transparent;
+    color: #b4bac4;
+  }
+
+  .terminal-back:hover,
+  .terminal-back:focus-visible {
+    border-color: #5a606b;
+    color: #fff;
+  }
+
+  .terminal-copy {
+    border: 1px solid var(--c-primary);
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .terminal-copy:hover,
+  .terminal-copy:focus-visible {
+    filter: brightness(1.08);
+  }
+
+  .terminal-copy.is-done {
+    border-color: #28c840;
+    background: #28c840;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .agent-deploy,
+    .agent-face {
+      transition: none;
+    }
+
+    .prompt::after {
+      animation: none;
+    }
+  }
+</style>

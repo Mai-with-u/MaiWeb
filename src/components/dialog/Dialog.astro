@@ -36,7 +36,11 @@ const { id, labelledby, width = '47.5rem' } = Astro.props;
       const dialog = document.getElementById(`dialog-${trigger.dataset.dialog}`);
       if (dialog instanceof HTMLDialogElement) {
         event.preventDefault();
-        dialog.showModal();
+        // 从一个弹窗跳到另一个弹窗时，先关掉当前打开的，避免叠在一起
+        document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((other) => {
+          if (other !== dialog) other.close();
+        });
+        if (!dialog.open) dialog.showModal();
       }
       return;
     }

@@ -5,6 +5,7 @@ import CtaButton from '../components/CtaButton.astro';
 import QqGroupsDialog from '../components/dialog/QqGroupsDialog.astro';
 import VersionsDialog from '../components/dialog/VersionsDialog.astro';
 import DownloadSourcesDialog from '../components/dialog/DownloadSourcesDialog.astro';
+import AgentDeploy from '../components/AgentDeploy.astro';
 import heroImage from '../assets/maimai-v2.png';
 import { links } from '../data/links';
 const { t } = useI18n(Astro.url);
@@ -50,28 +51,31 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
           sublabel={t('Windows 一键包')}
           delay={0.3}
         />
-        <div class="hero-buttons-row">
-          <CtaButton
-            variant="green"
-            size="small"
-            href={links.manual}
-            icon="download"
-            label={t('其他部署方式')}
-            dialog="versions"
-            delay={0.4}
-          />
-          <CtaButton variant="green" size="small" href={links.docs} icon="docs" label={t('使用文档')} delay={0.5} />
-          <CtaButton
-            variant="green"
-            size="small"
-            href={links.community}
-            icon="qq"
-            label={t('加入社区')}
-            dialog="qq"
-            delay={0.6}
-          />
-          <CtaButton variant="green" size="small" href={links.repo} icon="github" label="GitHub" delay={0.7} />
-        </div>
+        <AgentDeploy>
+          <div class="hero-buttons-row">
+            <CtaButton
+              variant="green"
+              size="small"
+              href={links.community}
+              icon="qq"
+              label={t('加入社区')}
+              dialog="qq"
+              delay={0.6}
+            />
+            <CtaButton variant="green" size="small" href={links.repo} icon="github" label="GitHub" delay={0.7} />
+          </div>
+          <div class="hero-agent">
+            <CtaButton
+              variant="green"
+              size="small"
+              id="agent-deploy-open"
+              href={links.manual}
+              icon="paperplane"
+              label={t('使用Agent帮助部署')}
+              delay={0.8}
+            />
+          </div>
+        </AgentDeploy>
       </div>
     </div>
 
@@ -319,6 +323,18 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
     grid-template-columns: repeat(2, minmax(0, 1fr));
     width: min(100%, 24rem);
     gap: 0.625rem 0.75rem;
+  }
+
+  .hero-agent {
+    width: min(100%, 24rem);
+  }
+
+  .hero-agent :global(.cta-blur),
+  .hero-agent :global(.cta-wrap),
+  .hero-agent :global(.cta-clip),
+  .hero-agent :global(.cta-link-small) {
+    width: 100%;
+    min-width: 0;
   }
 
   .hero-buttons-row :global(.cta-blur),

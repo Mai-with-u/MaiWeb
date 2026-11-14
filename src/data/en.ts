@@ -1,5 +1,14 @@
 // English UI copy. Proper names and external URLs remain unchanged unless listed here.
 export const en: Record<string, string> = {
+  使用Agent帮助部署: 'Deploy with an Agent',
+  '复制后发给 Claude Code、Codex 等 Agent': 'Paste into Claude Code, Codex or another agent',
+  返回: 'Back',
+  '不是 Windows？查看其他版本': 'Not on Windows? See other options',
+  'Android 客户端': 'Android app',
+  'Linux 服务器': 'Linux server',
+  复制提示词: 'Copy prompt',
+  已复制: 'Copied',
+  '复制失败，请手动选择': 'Copy failed, please select manually',
   选择下载源: 'Choose a download source',
   'CNB 国内源': 'CNB mirror',
   '国内网络推荐，直接下载最新安装包。': 'Recommended for mainland China. Download the latest installer directly.',
