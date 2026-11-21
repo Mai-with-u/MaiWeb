@@ -17,6 +17,8 @@
   --c-blue-rgb: 48, 204, 239;
   --c-purple: #8b6cf0;
   --c-purple-rgb: 139, 108, 240;
+  --c-pink: #d1296a;
+  --c-pink-rgb: 209, 41, 106;
 
   /* 文字：strong 用于标题，body 用于正文，muted 用于说明，subtle 只用于装饰性的弱提示 */
   --text-strong: #121831;
@@ -79,6 +81,9 @@ html[lang='en'] {
   --c-green: #70bf22;
   --c-green-strong: #4a9a17;
   --c-green-rgb: 112, 191, 34;
+  /* 深色底上粉色要提亮，否则标签文字读不清 */
+  --c-pink: #f47ba8;
+  --c-pink-rgb: 244, 123, 168;
 
   --text-strong: #f9fafc;
   --text-body: #d5dae2;

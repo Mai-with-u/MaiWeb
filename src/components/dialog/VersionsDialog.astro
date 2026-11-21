@@ -2,12 +2,25 @@
 import { useI18n } from '../../lib/i18n';
 import Dialog from './Dialog.astro';
 import { links } from '../../data/links';
+import { maidroidFeedbackGroup } from '../../data/community';
 const { t } = useI18n(Astro.url);
 
 // “其他部署方式”弹窗：隐藏首页已经推荐的安装包，保留其他平台和高级部署入口。
 // 两个平台的安装包都静态列出，下载地址是官网的下载入口，由 Worker 按访客地区选源；
 // Windows 一键包点击后先打开手动选源弹窗。版本号由首屏脚本查询后回填到带 data-download-version 的元素上。
-const platforms = [
+interface Platform {
+  id: string;
+  name: string;
+  package: string;
+  description: string;
+  downloadUrl: string;
+  projectUrl: string;
+  note: string;
+  // 反馈群入口：安卓版用得上的额外出口，Windows 版没有
+  feedbackUrl?: string;
+}
+
+const platforms: Platform[] = [
   {
     id: 'windows',
     name: t('MaiBot Windows 一键包'),
@@ -25,6 +38,8 @@ const platforms = [
     downloadUrl: links.droidDownload,
     projectUrl: links.droidRepo,
     note: t('还在测试阶段。安装时要是被系统拦下，允许浏览器安装应用就行。'),
+    // 安卓版另外挂了用户反馈群：App 用起来有问题的人，除了看项目页也知道去哪问
+    feedbackUrl: maidroidFeedbackGroup.url,
   },
 ];
 
@@ -71,6 +86,12 @@ const methods = [
               {t('查看项目')}
             </a>
           </div>
+          {/* 安卓版另外挂一条反馈群入口：拿到 APK 的人遇到问题，知道去哪反馈 */}
+          {platform.feedbackUrl && (
+            <a class="platform-feedback" href={platform.feedbackUrl} target="_blank" rel="noopener noreferrer">
+              {t('遇到问题？去 MaiDroid 反馈群')}
+            </a>
+          )}
         </section>
       ))}
     </div>
@@ -219,6 +240,25 @@ const methods = [
   .platform-download:hover,
   .platform-download:focus-visible {
     transform: translateY(-2px);
+  }
+
+  /* 反馈群入口：放在按钮下面的一行小字，用群本身的粉色，和 QQ 群弹窗里的 MaiDroid 分区对应 */
+  .platform-feedback {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    align-self: flex-start;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .platform-feedback:hover,
+  .platform-feedback:focus-visible {
+    color: rgb(var(--c-pink-rgb));
   }
 
   .methods {

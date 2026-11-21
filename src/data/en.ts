@@ -229,8 +229,6 @@ export const en: Record<string, string> = {
   高级部署: 'Advanced setup',
   '加入群聊 →': 'Join group →',
   '不用 QQ 的话': 'Beyond QQ',
-  '技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。':
-    'Ask technical questions in the support groups. The casual group is for chatting, not troubleshooting. Building a plugin? Join the plugin developers.',
   要去: 'Want to visit ',
   外部页面: 'this website',
   '看看吗？': '?',
@@ -262,6 +260,7 @@ export const en: Record<string, string> = {
   麦麦心理测验: 'Mai Personality Test',
   麦麦7群之青春麦麦不会得玉米症: 'Mai Group 7',
   '群号：995845542': 'QQ group: 995845542',
+  '群号：750194887': 'QQ group: 750194887',
   闲聊吹水: 'Casual chat',
   闲聊群: 'Hangout',
   '仅限闲聊，不答疑': 'Casual conversation only, no technical support',
@@ -269,8 +268,13 @@ export const en: Record<string, string> = {
   插件开发: 'Plugin development',
   插件开发群: 'Plugin developers',
   进阶开发与测试: 'Development and testing',
+  麦麦不吃苹果派: "Mai doesn't eat apple pie",
+  'MaiDroid 用户反馈群': 'MaiDroid user feedback group',
+  '遇到问题？去 MaiDroid 反馈群': 'Run into a problem? Report it in the MaiDroid group',
   '看代码、提 Issue、交 PR': 'Explore the code, report issues, and contribute',
   官方账号: 'Official account',
   'Discord 群': 'Discord community',
   官方频道: 'Official channel',
+  '技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。安卓版（MaiDroid）的问题去 MaiDroid 群反馈。':
+    'Technical questions go to the support groups; the hangout group is just for chatting. Writing plugins? Join the plugin developers. Running the Android app (MaiDroid)? Report it in the MaiDroid group.',
 };

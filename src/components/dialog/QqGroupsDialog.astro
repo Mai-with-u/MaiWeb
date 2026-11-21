@@ -33,6 +33,7 @@ const { t, locale } = useI18n(Astro.url);
                     {t(group.name)}
                   </h4>
                   <p class="qq-card-desc">{t(group.description)}</p>
+                  {group.groupNumber && <p class="qq-card-number">{t(`群号：${group.groupNumber}`)}</p>}
                 </div>
                 <a
                   class="qq-join"
@@ -68,7 +69,11 @@ const { t, locale } = useI18n(Astro.url);
     </section>
 
     <aside class="qq-tip">
-      <p>{t('技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。')}</p>
+      <p>
+        {t(
+          '技术问题去技术交流群问，闲聊群只唠嗑、不答疑。在写插件的话，来插件开发群一起折腾。安卓版（MaiDroid）的问题去 MaiDroid 群反馈。'
+        )}
+      </p>
     </aside>
   </div>
 </Dialog>
@@ -130,6 +135,10 @@ const { t, locale } = useI18n(Astro.url);
 
   .tone-purple {
     --tone: var(--c-purple-rgb);
+  }
+
+  .tone-pink {
+    --tone: var(--c-pink-rgb);
   }
 
   .qq-section-label {
@@ -197,6 +206,15 @@ const { t, locale } = useI18n(Astro.url);
     color: var(--text-muted);
     font-size: 0.8125rem;
     line-height: 1.45;
+  }
+
+  /* 群号：群名玩梗不好念时给一个能直接搜的号码，比说明文字更显眼一点，方便照着念 */
+  .qq-card-number {
+    color: var(--text-body);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
   }
 
   .qq-join {

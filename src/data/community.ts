@@ -1,12 +1,14 @@
 // 社区入口数据，与文档站“交流群”页面（docs.maibot.chat/about/community）保持一致。
 // 文档站换群或新增群时，同步改这里即可，首页 QQ 群弹窗和关于页会一起更新。
 
-export type Tone = 'primary' | 'green' | 'blue' | 'purple';
+export type Tone = 'primary' | 'green' | 'blue' | 'purple' | 'pink';
 
 export interface QqGroup {
   name: string;
   description: string;
   url: string;
+  // 群号：群名是玩梗、不好念的时候，给一个能直接搜的号码
+  groupNumber?: string;
 }
 
 export interface QqGroupSection {
@@ -14,6 +16,15 @@ export interface QqGroupSection {
   tone: Tone;
   groups: QqGroup[];
 }
+
+// MaiDroid（安卓版）的用户反馈群。QQ 群弹窗之外还要用：安卓下载卡片上直接挂一条，
+// 让拿到 APK 的人遇到问题时知道去哪反馈，不用自己翻群列表
+export const maidroidFeedbackGroup: QqGroup = {
+  name: '麦麦不吃苹果派',
+  description: 'MaiDroid 用户反馈群',
+  groupNumber: '750194887',
+  url: 'https://qm.qq.com/q/Wf12XzKe4O',
+};
 
 export const qqGroupSections: QqGroupSection[] = [
   {
@@ -37,7 +48,8 @@ export const qqGroupSections: QqGroupSection[] = [
       },
       {
         name: '麦麦7群之青春麦麦不会得玉米症',
-        description: '群号：995845542',
+        description: '技术交流 / 答疑',
+        groupNumber: '995845542',
         url: 'https://qun.qq.com/universal-share/share?ac=1&svctype=5&tempid=h5_group_info&busi_data=eyJncm91cENvZGUiOiI5OTU4NDU1NDIifQ%3D%3D',
       },
     ],
@@ -62,6 +74,12 @@ export const qqGroupSections: QqGroupSection[] = [
     title: '插件开发',
     tone: 'green',
     groups: [{ name: '插件开发群', description: '进阶开发与测试', url: 'https://qm.qq.com/q/t0kfHuZmSY' }],
+  },
+  {
+    // MaiDroid（安卓版）单独一个分区：这边问的是 App 使用问题，和服务端的技术交流不是一回事
+    title: 'MaiDroid',
+    tone: 'pink',
+    groups: [maidroidFeedbackGroup],
   },
 ];
 
